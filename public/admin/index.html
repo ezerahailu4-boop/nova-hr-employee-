@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Nova HR SM — Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#09090b;--surface:#111113;--card:#18181b;--hover:#1f1f23;--border:rgba(255,255,255,.07);
+  --t1:#fafafa;--t2:#a1a1aa;--t3:#52525b;
+  --accent:#f59e0b;--accent2:#fbbf24;--accent-bg:rgba(245,158,11,.1);--accent-border:rgba(245,158,11,.2);
+  --teal:#2dd4bf;--teal-bg:rgba(45,212,191,.08);--teal-border:rgba(45,212,191,.2);
+  --green:#4ade80;--green-bg:rgba(74,222,128,.08);--green-border:rgba(74,222,128,.2);
+  --red:#f87171;--red-bg:rgba(248,113,113,.08);--red-border:rgba(248,113,113,.2);
+  --blue:#60a5fa;--blue-bg:rgba(96,165,250,.08);--blue-border:rgba(96,165,250,.2);
+  --purple:#c084fc;--purple-bg:rgba(192,132,252,.08);
+  --r:8px;--r2:12px;--r3:16px;
+  --sidebar:236px;
+  --font:'Inter',system-ui,sans-serif;
+}
+html,body{height:100%;background:var(--bg);color:var(--t1);font-family:var(--font);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:3px;height:3px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:2px}
+
+/* --- layout --- */
+.root{display:flex;height:100vh;overflow:hidden}
+.sidebar{width:var(--sidebar);min-width:var(--sidebar);background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;transition:transform .2s ease}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+.page{flex:1;overflow-y:auto;padding:28px 32px 40px}
+
+/* --- sidebar --- */
+.sb-head{padding:18px 16px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.sb-logo{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--teal));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:#000;flex-shrink:0;letter-spacing:-.5px}
+.sb-brand strong{display:block;font-size:13px;font-weight:600}
+.sb-brand span{font-size:11px;color:var(--t3)}
+nav{flex:1;padding:10px 8px;display:flex;flex-direction:column;gap:1px}
+.nav-btn{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:var(--r);border:none;background:none;color:var(--t2);font:500 13px/1 var(--font);cursor:pointer;width:100%;text-align:left;transition:all .15s;position:relative}
+.nav-btn:hover{color:var(--t1);background:var(--hover)}
+.nav-btn.on{color:var(--accent);background:var(--accent-bg)}
+.nav-btn .ico{width:15px;flex-shrink:0;opacity:.75}
+.nav-btn.on .ico{opacity:1}
+.nb{margin-left:auto;background:var(--red);color:#fff;font-size:10px;font-weight:700;padding:1px 5px;border-radius:20px;min-width:17px;text-align:center;display:none}
+.nb.show{display:block}
+.sb-foot{padding:10px 8px;border-top:1px solid var(--border)}
+.nav-out{color:var(--t3)}
+.nav-out:hover{color:var(--red);background:var(--red-bg)}
+
+/* --- topbar --- */
+.topbar{height:52px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:12px;flex-shrink:0}
+.topbar-title{font-size:14px;font-weight:600;flex:1;color:var(--t1)}
+.tb-right{display:flex;align-items:center;gap:8px}
+.tb-time{font-size:11px;color:var(--t3);font-variant-numeric:tabular-nums}
+.ib{width:30px;height:30px;border-radius:var(--r);border:1px solid var(--border);background:var(--card);color:var(--t2);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;padding:0}
+.ib:hover{color:var(--t1);border-color:rgba(255,255,255,.15)}
+.mb{display:none}
+
+/* --- utils --- */
+.hidden{display:none!important}
+.tab{display:none}
+.tab.on{display:block}
+
+/* --- login --- */
+.login-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:999}
+.login-box{width:360px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r3);padding:36px 32px}
+.login-logo{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--teal));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:20px;color:#000;margin:0 auto 20px}
+.login-box h1{text-align:center;font-size:18px;font-weight:600;margin-bottom:3px}
+.login-box p{text-align:center;font-size:13px;color:var(--t3);margin-bottom:26px}
+.lbl{display:block;font-size:11px;font-weight:500;color:var(--t3);margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em}
+.inp{width:100%;background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:9px 12px;color:var(--t1);font:14px var(--font);outline:none;transition:border .15s}
+.inp:focus{border-color:var(--accent)}
+.err{color:var(--red);font-size:12px;margin-top:8px;min-height:16px}
+
+/* --- buttons --- */
+.btn{padding:8px 16px;border-radius:var(--r);font:500 13px var(--font);cursor:pointer;border:none;transition:all .15s;display:inline-flex;align-items:center;gap:6px}
+.btn-accent{background:var(--accent);color:#000}
+.btn-accent:hover{background:var(--accent2)}
+.btn-accent:disabled{opacity:.45;cursor:default}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--t2)}
+.btn-ghost:hover{border-color:rgba(255,255,255,.15);color:var(--t1);background:var(--hover)}
+.btn-full{width:100%;justify-content:center}
+.btn-sm{padding:5px 11px;font-size:12px}
+.btn-xs{padding:3px 8px;font-size:11px}
+.btn-danger{background:var(--red-bg);border:1px solid var(--red-border);color:var(--red)}
+.btn-danger:hover{background:var(--red);color:#fff;border-color:var(--red)}
+.btn-accept{background:var(--green-bg);border:1px solid var(--green-border);color:var(--green)}
+.btn-accept:hover{background:var(--green);color:#000;border-color:var(--green)}
+.btn-reject{background:var(--red-bg);border:1px solid var(--red-border);color:var(--red)}
+.btn-reject:hover{background:var(--red);color:#fff;border-color:var(--red)}
+
+/* --- stat cards --- */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:12px;margin-bottom:24px}
+.sc{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:18px 16px;position:relative;overflow:hidden}
+.sc::after{content:'';position:absolute;top:0;left:0;right:0;height:1.5px}
+.sc.c-amber::after{background:var(--accent)}
+.sc.c-teal::after{background:var(--teal)}
+.sc.c-green::after{background:var(--green)}
+.sc.c-red::after{background:var(--red)}
+.sc.c-blue::after{background:var(--blue)}
+.sc.c-purple::after{background:var(--purple)}
+.sc-ic{font-size:18px;margin-bottom:10px}
+.sc-n{font-size:26px;font-weight:700;line-height:1;margin-bottom:2px;letter-spacing:-1px}
+.sc-l{font-size:11.5px;color:var(--t2);font-weight:500}
+
+/* --- two-col dash --- */
+.dash-grid{display:grid;grid-template-columns:1fr 300px;gap:16px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r2)}
+.ch{padding:16px 18px 0;display:flex;align-items:center;justify-content:space-between}
+.ch h3{font-size:13px;font-weight:600}
+.cb{padding:14px 18px 18px}
+
+/* --- recent list --- */
+.ri{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)}
+.ri:last-child{border:none}
+.av{width:30px;height:30px;border-radius:8px;background:var(--accent-bg);border:1px solid var(--accent-border);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:var(--accent);flex-shrink:0}
+.ri-info{flex:1;min-width:0}
+.ri-info strong{display:block;font-size:12.5px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ri-info span{font-size:11px;color:var(--t3)}
+.ri-time{font-size:11px;color:var(--t3);white-space:nowrap}
+
+/* --- bar chart --- */
+.br{margin-bottom:8px}
+.br:last-child{margin-bottom:0}
+.br-lbl{display:flex;justify-content:space-between;font-size:11.5px;color:var(--t2);margin-bottom:4px}
+.br-track{height:4px;background:var(--hover);border-radius:2px;overflow:hidden}
+.br-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--teal));border-radius:2px;transition:width .7s ease}
+
+/* --- toolbar --- */
+.tbar{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.sbox{flex:1;min-width:180px;position:relative}
+.sbox svg{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--t3);pointer-events:none}
+.sbox input{width:100%;background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:7px 10px 7px 30px;color:var(--t1);font:13px var(--font);outline:none}
+.sbox input:focus{border-color:var(--accent)}
+select.fsel{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:7px 10px;color:var(--t2);font:13px var(--font);outline:none;cursor:pointer}
+select.fsel:focus{border-color:var(--accent)}
+
+/* --- table --- */
+.tw{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden}
+table{width:100%;border-collapse:collapse}
+thead{background:var(--surface)}
+th{padding:10px 12px;font-size:11px;font-weight:600;color:var(--t3);text-align:left;text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}
+td{padding:11px 12px;font-size:13px;border-top:1px solid var(--border);vertical-align:middle}
+tr:hover td{background:rgba(255,255,255,.012)}
+.td-nm strong{display:block;font-size:13px;font-weight:500}
+.td-nm span,.td-ct span{display:block;font-size:11px;color:var(--t3)}
+.ar{display:flex;gap:5px;align-items:center}
+
+/* --- status badges --- */
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap}
+.bd-pending{background:var(--accent-bg);color:var(--accent)}
+.bd-pending_cv{background:var(--blue-bg);color:var(--blue)}
+.bd-accepted{background:var(--green-bg);color:var(--green)}
+.bd-rejected{background:var(--red-bg);color:var(--red)}
+
+/* --- pagination --- */
+.pag{display:flex;align-items:center;gap:4px;margin-top:14px}
+.pb{padding:4px 9px;border-radius:6px;font-size:12px;cursor:pointer;border:1px solid var(--border);background:var(--card);color:var(--t2);transition:all .15s}
+.pb:hover{border-color:rgba(255,255,255,.15);color:var(--t1)}
+.pb.on{background:var(--accent);border-color:var(--accent);color:#000;font-weight:600}
+.pb:disabled{opacity:.3;cursor:default}
+.pag-gap{color:var(--t3);padding:0 3px;font-size:12px}
+
+/* --- empty --- */
+.empty{padding:60px 20px;text-align:center;color:var(--t3)}
+.empty .e-ic{font-size:32px;margin-bottom:10px;opacity:.5}
+.empty p{font-size:13px}
+
+/* --- jobs grid --- */
+.jg{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px}
+.jc{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:16px;display:flex;flex-direction:column;gap:10px;transition:border-color .15s}
+.jc:hover{border-color:rgba(255,255,255,.12)}
+.jc-top{display:flex;gap:10px;align-items:flex-start}
+.jc-em{width:38px;height:38px;border-radius:9px;background:var(--hover);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.jc-info h4{font-size:13.5px;font-weight:600;margin-bottom:1px}
+.jc-info p{font-size:11px;color:var(--t3)}
+.tags{display:flex;flex-wrap:wrap;gap:5px}
+.tag{padding:2px 7px;border-radius:5px;font-size:11px;font-weight:500;background:var(--hover);color:var(--t2)}
+.jc-desc{font-size:12px;color:var(--t2);line-height:1.55;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.jc-foot{display:flex;gap:6px;align-items:center;border-top:1px solid var(--border);padding-top:10px;margin-top:auto}
+.jc-ct{margin-left:auto;font-size:11px;color:var(--t3)}
+
+/* --- CV grid --- */
+.cg{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
+.cvcard{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:16px;display:flex;flex-direction:column;gap:10px}
+.cvc-top{display:flex;gap:9px;align-items:center}
+.cvc-av{width:36px;height:36px;border-radius:9px;background:var(--teal-bg);border:1px solid var(--teal-border);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--teal);flex-shrink:0}
+.cvc-info h4{font-size:13px;font-weight:600}
+.cvc-info p{font-size:11px;color:var(--t3)}
+.cvc-meta{display:flex;flex-direction:column;gap:3px}
+.cvc-meta span{font-size:12px;color:var(--t2)}
+.cv-file{display:flex;align-items:center;gap:7px;background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:7px 9px}
+.cf-ic{font-size:16px;flex-shrink:0}
+.cf-nm{font-size:11px;color:var(--t2);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cf-ext{font-size:10px;color:var(--t3);flex-shrink:0;font-weight:600}
+
+/* --- modal --- */
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;z-index:500;padding:20px}
+.modal{background:var(--surface);border:1px solid rgba(255,255,255,.1);border-radius:var(--r3);width:100%;max-width:520px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.8)}
+.modal-lg{max-width:660px}
+.modal-sm{max-width:380px}
+.mh{padding:18px 22px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);flex-shrink:0}
+.mh h3{font-size:14px;font-weight:600}
+.mc{background:none;border:none;color:var(--t3);cursor:pointer;font-size:18px;width:26px;height:26px;display:flex;align-items:center;justify-content:center;border-radius:5px;transition:all .15s}
+.mc:hover{color:var(--t1);background:var(--hover)}
+.mb2{padding:18px 22px;overflow-y:auto;flex:1}
+.mf{padding:14px 22px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end;flex-shrink:0}
+
+/* --- detail rows --- */
+.dr{display:flex;gap:14px;padding:8px 0;border-bottom:1px solid var(--border)}
+.dr:last-child{border:none}
+.dl{font-size:11.5px;color:var(--t3);font-weight:500;min-width:110px;flex-shrink:0;padding-top:1px}
+.dv{font-size:13px;color:var(--t1);word-break:break-word;line-height:1.5}
+.cover-box{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:11px;font-size:12.5px;color:var(--t2);line-height:1.6;white-space:pre-wrap;margin-top:6px}
+.app-head{display:flex;gap:12px;align-items:center;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+.app-av{width:44px;height:44px;border-radius:11px;background:var(--accent-bg);border:1px solid var(--accent-border);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:var(--accent);flex-shrink:0}
+.app-nm{font-size:15px;font-weight:600;margin-bottom:1px}
+.app-sub{font-size:12px;color:var(--t3)}
+
+/* --- form grid --- */
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.fg .full{grid-column:1/-1}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-size:11.5px;font-weight:500;color:var(--t3)}
+.field textarea{resize:vertical;min-height:88px}
+.req{color:var(--red)}
+
+/* --- toast --- */
+.toast{position:fixed;bottom:22px;right:22px;background:var(--card);border:1px solid rgba(255,255,255,.1);border-radius:var(--r2);padding:11px 16px;font-size:13px;color:var(--t1);opacity:0;transform:translateY(6px);transition:all .22s;z-index:999;pointer-events:none;max-width:300px;box-shadow:0 8px 40px rgba(0,0,0,.6)}
+.toast.show{opacity:1;transform:none}
+.toast.ok{border-color:var(--green-border)}
+.toast.err{border-color:var(--red-border)}
+
+/* --- loading --- */
+.spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.15);border-top-color:var(--accent);border-radius:50%;animation:spin .65s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-row{padding:40px;text-align:center;color:var(--t3)}
+
+/* --- mobile --- */
+@media(max-width:860px){
+  .sidebar{position:fixed;top:0;bottom:0;left:0;z-index:200;transform:translateX(-100%)}
+  .sidebar.open{transform:none}
+  .main{width:100%}
+  .mb{display:flex}
+  .dash-grid{grid-template-columns:1fr}
+  .fg{grid-template-columns:1fr}
+  .page{padding:16px}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginScreen" class="login-screen">
+  <div class="login-box">
+    <div class="login-logo">N</div>
+    <h1>Nova HR SM</h1>
+    <p>Admin Dashboard</p>
+    <label class="lbl">Password</label>
+    <input class="inp" type="password" id="pwInput" placeholder="Enter admin password" autocomplete="current-password"/>
+    <div class="err" id="loginErr"></div>
+    <button class="btn btn-accent btn-full" id="loginBtn" style="margin-top:14px">Sign In</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="root hidden" id="appRoot">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-head">
+      <div class="sb-logo">N</div>
+      <div class="sb-brand"><strong>Nova HR SM</strong><span>Admin Panel</span></div>
+    </div>
+    <nav>
+      <button class="nav-btn on" data-tab="dashboard">
+        <svg class="ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>
+        Dashboard
+      </button>
+      <button class="nav-btn" data-tab="applications">
+        <svg class="ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 1.5H4a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V5.5L10 1.5z"/><path d="M10 1.5v4h4"/><line x1="5" y1="9" x2="11" y2="9"/><line x1="5" y1="11.5" x2="11" y2="11.5"/></svg>
+        Applications
+        <span class="nb" id="pendingBadge">0</span>
+      </button>
+      <button class="nav-btn" data-tab="cvs">
+        <svg class="ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 10v2.667a1.333 1.333 0 0 1-1.333 1.333H3.333A1.333 1.333 0 0 1 2 12.667V10"/><polyline points="11.333 5.333 8 2 4.667 5.333"/><line x1="8" y1="2" x2="8" y2="10"/></svg>
+        CV Files
+      </button>
+      <button class="nav-btn" data-tab="jobs">
+        <svg class="ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="5" width="14" height="9" rx="1"/><path d="M11 5V4a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v1"/></svg>
+        Jobs
+      </button>
+    </nav>
+    <div class="sb-foot">
+      <button class="nav-btn nav-out" id="logoutBtn">
+        <svg class="ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 14H3a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1h3"/><polyline points="11 11 14 8 11 5"/><line x1="14" y1="8" x2="6" y2="8"/></svg>
+        Sign Out
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="main">
+    <header class="topbar">
+      <button class="ib mb" id="menuBtn">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 16 16"><line x1="2" y1="4" x2="14" y2="4"/><line x1="2" y1="8" x2="14" y2="8"/><line x1="2" y1="12" x2="14" y2="12"/></svg>
+      </button>
+      <div class="topbar-title" id="pageTitle">Dashboard</div>
+      <div class="tb-right">
+        <button class="ib" id="refreshBtn" title="Refresh data">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 16 16"><path d="M14 2v4h-4"/><path d="M13.5 9A6 6 0 1 1 10.6 3.4L14 6"/></svg>
+        </button>
+        <span class="tb-time" id="clk"></span>
+      </div>
+    </header>
+
+    <div class="page">
+      <!-- DASHBOARD -->
+      <div class="tab on" id="tabDashboard">
+        <div class="stats">
+          <div class="sc c-amber"><div class="sc-ic">📋</div><div class="sc-n" id="dTotal">0</div><div class="sc-l">Total Applications</div></div>
+          <div class="sc c-teal"><div class="sc-ic">⏳</div><div class="sc-n" id="dPending">0</div><div class="sc-l">Pending Review</div></div>
+          <div class="sc c-green"><div class="sc-ic">✅</div><div class="sc-n" id="dAccepted">0</div><div class="sc-l">Accepted</div></div>
+          <div class="sc c-red"><div class="sc-ic">❌</div><div class="sc-n" id="dRejected">0</div><div class="sc-l">Rejected</div></div>
+          <div class="sc c-blue"><div class="sc-ic">💼</div><div class="sc-n" id="dJobs">0</div><div class="sc-l">Open Jobs</div></div>
+          <div class="sc c-purple"><div class="sc-ic">📎</div><div class="sc-n" id="dCVs">0</div><div class="sc-l">CVs Uploaded</div></div>
+        </div>
+        <div class="dash-grid">
+          <div class="card">
+            <div class="ch"><h3>Recent Applications</h3><button class="btn btn-ghost btn-xs" data-tab="applications">View all →</button></div>
+            <div class="cb" id="recentList"></div>
+          </div>
+          <div class="card">
+            <div class="ch"><h3>By Position</h3></div>
+            <div class="cb" id="posChart"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- APPLICATIONS -->
+      <div class="tab" id="tabApplications">
+        <div class="tbar">
+          <div class="sbox">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 16 16"><circle cx="6.5" cy="6.5" r="5"/><line x1="11" y1="11" x2="14.5" y2="14.5"/></svg>
+            <input type="text" id="appQ" placeholder="Search name, email, phone, position…"/>
+          </div>
+          <select class="fsel" id="stFilter"><option value="">All Status</option><option value="pending">Pending</option><option value="pending_cv">Awaiting CV</option><option value="accepted">Accepted</option><option value="rejected">Rejected</option></select>
+          <select class="fsel" id="posFilter"><option value="">All Positions</option></select>
+          <button class="btn btn-ghost btn-sm" id="exportBtn">⬇ Export CSV</button>
+        </div>
+        <div class="tw">
+          <table>
+            <thead><tr><th>Applicant</th><th>Position</th><th>Contact</th><th>Education</th><th>Experience</th><th>Date</th><th>Status</th><th></th></tr></thead>
+            <tbody id="appsTbody"></tbody>
+          </table>
+          <div class="empty hidden" id="appsEmpty"><div class="e-ic">📭</div><p>No applications found</p></div>
+          <div class="loading-row hidden" id="appsLoading"><div class="spin"></div></div>
+        </div>
+        <div class="pag" id="appsPag"></div>
+      </div>
+
+      <!-- CVs -->
+      <div class="tab" id="tabCvs">
+        <div class="tbar">
+          <div class="sbox">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 16 16"><circle cx="6.5" cy="6.5" r="5"/><line x1="11" y1="11" x2="14.5" y2="14.5"/></svg>
+            <input type="text" id="cvQ" placeholder="Search name or position…"/>
+          </div>
+          <select class="fsel" id="cvStFilter"><option value="">All Status</option><option value="pending">Pending</option><option value="pending_cv">Awaiting CV</option><option value="accepted">Accepted</option><option value="rejected">Rejected</option></select>
+        </div>
+        <div class="cg" id="cvGrid"></div>
+        <div class="empty hidden" id="cvEmpty"><div class="e-ic">📂</div><p>No CVs uploaded yet</p></div>
+      </div>
+
+      <!-- JOBS -->
+      <div class="tab" id="tabJobs">
+        <div class="tbar">
+          <div class="sbox">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 16 16"><circle cx="6.5" cy="6.5" r="5"/><line x1="11" y1="11" x2="14.5" y2="14.5"/></svg>
+            <input type="text" id="jobQ" placeholder="Search jobs…"/>
+          </div>
+          <button class="btn btn-accent btn-sm" id="addJobBtn">+ Add Job</button>
+        </div>
+        <div class="jg" id="jobsGrid"></div>
+        <div class="empty hidden" id="jobsEmpty"><div class="e-ic">💼</div><p>No jobs posted yet</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Application Detail -->
+<div class="ov hidden" id="appModal">
+  <div class="modal">
+    <div class="mh"><h3 id="appModalTitle">Application</h3><button class="mc" id="closeAppModal">✕</button></div>
+    <div class="mb2" id="appModalBody"></div>
+    <div class="mf" id="appModalFoot"></div>
+  </div>
+</div>
+
+<!-- MODAL: Add/Edit Job -->
+<div class="ov hidden" id="jobModal">
+  <div class="modal modal-lg">
+    <div class="mh"><h3 id="jobModalTitle">Add Job</h3><button class="mc" id="closeJobModal">✕</button></div>
+    <div class="mb2">
+      <div class="fg">
+        <div class="field"><label>Title <span class="req">*</span></label><input class="inp" type="text" id="jTitle" placeholder="HR Officer"/></div>
+        <div class="field"><label>Company</label><input class="inp" type="text" id="jCompany" placeholder="Nova HR SM"/></div>
+        <div class="field"><label>Location <span class="req">*</span></label><input class="inp" type="text" id="jLocation" placeholder="Addis Ababa, Ethiopia"/></div>
+        <div class="field"><label>Type</label>
+          <select class="inp fsel" id="jType"><option>Full-time</option><option>Part-time</option><option>Contract</option><option>Freelance</option><option>Internship</option></select>
+        </div>
+        <div class="field"><label>Salary</label><input class="inp" type="text" id="jSalary" placeholder="15,000 – 25,000 ETB"/></div>
+        <div class="field"><label>Category</label><input class="inp" type="text" id="jCategory" placeholder="HR, Finance, IT…"/></div>
+        <div class="field"><label>Deadline</label><input class="inp" type="date" id="jDeadline"/></div>
+        <div class="field"><label>Icon (emoji)</label><input class="inp" type="text" id="jIcon" placeholder="💼" maxlength="4"/></div>
+        <div class="field full"><label>Description <span class="req">*</span></label><textarea class="inp" id="jDesc" placeholder="Describe the role…"></textarea></div>
+        <div class="field full"><label>Requirements <span class="req">*</span></label><textarea class="inp" id="jReqs" placeholder="Required skills and qualifications…"></textarea></div>
+      </div>
+    </div>
+    <div class="mf"><button class="btn btn-ghost" id="cancelJob">Cancel</button><button class="btn btn-accent" id="saveJobBtn">Save Job</button></div>
+  </div>
+</div>
+
+<!-- MODAL: Confirm Delete -->
+<div class="ov hidden" id="confirmModal">
+  <div class="modal modal-sm">
+    <div class="mh"><h3>Confirm Delete</h3><button class="mc" id="closeConfirm">✕</button></div>
+    <div class="mb2"><p id="confirmMsg" style="color:var(--t2);line-height:1.6;font-size:13px"></p></div>
+    <div class="mf"><button class="btn btn-ghost" id="cancelDel">Cancel</button><button class="btn btn-danger" id="doDel">Delete</button></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ─── State ────────────────────────────────────────────────────────── */
+let token = sessionStorage.getItem('nhr_tok') || ''
+let submissions = [], jobs = [], filtered = [], curPage = 1
+let editJobId = null, deleteCb = null
+const PER = 15
+const $ = id => document.getElementById(id)
+
+/* ─── API ──────────────────────────────────────────────────────────── */
+async function api(path, opts = {}) {
+  const h = { ...(opts.headers||{}) }
+  if (token) h['Authorization'] = 'Bearer ' + token
+  if (opts.body && typeof opts.body === 'string') h['Content-Type'] = 'application/json'
+  const r = await fetch(path, { ...opts, headers: h })
+  const d = await r.json().catch(() => null)
+  if (!r.ok) throw new Error(d?.error || r.statusText)
+  return d
+}
+
+/* ─── Helpers ──────────────────────────────────────────────────────── */
+const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+const ago = ts => {
+  if (!ts) return ''
+  const m = Math.floor((Date.now()-new Date(ts))/60000)
+  if (m<1) return 'just now'; if (m<60) return m+'m ago'
+  const h = Math.floor(m/60); if (h<24) return h+'h ago'
+  return Math.floor(h/24)+'d ago'
+}
+const fmt = ts => !ts ? '—' : new Date(ts).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})
+const badge = s => { const c = {pending:'bd-pending',pending_cv:'bd-pending_cv',accepted:'bd-accepted',rejected:'bd-rejected'}; return `<span class="badge ${c[s]||'bd-pending'}">${(s||'pending').replace('_',' ')}</span>` }
+let toastT
+const toast = (msg, type='') => {
+  const el=$('toast'); el.textContent=msg; el.className='toast show'+(type?' '+type:'')
+  clearTimeout(toastT); toastT=setTimeout(()=>el.classList.remove('show'),3000)
+}
+
+/* ─── Login ────────────────────────────────────────────────────────── */
+$('loginBtn').addEventListener('click', doLogin)
+$('pwInput').addEventListener('keydown', e => e.key==='Enter' && doLogin())
+
+async function doLogin() {
+  const pw = $('pwInput').value.trim()
+  if (!pw) { $('loginErr').textContent='Enter your password.'; return }
+  $('loginBtn').disabled=true; $('loginErr').textContent=''
+  $('loginBtn').innerHTML='<div class="spin"></div>'
+  try {
+    const d = await api('/api/admin/login', { method:'POST', body: JSON.stringify({ password:pw }) })
+    token = d.token
+    sessionStorage.setItem('nhr_tok', token)
+    $('loginScreen').classList.add('hidden')
+    $('appRoot').classList.remove('hidden')
+    await loadAll()
+    clock()
+  } catch(e) {
+    $('loginErr').textContent = e.message==='Invalid password' ? 'Wrong password. Try again.' : 'Server error — check your connection.'
+    $('pwInput').value=''
+  } finally { $('loginBtn').disabled=false; $('loginBtn').innerHTML='Sign In' }
+}
+
+// Auto-restore session
+if (token) {
+  $('loginScreen').classList.add('hidden')
+  $('appRoot').classList.remove('hidden')
+  loadAll().then(clock).catch(() => {
+    token=''; sessionStorage.removeItem('nhr_tok')
+    $('loginScreen').classList.remove('hidden'); $('appRoot').classList.add('hidden')
+  })
+}
+
+$('logoutBtn').addEventListener('click', () => {
+  token=''; sessionStorage.removeItem('nhr_tok')
+  location.reload()
+})
+
+/* ─── Clock ────────────────────────────────────────────────────────── */
+function clock() {
+  const tick = () => $('clk').textContent = new Date().toLocaleTimeString()
+  tick(); setInterval(tick, 1000)
+}
+
+/* ─── Data loading ─────────────────────────────────────────────────── */
+async function loadAll() {
+  await Promise.all([loadSubs(), loadJobs()])
+  renderDash(); renderApps(); renderCVs(); renderJobs(); updateBadge()
+}
+
+async function loadSubs() {
+  try { submissions = await api('/api/submissions') }
+  catch { submissions = []; toast('Could not load applications', 'err') }
+}
+
+async function loadJobs() {
+  try { jobs = await api('/api/jobs') }
+  catch { jobs = []; toast('Could not load jobs', 'err') }
+}
+
+$('refreshBtn').addEventListener('click', async () => {
+  $('refreshBtn').style.opacity='.3'
+  await loadAll()
+  $('refreshBtn').style.opacity='1'
+  toast('✓ Data refreshed')
+})
+
+/* ─── Tabs ─────────────────────────────────────────────────────────── */
+const TITLES = { dashboard:'Dashboard', applications:'Applications', cvs:'CV Files', jobs:'Jobs' }
+document.querySelectorAll('[data-tab]').forEach(b => b.addEventListener('click', ()=>go(b.dataset.tab)))
+
+function go(name) {
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('on', b.dataset.tab===name))
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('on', t.id==='tab'+name.charAt(0).toUpperCase()+name.slice(1)))
+  $('pageTitle').textContent = TITLES[name]||name
+  $('sidebar').classList.remove('open')
+}
+
+$('menuBtn').addEventListener('click', () => $('sidebar').classList.toggle('open'))
+document.addEventListener('click', e => {
+  const sb=$('sidebar')
+  if (sb.classList.contains('open') && !sb.contains(e.target) && e.target!==$('menuBtn')) sb.classList.remove('open')
+})
+
+/* ─── Dashboard ────────────────────────────────────────────────────── */
+function renderDash() {
+  const tot=submissions.length
+  const pend=submissions.filter(s=>s.status==='pending'||s.status==='pending_cv').length
+  const acc=submissions.filter(s=>s.status==='accepted').length
+  const rej=submissions.filter(s=>s.status==='rejected').length
+  const cvs=submissions.filter(s=>s.cv_path).length
+  $('dTotal').textContent=tot; $('dPending').textContent=pend
+  $('dAccepted').textContent=acc; $('dRejected').textContent=rej
+  $('dJobs').textContent=jobs.length; $('dCVs').textContent=cvs
+
+  // Recent
+  const rec = [...submissions].sort((a,b)=>new Date(b.timestamp||0)-new Date(a.timestamp||0)).slice(0,6)
+  $('recentList').innerHTML = rec.length
+    ? rec.map(s=>`<div class="ri">
+        <div class="av">${(s.full_name||'?')[0].toUpperCase()}</div>
+        <div class="ri-info"><strong>${esc(s.full_name||'Unknown')}</strong><span>${esc(s.position||'N/A')}</span></div>
+        <span class="ri-time">${ago(s.timestamp)}</span>
+      </div>`).join('')
+    : '<div class="empty" style="padding:28px 0"><p>No applications yet</p></div>'
+
+  // Chart
+  const counts={}, sorted_subs=[...submissions]
+  sorted_subs.forEach(s=>{if(s.position)counts[s.position]=(counts[s.position]||0)+1})
+  const rows=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,7)
+  const max=rows[0]?.[1]||1
+  $('posChart').innerHTML = rows.length
+    ? rows.map(([p,n])=>`<div class="br">
+        <div class="br-lbl"><span>${esc(p)}</span><span>${n}</span></div>
+        <div class="br-track"><div class="br-fill" style="width:${(n/max*100).toFixed(1)}%"></div></div>
+      </div>`).join('')
+    : '<div class="empty" style="padding:28px 0"><p>No data yet</p></div>'
+}
+
+function updateBadge() {
+  const n=submissions.filter(s=>s.status==='pending'||s.status==='pending_cv').length
+  const b=$('pendingBadge'); b.textContent=n; b.classList.toggle('show',n>0)
+}
+
+/* ─── Applications ─────────────────────────────────────────────────── */
+function renderApps() {
+  const pos=[...new Set(submissions.map(s=>s.position).filter(Boolean))]
+  const pf=$('posFilter'), cur=pf.value
+  pf.innerHTML=`<option value="">All Positions</option>`+pos.map(p=>`<option${p===cur?' selected':''}>${esc(p)}</option>`).join('')
+  applyFilters()
+}
+
+function applyFilters() {
+  const q=$('appQ').value.toLowerCase()
+  const st=$('stFilter').value, pos=$('posFilter').value
+  filtered=submissions.filter(s=>{
+    const mQ=!q||[s.full_name,s.email,s.phone,s.position].some(f=>(f||'').toLowerCase().includes(q))
+    return mQ && (!st||s.status===st) && (!pos||s.position===pos)
+  }).sort((a,b)=>new Date(b.timestamp||0)-new Date(a.timestamp||0))
+  curPage=1; renderTable()
+}
+
+function renderTable() {
+  const pages=Math.max(1,Math.ceil(filtered.length/PER))
+  curPage=Math.min(curPage,pages)
+  const slice=filtered.slice((curPage-1)*PER, curPage*PER)
+  const tb=$('appsTbody'), em=$('appsEmpty')
+  if (!slice.length) { tb.innerHTML=''; em.classList.remove('hidden'); $('appsPag').innerHTML=''; return }
+  em.classList.add('hidden')
+  tb.innerHTML=slice.map(s=>`<tr>
+    <td class="td-nm"><strong>${esc(s.full_name||'Unknown')}</strong><span>@${esc(s.telegram_username||'N/A')}</span></td>
+    <td>${esc(s.position||'N/A')}</td>
+    <td class="td-ct"><span>${esc(s.phone||'—')}</span><span>${esc(s.email||'—')}</span></td>
+    <td><span style="font-size:12px">${esc(s.education||'—')}</span></td>
+    <td><span style="font-size:12px">${esc(s.experience||'—')}</span></td>
+    <td style="color:var(--t3);font-size:12px">${fmt(s.timestamp)}</td>
+    <td>${badge(s.status)}</td>
+    <td><div class="ar">
+      <button class="btn btn-ghost btn-xs" onclick="viewApp('${s.id}')">View</button>
+      ${s.cv_path?`<button class="btn btn-ghost btn-xs" onclick="dlCV('${s.id}')" title="Download CV">⬇</button>`:''}
+      ${(s.status==='pending'||s.status==='pending_cv')?`
+        <button class="btn btn-accept btn-xs" onclick="setStatus('${s.id}','accepted')">✓</button>
+        <button class="btn btn-reject btn-xs" onclick="setStatus('${s.id}','rejected')">✗</button>`:''}
+    </div></td>
+  </tr>`).join('')
+
+  // Pagination
+  if (pages<=1){$('appsPag').innerHTML='';return}
+  let h=`<button class="pb" onclick="pg(${curPage-1})" ${curPage===1?'disabled':''}>‹</button>`
+  for(let i=1;i<=pages;i++){
+    if(i===1||i===pages||Math.abs(i-curPage)<=1) h+=`<button class="pb ${i===curPage?'on':''}" onclick="pg(${i})">${i}</button>`
+    else if(Math.abs(i-curPage)===2) h+=`<span class="pag-gap">…</span>`
+  }
+  h+=`<button class="pb" onclick="pg(${curPage+1})" ${curPage===pages?'disabled':''}>›</button>`
+  $('appsPag').innerHTML=h
+}
+
+window.pg = p => { curPage=p; renderTable() }
+$('appQ').addEventListener('input', applyFilters)
+$('stFilter').addEventListener('change', applyFilters)
+$('posFilter').addEventListener('change', applyFilters)
+
+/* ─── Status update ────────────────────────────────────────────────── */
+window.setStatus = async (id, status) => {
+  try {
+    await api(`/api/submissions/${encodeURIComponent(id)}`, { method:'PATCH', body:JSON.stringify({status}) })
+    const s=submissions.find(x=>x.id===id); if(s) s.status=status
+    renderDash(); renderApps(); renderCVs(); updateBadge()
+    $('appModal').classList.add('hidden')
+    toast(status==='accepted'?'✅ Accepted':'❌ Rejected', status==='accepted'?'ok':'err')
+  } catch(e){ toast('Error: '+e.message,'err') }
+}
+
+window.scheduleInterview = async id => {
+  const s=submissions.find(x=>x.id===id); if(!s) return
+  const when=prompt('Interview date/time:', s.interview||'')
+  if(when===null) return
+  try {
+    await api(`/api/submissions/${encodeURIComponent(id)}`, { method:'PATCH', body:JSON.stringify({interview:when.trim()}) })
+    s.interview=when.trim()
+    viewApp(id)
+    toast('📅 Interview scheduled','ok')
+  } catch(e){ toast('Error: '+e.message,'err') }
+}
+
+/* ─── CV download ──────────────────────────────────────────────────── */
+window.dlCV = id => {
+  const s=submissions.find(x=>x.id===id); if(!s?.cv_path) { toast('No CV file','err'); return }
+  const parts=s.cv_path.split('/'), filename=parts.slice(1).join('/')||parts[0], subId=parts.length>1?parts[0]:''
+  window.open(`/api/uploads/${encodeURIComponent(filename)}${subId?'?subId='+encodeURIComponent(subId):''}`, '_blank')
+}
+
+/* ─── Export CSV ───────────────────────────────────────────────────── */
+$('exportBtn').addEventListener('click', () => {
+  const fields=['id','timestamp','status','position','full_name','phone','email','age','gender','education','experience','telegram_username','cv_path','interview']
+  const rows=[fields.join(',')]
+  filtered.forEach(s=>rows.push(fields.map(f=>`"${String(s[f]||'').replace(/"/g,'""')}"`).join(',')))
+  const a=document.createElement('a')
+  a.href=URL.createObjectURL(new Blob([rows.join('\n')],{type:'text/csv'}))
+  a.download=`applications_${new Date().toISOString().slice(0,10)}.csv`
+  a.click(); toast('⬇ Exported')
+})
+
+/* ─── App detail modal ─────────────────────────────────────────────── */
+window.viewApp = id => {
+  const s=submissions.find(x=>x.id===id); if(!s) return
+
+  const links=(s.portfolio_links||[]).map(l=>`<a href="${encodeURI(l)}" target="_blank" rel="noopener" style="color:var(--accent);font-size:12px">${esc(l)}</a>`).join('<br>')||'—'
+  let cvHtml='<span style="color:var(--t3)">No CV uploaded</span>'
+  if(s.cv_path){
+    const parts=s.cv_path.split('/'), filename=parts.slice(1).join('/')||parts[0], subId=parts.length>1?parts[0]:''
+    const url=`/api/uploads/${encodeURIComponent(filename)}${subId?'?subId='+encodeURIComponent(subId):''}`
+    cvHtml=`<a href="${url}" target="_blank" style="color:var(--teal);font-size:12px">⬇ ${esc(s.cv_path)}</a>`
+  } else if(s.cv?.file_id){
+    cvHtml=`<span style="color:var(--accent);font-size:12px">📎 Telegram file</span>`
+  }
+
+  let attHtml=''
+  if(Array.isArray(s.attachments)&&s.attachments.length){
+    attHtml=s.attachments.map(f=>{
+      const parts=f.path.split('/'), filename=parts.slice(1).join('/')||parts[0], subId=parts.length>1?parts[0]:''
+      const url=`/api/uploads/${encodeURIComponent(filename)}${subId?'?subId='+encodeURIComponent(subId):''}`
+      return `<a href="${url}" target="_blank" style="display:inline-block;color:var(--teal);font-size:12px;margin-right:8px">📎 ${esc(f.name)}</a>`
+    }).join('')
+  }
+
+  $('appModalTitle').textContent=(s.full_name||'Applicant')+' — '+(s.position||'')
+  $('appModalBody').innerHTML=`
+    <div class="app-head">
+      <div class="app-av">${(s.full_name||'?')[0].toUpperCase()}</div>
+      <div><div class="app-nm">${esc(s.full_name||'Unknown')}</div><div class="app-sub">@${esc(s.telegram_username||'N/A')} · ${esc(s.source||'bot')}</div></div>
+      <div style="margin-left:auto">${badge(s.status)}</div>
+    </div>
+    ${dr('Position',esc(s.position))}
+    ${dr('Phone',esc(s.phone))}
+    ${dr('Email',esc(s.email))}
+    ${dr('Age',esc(s.age))}
+    ${dr('Gender',esc(s.gender))}
+    ${dr('Education',esc(s.education))}
+    ${dr('Experience',esc(s.experience))}
+    ${dr('Applied',fmt(s.timestamp))}
+    ${s.interview?dr('Interview',`<span style="color:var(--accent)">${esc(s.interview)}</span>`):''}
+    ${dr('Portfolio',links)}
+    ${dr('CV File',cvHtml)}
+    ${attHtml?dr('Attachments',attHtml):''}
+    ${(s.cover_letter||s.bio)?`<div class="dr" style="flex-direction:column;gap:6px"><span class="dl">Cover Letter</span><div class="cover-box">${esc(s.cover_letter||s.bio)}</div></div>`:''}
+  `
+  $('appModalFoot').innerHTML=(s.status==='pending'||s.status==='pending_cv')?`
+    <button class="btn btn-ghost btn-sm" onclick="scheduleInterview('${s.id}')">📅 Schedule Interview</button>
+    <button class="btn btn-reject btn-sm" onclick="setStatus('${s.id}','rejected')">❌ Reject</button>
+    <button class="btn btn-accept btn-sm" onclick="setStatus('${s.id}','accepted')">✅ Accept</button>
+  `:`<button class="btn btn-ghost btn-sm" onclick="scheduleInterview('${s.id}')">📅 Update Interview</button>
+     <button class="btn btn-ghost btn-sm" onclick="setStatus('${s.id}','pending')">↩ Reset to Pending</button>`
+  $('appModal').classList.remove('hidden')
+}
+
+function dr(label,value){return`<div class="dr"><span class="dl">${label}</span><span class="dv">${value||'—'}</span></div>`}
+$('closeAppModal').addEventListener('click',()=>$('appModal').classList.add('hidden'))
+$('appModal').addEventListener('click',e=>{if(e.target===$('appModal'))$('appModal').classList.add('hidden')})
+
+/* ─── CVs ──────────────────────────────────────────────────────────── */
+function renderCVs() {
+  const q=($('cvQ').value||'').toLowerCase(), st=$('cvStFilter').value
+  const all=submissions.filter(s=>
+    (s.cv_path||(s.cv&&s.cv.file_id))&&
+    (!q||(s.full_name||'').toLowerCase().includes(q)||(s.position||'').toLowerCase().includes(q))&&
+    (!st||s.status===st)
+  ).sort((a,b)=>new Date(b.timestamp||0)-new Date(a.timestamp||0))
+
+  if(!all.length){$('cvGrid').innerHTML='';$('cvEmpty').classList.remove('hidden');return}
+  $('cvEmpty').classList.add('hidden')
+
+  $('cvGrid').innerHTML=all.map(s=>{
+    const hasCv=!!s.cv_path
+    const parts=hasCv?s.cv_path.split('/'):[]
+    const fname=parts.length>1?parts.slice(1).join('/'):parts[0]||''
+    const subId=parts.length>1?parts[0]:''
+    const ext=(fname.split('.').pop()||'FILE').toUpperCase()
+    const icon={'PDF':'📄','JPG':'🖼','JPEG':'🖼','PNG':'🖼','DOC':'📝','DOCX':'📝'}[ext]||'📎'
+    const dlUrl=hasCv?`/api/uploads/${encodeURIComponent(fname)}${subId?'?subId='+encodeURIComponent(subId):''}`:null
+    return `<div class="cvcard">
+      <div class="cvc-top">
+        <div class="cvc-av">${(s.full_name||'?')[0].toUpperCase()}</div>
+        <div class="cvc-info"><h4>${esc(s.full_name||'Unknown')}</h4><p>${esc(s.position||'N/A')}</p></div>
+        <div style="margin-left:auto">${badge(s.status)}</div>
+      </div>
+      <div class="cvc-meta">
+        <span>📱 ${esc(s.phone||'—')}</span>
+        <span>📧 ${esc(s.email||'—')}</span>
+        <span>🕒 ${fmt(s.timestamp)}</span>
+        ${s.interview?`<span style="color:var(--accent)">📅 ${esc(s.interview)}</span>`:''}
+      </div>
+      ${hasCv?`<div class="cv-file"><span class="cf-ic">${icon}</span><span class="cf-nm">${esc(fname)}</span><span class="cf-ext">${ext}</span></div>`:`<div style="font-size:12px;color:var(--t3);text-align:center;padding:6px">📎 Telegram only</div>`}
+      <div class="ar" style="flex-wrap:wrap">
+        <button class="btn btn-ghost btn-xs" onclick="viewApp('${s.id}')">View Details</button>
+        ${dlUrl?`<button class="btn btn-ghost btn-xs" onclick="window.open('${dlUrl}','_blank')">⬇ Download</button>`:''}
+        ${(s.status==='pending'||s.status==='pending_cv')?`
+          <button class="btn btn-accept btn-xs" onclick="setStatus('${s.id}','accepted')">✓ Accept</button>
+          <button class="btn btn-reject btn-xs" onclick="setStatus('${s.id}','rejected')">✗ Reject</button>`:''}
+      </div>
+    </div>`
+  }).join('')
+}
+$('cvQ').addEventListener('input', renderCVs)
+$('cvStFilter').addEventListener('change', renderCVs)
+
+/* ─── Jobs ─────────────────────────────────────────────────────────── */
+function renderJobs() {
+  const q=($('jobQ').value||'').toLowerCase()
+  const fj=jobs.filter(j=>!q||(j.title||'').toLowerCase().includes(q)||(j.location||'').toLowerCase().includes(q))
+  if(!fj.length){$('jobsGrid').innerHTML='';$('jobsEmpty').classList.remove('hidden');return}
+  $('jobsEmpty').classList.add('hidden')
+  $('jobsGrid').innerHTML=fj.map(j=>{
+    const ct=submissions.filter(s=>s.position===j.title).length
+    const reqs=Array.isArray(j.requirements)?j.requirements.join('\n'):j.requirements||''
+    return `<div class="jc">
+      <div class="jc-top">
+        <div class="jc-em">${j.icon||'💼'}</div>
+        <div class="jc-info"><h4>${esc(j.title)}</h4><p>${esc(j.company||'Nova HR SM')} · ${esc(j.location)}</p></div>
+      </div>
+      <div class="tags">
+        <span class="tag">${esc(j.type||'Full-time')}</span>
+        ${j.salary?`<span class="tag">${esc(j.salary)}</span>`:''}
+        ${j.category?`<span class="tag">${esc(j.category)}</span>`:''}
+        ${j.deadline?`<span class="tag">⏳ ${esc(j.deadline)}</span>`:''}
+      </div>
+      <div class="jc-desc">${esc((j.description||'').slice(0,120))}${(j.description||'').length>120?'…':''}</div>
+      <div class="jc-foot">
+        <button class="btn btn-ghost btn-xs" onclick="editJob(${j.id})">✏ Edit</button>
+        <button class="btn btn-danger btn-xs" onclick="delJob(${j.id})">🗑</button>
+        <span class="jc-ct">${ct} applicant${ct!==1?'s':''}</span>
+      </div>
+    </div>`
+  }).join('')
+}
+$('jobQ').addEventListener('input',renderJobs)
+
+/* ─── Add/Edit Job ─────────────────────────────────────────────────── */
+$('addJobBtn').addEventListener('click',()=>{
+  editJobId=null; $('jobModalTitle').textContent='Add New Job'
+  ;['jTitle','jCompany','jLocation','jSalary','jCategory','jIcon','jDesc','jReqs'].forEach(id=>$(id).value='')
+  $('jType').value='Full-time'; $('jDeadline').value=''
+  $('jobModal').classList.remove('hidden')
+})
+
+window.editJob = id => {
+  const j=jobs.find(x=>x.id===id); if(!j) return
+  editJobId=id; $('jobModalTitle').textContent='Edit Job'
+  $('jTitle').value=j.title||''; $('jCompany').value=j.company||''
+  $('jLocation').value=j.location||''; $('jType').value=j.type||'Full-time'
+  $('jSalary').value=j.salary||''; $('jCategory').value=j.category||''
+  $('jDeadline').value=j.deadline||''; $('jIcon').value=j.icon||''
+  $('jDesc').value=j.description||''
+  $('jReqs').value=Array.isArray(j.requirements)?j.requirements.join('\n'):j.requirements||''
+  $('jobModal').classList.remove('hidden')
+}
+
+$('saveJobBtn').addEventListener('click', async ()=>{
+  const title=$('jTitle').value.trim(), loc=$('jLocation').value.trim()
+  const desc=$('jDesc').value.trim(), reqs=$('jReqs').value.trim()
+  if(!title||!loc||!desc||!reqs){toast('Fill all required fields','err');return}
+  const payload={title,company:$('jCompany').value.trim()||'Nova HR SM',location:loc,type:$('jType').value,
+    salary:$('jSalary').value.trim(),category:$('jCategory').value.trim(),deadline:$('jDeadline').value,
+    icon:$('jIcon').value.trim()||'💼',description:desc,requirements:reqs,remote:loc.toLowerCase().includes('remote')}
+  $('saveJobBtn').disabled=true; $('saveJobBtn').innerHTML='<div class="spin"></div>'
+  try {
+    if(editJobId!==null) await api(`/api/jobs/${editJobId}`,{method:'PUT',body:JSON.stringify(payload)})
+    else await api('/api/jobs',{method:'POST',body:JSON.stringify(payload)})
+    await loadJobs(); renderJobs(); renderDash()
+    $('jobModal').classList.add('hidden')
+    toast(editJobId!==null?'✅ Job updated':'✅ Job created','ok')
+  } catch(e){toast('Error: '+e.message,'err')}
+  finally{$('saveJobBtn').disabled=false;$('saveJobBtn').innerHTML='Save Job'}
+})
+
+$('closeJobModal').addEventListener('click',()=>$('jobModal').classList.add('hidden'))
+$('cancelJob').addEventListener('click',()=>$('jobModal').classList.add('hidden'))
+$('jobModal').addEventListener('click',e=>{if(e.target===$('jobModal'))$('jobModal').classList.add('hidden')})
+
+/* ─── Delete job ───────────────────────────────────────────────────── */
+window.delJob = id => {
+  const j=jobs.find(x=>x.id===id); if(!j) return
+  $('confirmMsg').textContent=`Delete "${j.title}"? This cannot be undone.`
+  deleteCb=async()=>{
+    try{
+      await api(`/api/jobs/${id}`,{method:'DELETE'})
+      jobs=jobs.filter(x=>x.id!==id); renderJobs(); renderDash()
+      toast('🗑 Job deleted')
+    }catch(e){toast('Error: '+e.message,'err')}
+  }
+  $('confirmModal').classList.remove('hidden')
+}
+
+$('doDel').addEventListener('click',async()=>{
+  if(deleteCb){await deleteCb();deleteCb=null}
+  $('confirmModal').classList.add('hidden')
+})
+$('cancelDel').addEventListener('click',()=>$('confirmModal').classList.add('hidden'))
+$('closeConfirm').addEventListener('click',()=>$('confirmModal').classList.add('hidden'))
+$('confirmModal').addEventListener('click',e=>{if(e.target===$('confirmModal'))$('confirmModal').classList.add('hidden')})
+</script>
+</body>
+</html>

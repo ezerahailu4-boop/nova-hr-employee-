@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Nova HR SM — Careers</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- SPLASH -->
+  <div id="splash">
+    <div class="splash-inner">
+      <div class="splash-logo">
+        <img src="https://novahrsm.com/nova_logo0.png" alt="Nova HR SM" class="splash-logo-img" onerror="this.style.display='none';document.getElementById('splashFallback').style.display='flex'" />
+        <div id="splashFallback" class="splash-logo-fallback" style="display:none">
+          <span>N</span>
+        </div>
+      </div>
+      <h1 class="splash-title">Nova HR SM</h1>
+      <p class="splash-sub">Strategic HR Management for Sustainable Growth</p>
+      <div class="splash-dots"><span></span><span></span><span></span></div>
+    </div>
+  </div>
+
+  <!-- APP -->
+  <div id="app" class="hidden">
+
+    <!-- Header -->
+    <header class="header">
+      <div class="header-inner">
+        <button class="btn-back hidden" id="btnBack">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 12H5M12 5l-7 7 7 7"/>
+          </svg>
+        </button>
+        <div class="header-brand">
+          <img src="https://novahrsm.com/nova_logo0.png" alt="Nova HR SM" class="header-logo" onerror="this.style.display='none'" />
+          <span id="headerTitle">Nova HR SM</span>
+        </div>
+        <div class="header-actions">
+          <button class="icon-btn" id="btnSearch">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="search-bar hidden" id="searchBar">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input type="text" id="searchInput" placeholder="Search jobs…" autocomplete="off" />
+        <button id="btnClearSearch">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <path d="M18 6 6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <main id="main">
+
+      <!-- ══ HOME PAGE ══ -->
+      <section id="pageHome" class="page active">
+
+        <!-- Hero -->
+        <div class="hero">
+          <div class="hero-text">
+            <p class="hero-eyebrow" id="heroGreeting">Good morning 👋</p>
+            <h2 class="hero-title">Build your career with <span class="gold-text">Nova HR SM</span></h2>
+            <p class="hero-sub">Ethiopia's trusted HR & workforce solutions partner</p>
+            <div class="hero-btns">
+              <button class="btn-gold" id="heroBrowseBtn">Browse Jobs →</button>
+              <button class="btn-outline" id="heroUploadBtn">Upload CV 📎</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-bar">
+          <div class="stat-item">
+            <span class="stat-num gold" id="statTotal">0</span>
+            <span class="stat-label">Open Roles</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <span class="stat-num teal" id="statFull">0</span>
+            <span class="stat-label">Full-time</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <span class="stat-num gold" id="statRemote">0</span>
+            <span class="stat-label">Remote</span>
+          </div>
+        </div>
+
+        <!-- Services -->
+        <div class="section-header"><h3>What We Do</h3></div>
+        <div class="services-grid">
+          <div class="service-card teal-border">
+            <span class="service-icon">🎯</span>
+            <h4>Talent Sourcing</h4>
+            <p>Permanent, contract & temporary staffing across all industries in Ethiopia</p>
+          </div>
+          <div class="service-card gold-border">
+            <span class="service-icon">🏢</span>
+            <h4>HR Outsourcing</h4>
+            <p>Full HR function management — from onboarding to offboarding</p>
+          </div>
+          <div class="service-card teal-border">
+            <span class="service-icon">🎓</span>
+            <h4>Training & Dev</h4>
+            <p>Customized L&D programs that drive measurable performance growth</p>
+          </div>
+          <div class="service-card gold-border">
+            <span class="service-icon">⚖️</span>
+            <h4>HR Consulting</h4>
+            <p>Labor law compliance with Ethiopia's Proclamation 1156/2019</p>
+          </div>
+          <div class="service-card teal-border">
+            <span class="service-icon">💰</span>
+            <h4>Payroll Mgmt</h4>
+            <p>Accurate, timely payroll compliant with ERCA tax regulations</p>
+          </div>
+          <div class="service-card gold-border">
+            <span class="service-icon">🔒</span>
+            <h4>Manpower Supply</h4>
+            <p>Security guards, cleaners, drivers, logistics & facility staff</p>
+          </div>
+        </div>
+
+        <!-- Jobs -->
+        <!-- Departments -->
+        <div class="section-header" style="margin-top:8px">
+          <h3>Departments</h3>
+          <span class="badge-gold" id="departmentCount">0</span>
+        </div>
+        <div class="departments-grid" id="departmentList"></div>
+
+        <!-- Jobs -->
+        <div class="section-header" style="margin-top:8px">
+          <h3>Open Positions</h3>
+          <span class="badge-gold" id="listingCount">0</span>
+        </div>
+        <div class="chips-scroll" id="categoryChips"></div>
+        <div id="jobList" class="job-list"></div>
+        <div id="emptyState" class="empty-state hidden">
+          <div class="empty-icon">🔍</div>
+          <p>No jobs found</p>
+          <span>Try a different search or category</span>
+        </div>
+
+        <!-- Upload CV Banner -->
+        <div class="cv-banner" id="cvBannerHome">
+          <div class="cv-banner-text">
+            <strong>Don't see your role?</strong>
+            <p>Upload your CV and we'll match you with the right opportunity.</p>
+          </div>
+          <button class="btn-gold-sm" id="cvBannerBtn">Upload CV</button>
+        </div>
+
+      </section>
+
+      <!-- ══ JOB DETAIL PAGE ══ -->
+      <section id="pageDetail" class="page">
+        <div id="jobDetailContent"></div>
+      </section>
+
+      <!-- ══ APPLY PAGE ══ -->
+      <section id="pageApply" class="page">
+        <div class="form-header">
+          <div class="progress-bar-wrap"><div class="progress-bar" id="progressBar"></div></div>
+          <p class="step-label" id="stepLabel">Step 1 of 5</p>
+        </div>
+        <div id="formSteps"></div>
+      </section>
+
+      <!-- ══ CV UPLOAD PAGE ══ -->
+      <section id="pageUpload" class="page">
+        <div class="upload-wrap">
+          <div class="upload-hero">
+            <div class="upload-icon-wrap">📎</div>
+            <h2>Submit Your CV</h2>
+            <p>Upload your CV and documents. Our team will review your profile and reach out when a matching role opens.</p>
+          </div>
+
+          <div class="upload-form" id="uploadForm">
+
+            <div class="field">
+              <label>Full Name <span class="req">*</span></label>
+              <input type="text" id="uName" placeholder="Abebe Kebede" />
+              <div class="err-msg" id="uNameErr"></div>
+            </div>
+
+            <div class="field">
+              <label>Phone Number <span class="req">*</span></label>
+              <input type="tel" id="uPhone" placeholder="+251 911 000000" />
+              <div class="err-msg" id="uPhoneErr"></div>
+            </div>
+
+            <div class="field">
+              <label>Email Address <span class="req">*</span></label>
+              <input type="email" id="uEmail" placeholder="abebe@email.com" />
+              <div class="err-msg" id="uEmailErr"></div>
+            </div>
+
+            <div class="field">
+              <label>Job Interest / Position</label>
+              <input list="positionOptions" id="uPosition" placeholder="Select or type a position…" />
+              <datalist id="positionOptions"></datalist>
+            </div>
+
+            <div class="field">
+              <label>Attach CV</label>
+              <input type="file" id="uCvFile" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" />
+              <div class="file-preview" id="filePreview">No file selected</div>
+            </div>
+
+            <div class="field">
+              <label>Brief Introduction</label>
+              <textarea id="uBio" rows="4" placeholder="Tell us about yourself, your experience, and what you're looking for…"></textarea>
+            </div>
+
+            <div class="upload-doc-section">
+              <h3>📄 Documents to Upload</h3>
+              <p class="upload-doc-note">After submitting this form, you'll be prompted to send your documents in the bot chat.</p>
+
+              <div class="doc-checklist">
+                <label class="doc-check-item">
+                  <input type="checkbox" id="docCV" checked />
+                  <span class="doc-check-box"></span>
+                  <div>
+                    <strong>CV / Resume</strong>
+                    <p>PDF or Word document preferred</p>
+                  </div>
+                </label>
+                <label class="doc-check-item">
+                  <input type="checkbox" id="docCover" />
+                  <span class="doc-check-box"></span>
+                  <div>
+                    <strong>Cover Letter</strong>
+                    <p>Optional but recommended</p>
+                  </div>
+                </label>
+                <label class="doc-check-item">
+                  <input type="checkbox" id="docCert" />
+                  <span class="doc-check-box"></span>
+                  <div>
+                    <strong>Certificates / Credentials</strong>
+                    <p>Educational or professional certificates</p>
+                  </div>
+                </label>
+                <label class="doc-check-item">
+                  <input type="checkbox" id="docPortfolio" />
+                  <span class="doc-check-box"></span>
+                  <div>
+                    <strong>Portfolio / Work Samples</strong>
+                    <p>For creative or technical roles</p>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <button class="btn-gold full" id="btnSubmitUpload">Submit & Upload Documents →</button>
+          </div>
+
+          <!-- After submit instructions -->
+          <div class="upload-instructions hidden" id="uploadInstructions">
+            <div class="instr-check">✅</div>
+            <h3>Profile Submitted!</h3>
+            <p>Now please send your documents in this chat:</p>
+            <div class="instr-steps">
+              <div class="instr-step" id="instrCV">
+                <span class="instr-num">1</span>
+                <div><strong>Send your CV</strong><p>PDF, Word, or photo of your CV</p></div>
+              </div>
+              <div class="instr-step hidden" id="instrCover">
+                <span class="instr-num">2</span>
+                <div><strong>Send your Cover Letter</strong><p>PDF or Word document</p></div>
+              </div>
+              <div class="instr-step hidden" id="instrCert">
+                <span class="instr-num" id="instrCertNum">2</span>
+                <div><strong>Send your Certificates</strong><p>PDF, image, or scanned copy</p></div>
+              </div>
+              <div class="instr-step hidden" id="instrPortfolio">
+                <span class="instr-num" id="instrPortfolioNum">3</span>
+                <div><strong>Send your Portfolio</strong><p>PDF, ZIP, or share a link</p></div>
+              </div>
+            </div>
+            <button class="btn-gold full" id="btnDoneUpload">Done — Back to Jobs</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ SUCCESS PAGE ══ -->
+      <section id="pageSuccess" class="page">
+        <div class="success-wrap">
+          <div class="success-anim">
+            <svg width="84" height="84" viewBox="0 0 84 84" fill="none">
+              <circle cx="42" cy="42" r="42" fill="url(#sg1)"/>
+              <path class="check-path" d="M25 42l13 13 21-25" stroke="white" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <defs>
+                <linearGradient id="sg1" x1="0" y1="0" x2="84" y2="84" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#d97706"/><stop offset="1" stop-color="#0d8b8b"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <h2>Application Sent! 🎉</h2>
+          <p id="successMsg"></p>
+          <div class="success-details" id="successDetails"></div>
+          <div class="cv-reminder">
+            <span class="cv-reminder-icon">📎</span>
+            <div>
+              <strong>Next step: Upload your CV</strong>
+              <p>Go back to the bot chat and send your CV (PDF, Word, or photo) now.</p>
+            </div>
+          </div>
+          <button class="btn-gold full" id="btnBackHome">Browse More Jobs</button>
+        </div>
+      </section>
+
+      <!-- ══ ABOUT PAGE ══ -->
+      <section id="pageAbout" class="page">
+        <div class="about-wrap">
+
+          <!-- Hero -->
+          <div class="about-hero">
+            <img src="https://novahrsm.com/nova_logo0.png" alt="Nova HR SM" class="about-logo-img" onerror="this.style.display='none'" />
+            <h2>Nova HR SM</h2>
+            <p class="about-full-name">Nova HR Supply & Management PLC</p>
+            <p class="about-tagline">Strategic Human Resource Management for Sustainable Growth</p>
+          </div>
+
+          <!-- Who We Are -->
+          <div class="about-desc">
+            <p>Nova HR SM is Ethiopia's trusted HR consulting and workforce solutions company, headquartered in Addis Ababa. We partner with businesses of all sizes to source top talent, manage HR operations, ensure legal compliance, and build high-performing teams across all industries — from finance and hospitality to construction and manufacturing.</p>
+          </div>
+
+          <!-- Why Choose Us -->
+          <div class="about-cards">
+            <div class="about-card teal-border">
+              <span class="about-icon">🎯</span>
+              <h4>Right Talent, Right Fit</h4>
+              <p>We don't just fill positions — we find candidates who align with your culture, values, and long-term goals.</p>
+            </div>
+            <div class="about-card gold-border">
+              <span class="about-icon">⚖️</span>
+              <h4>100% Legal Compliance</h4>
+              <p>Full adherence to Ethiopia's Labor Proclamation No. 1156/2019 and ERCA tax regulations.</p>
+            </div>
+            <div class="about-card teal-border">
+              <span class="about-icon">⚡</span>
+              <h4>Fast & Reliable</h4>
+              <p>Rapid turnaround on placements with a rigorous screening process to ensure quality every time.</p>
+            </div>
+            <div class="about-card gold-border">
+              <span class="about-icon">🤝</span>
+              <h4>Long-Term Partnership</h4>
+              <p>We build lasting relationships with both employers and candidates — transparent, fair, and professional.</p>
+            </div>
+          </div>
+
+          <!-- What We Do -->
+          <div class="services-list">
+            <h3>What We Do</h3>
+
+            <div class="service-row teal-left">
+              <span>🎯</span>
+              <div>
+                <strong>Talent Sourcing & Recruitment</strong>
+                <p>End-to-end recruitment for permanent, contract, and temporary positions. We source, screen, interview, and place candidates across all sectors in Ethiopia.</p>
+              </div>
+            </div>
+
+            <div class="service-row gold-left">
+              <span>🏢</span>
+              <div>
+                <strong>HR Outsourcing & Workforce Management</strong>
+                <p>We manage your entire HR function — employee records, contracts, disciplinary procedures, and day-to-day HR administration — so you can focus on your core business.</p>
+              </div>
+            </div>
+
+            <div class="service-row teal-left">
+              <span>🎓</span>
+              <div>
+                <strong>Training & Development</strong>
+                <p>Customized learning and development programs for all levels — from frontline staff to senior management. We design, deliver, and measure training effectiveness.</p>
+              </div>
+            </div>
+
+            <div class="service-row gold-left">
+              <span>💰</span>
+              <div>
+                <strong>Payroll Management</strong>
+                <p>Accurate, timely, and fully compliant payroll processing including income tax (PAYE), pension contributions, and all statutory deductions per ERCA requirements.</p>
+              </div>
+            </div>
+
+            <div class="service-row teal-left">
+              <span>🔒</span>
+              <div>
+                <strong>Manpower Supply</strong>
+                <p>Deployment of trained security guards, cleaners, drivers, receptionists, logistics staff, and general laborers to client sites across Addis Ababa and beyond.</p>
+              </div>
+            </div>
+
+            <div class="service-row gold-left">
+              <span>📊</span>
+              <div>
+                <strong>Performance Management</strong>
+                <p>Design and implementation of KPI frameworks, performance appraisal systems, and employee evaluation tools that drive accountability and results.</p>
+              </div>
+            </div>
+
+            <div class="service-row teal-left">
+              <span>⚖️</span>
+              <div>
+                <strong>HR Consulting & Legal Advisory</strong>
+                <p>Expert guidance on Ethiopian labor law, employment contracts, disciplinary hearings, termination procedures, and HR policy development.</p>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Contact -->
+          <div class="contact-section">
+            <h3>Contact Us</h3>
+            <a class="contact-row" href="https://www.novahrsm.com" target="_blank" rel="noopener noreferrer">
+              <span class="contact-icon teal-icon">🌐</span>
+              <span>www.novahrsm.com</span>
+            </a>
+            <a class="contact-row" href="mailto:info@novahrsm.com">
+              <span class="contact-icon gold-icon">📧</span>
+              <span>info@novahrsm.com</span>
+            </a>
+            <a class="contact-row" href="tel:+251990087807">
+              <span class="contact-icon teal-icon">📱</span>
+              <span>+251 990 087 807</span>
+            </a>
+            <div class="contact-row">
+              <span class="contact-icon gold-icon">🕐</span>
+              <span>Mon – Fri, 08:30 – 17:30</span>
+            </div>
+            <div class="contact-row">
+              <span class="contact-icon teal-icon">📍</span>
+              <span>Ethio China Street, TAF Energies Building, Addis Ababa, Ethiopia</span>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ══ MY APPLICATIONS PAGE ══ -->
+      <section id="pageMyApps" class="page">
+        <div class="my-apps-wrap">
+          <div class="my-apps-header">
+            <h2>My Applications</h2>
+            <p>Track your submission history and status</p>
+          </div>
+          <div id="myAppsList"></div>
+          <div id="myAppsEmpty" class="empty-state hidden">
+            <div class="empty-icon">📁</div>
+            <p>No applications yet</p>
+            <span>Apply for a job or upload your CV to get started</span>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Bottom Nav -->
+    <nav class="bottom-nav">
+      <button class="nav-item active" data-page="home">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        <span>Jobs</span>
+      </button>
+      <button class="nav-item" data-page="upload">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="17 8 12 3 7 8"/>
+          <line x1="12" y1="3" x2="12" y2="15"/>
+        </svg>
+        <span>Upload CV</span>
+      </button>
+      <button class="nav-item" data-page="myapps">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="16" y1="13" x2="8" y2="13"/>
+          <line x1="16" y1="17" x2="8" y2="17"/>
+          <polyline points="10 9 9 9 8 9"/>
+        </svg>
+        <span>My Apps</span>
+      </button>
+      <button class="nav-item" data-page="about">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M12 16v-4M12 8h.01"/>
+        </svg>
+        <span>About</span>
+      </button>
+    </nav>
+
+  </div>
+
+  <div id="toast" class="toast"></div>
+  <script src="js/app.js?v=3"></script>
+</body>
+</html>
