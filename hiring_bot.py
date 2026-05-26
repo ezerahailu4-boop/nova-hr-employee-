@@ -174,7 +174,17 @@ async def post_cv_to_telegram_channel(bot, submission: dict, cv: dict) -> bool:
 # ══════════════════════════════════════════════════════════════════════════════
 
 def main_menu_kb():
-    """Main reply keyboard shown at the bottom of chat."""
+    """Main reply keyboard shown at the bottom of chat (regular users)."""
+    return ReplyKeyboardMarkup(
+        [
+            ["📋 View Jobs", "📤 Upload CV"],
+            ["📁 My Applications", "ℹ️ About Us"],
+        ],
+        resize_keyboard=True,
+    )
+
+def admin_menu_kb():
+    """Admin-only keyboard with extra Post a Job button."""
     return ReplyKeyboardMarkup(
         [
             ["📋 View Jobs", "📤 Upload CV"],
@@ -183,6 +193,9 @@ def main_menu_kb():
         ],
         resize_keyboard=True,
     )
+
+def is_admin(update: Update) -> bool:
+    return update.effective_user.id == ADMIN_CHAT_ID
 
 def back_kb():
     return ReplyKeyboardMarkup([["🔙 Back"]], resize_keyboard=True)
@@ -316,6 +329,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         except ValueError:
             pass
 
+    kb = admin_menu_kb() if is_admin(update) else main_menu_kb()
     await update.message.reply_text(
         f"👋 Welcome, *{name}*!\n\n"
         f"*{COMPANY_NAME}*\n"
@@ -323,7 +337,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "We connect top talent with leading organizations across Ethiopia.\n\n"
         "What would you like to do today?",
         parse_mode="Markdown",
-        reply_markup=main_menu_kb(),
+        reply_markup=kb,
     )
     return MAIN_MENU
 
@@ -510,6 +524,12 @@ async def main_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return MAIN_MENU
 
     elif text == "🏢 Post a Job":
+        if not is_admin(update):
+            await update.message.reply_text(
+                "⛔ This option is not available.",
+                reply_markup=main_menu_kb(),
+            )
+            return MAIN_MENU
         await update.message.reply_text(
             "🔐 *Employer Access*\n\nPlease enter the employer password to post a job:",
             parse_mode="Markdown",
@@ -1045,14 +1065,30 @@ async def confirm_submission(update: Update, context: ContextTypes.DEFAULT_TYPE)
     return MAIN_MENU
 
 # ══════════════════════════════════════════════════════════════════════════════
+# ── /admin ────────────────────────────────────────────────────────────────────
+# ══════════════════════════════════════════════════════════════════════════════
+
+async def admin_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if not is_admin(update):
+        await update.message.reply_text("⛔ You are not authorized to use this command.")
+        return MAIN_MENU
+    await update.message.reply_text(
+        "🔐 *Admin Panel*\n\nWelcome back! You have full access.",
+        parse_mode="Markdown",
+        reply_markup=admin_menu_kb(),
+    )
+    return MAIN_MENU
+
+# ══════════════════════════════════════════════════════════════════════════════
 # ── /cancel ───────────────────────────────────────────────────────────────────
 # ══════════════════════════════════════════════════════════════════════════════
 
 async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
     context.user_data.clear()
+    kb = admin_menu_kb() if is_admin(update) else main_menu_kb()
     await update.message.reply_text(
         "👋 Cancelled. What would you like to do?",
-        reply_markup=main_menu_kb(),
+        reply_markup=kb,
     )
     return MAIN_MENU
 
@@ -1069,6 +1105,7 @@ def main():
     conv = ConversationHandler(
         entry_points=[
             CommandHandler("start", start),
+            CommandHandler("admin", admin_command),
             CallbackQueryHandler(inline_button_handler, pattern=r"^apply_\d+$"),
         ],
         states={
@@ -1104,6 +1141,7 @@ def main():
         fallbacks=[
             CommandHandler("cancel", cancel),
             CommandHandler("start", start),
+            CommandHandler("admin", admin_command),
         ],
         allow_reentry=True,
     )
