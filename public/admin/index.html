@@ -3,182 +3,384 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Nova HR — Admin</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<title>Nova HR — Admin Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet"/>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#0a0a0f;
-  --surface:#13131a;
-  --surface2:#1c1c26;
-  --border:#2a2a3a;
-  --accent:#6c63ff;
-  --accent2:#ff6584;
-  --green:#00d68f;
-  --yellow:#ffaa00;
-  --red:#ff4757;
-  --text:#e8e8f0;
-  --muted:#666680;
-  --font:'DM Sans',sans-serif;
-  --mono:'DM Mono',monospace;
+  --bg:#060608;--surface:#0e0e14;--surface2:#161620;--surface3:#1e1e2c;
+  --border:#252535;--border2:#30304a;
+  --accent:#5b6af7;--accent2:#7b5ea7;--accent3:#3dd9a4;
+  --amber:#f59e0b;--red:#f43f5e;--rose:#fb7185;
+  --text:#eeeef5;--sub:#9999b8;--muted:#55556a;
+  --font:'DM Sans',sans-serif;--head:'Syne',sans-serif;--mono:'JetBrains Mono',monospace;
+  --r:12px;--r2:8px;--r3:18px;
 }
 body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
 
-/* ── LOGIN ── */
+/* ═══════════════ LOGIN ═══════════════ */
 #login{display:flex;align-items:center;justify-content:center;min-height:100vh;
-  background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(108,99,255,.15),transparent),
-             radial-gradient(ellipse 60% 40% at 80% 80%,rgba(255,101,132,.08),transparent),
+  background:radial-gradient(ellipse 70% 50% at 30% 20%,rgba(91,106,247,.12),transparent),
+             radial-gradient(ellipse 50% 60% at 80% 70%,rgba(123,94,167,.1),transparent),
+             radial-gradient(ellipse 40% 30% at 60% 10%,rgba(61,217,164,.06),transparent),
              var(--bg)}
-.login-card{width:380px;padding:48px 40px;background:var(--surface);border:1px solid var(--border);
-  border-radius:20px;box-shadow:0 32px 80px rgba(0,0,0,.6)}
-.login-logo{display:flex;align-items:center;gap:12px;margin-bottom:32px}
-.login-logo .icon{width:44px;height:44px;background:linear-gradient(135deg,var(--accent),var(--accent2));
-  border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px}
-.login-logo h1{font-size:18px;font-weight:700;letter-spacing:-.3px}
-.login-logo p{font-size:12px;color:var(--muted);margin-top:1px}
-.login-label{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;
-  letter-spacing:.8px;margin-bottom:8px;display:block}
-.login-input{width:100%;background:var(--bg);border:1.5px solid var(--border);color:var(--text);
-  padding:14px 16px;border-radius:10px;font-size:15px;font-family:var(--font);
-  outline:none;transition:border-color .2s;margin-bottom:16px}
-.login-input:focus{border-color:var(--accent)}
-.login-btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--accent),#8b5cf6);
-  color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;
-  font-family:var(--font);transition:opacity .2s,transform .1s;margin-top:4px}
-.login-btn:hover{opacity:.9}
-.login-btn:active{transform:scale(.99)}
-.login-err{background:rgba(255,71,87,.1);border:1px solid rgba(255,71,87,.3);color:var(--red);
-  padding:10px 14px;border-radius:8px;font-size:13px;margin-top:12px;display:none}
+.lc{width:420px;padding:52px 44px;background:var(--surface);border:1px solid var(--border);
+  border-radius:24px;box-shadow:0 40px 100px rgba(0,0,0,.7),0 0 0 1px rgba(91,106,247,.08)}
+.lc-brand{display:flex;align-items:center;gap:14px;margin-bottom:40px}
+.lc-mark{width:48px;height:48px;border-radius:14px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  display:grid;place-items:center;font-size:22px;flex-shrink:0;
+  box-shadow:0 8px 24px rgba(91,106,247,.4)}
+.lc-brand h1{font-family:var(--head);font-size:20px;font-weight:800;letter-spacing:-.4px}
+.lc-brand p{font-size:11px;color:var(--sub);margin-top:2px;font-family:var(--mono)}
+.lc-label{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:1.2px;
+  text-transform:uppercase;display:block;margin-bottom:10px}
+.lc-input{width:100%;background:var(--bg);border:1.5px solid var(--border2);
+  color:var(--text);padding:15px 18px;border-radius:var(--r);font-size:15px;
+  font-family:var(--font);outline:none;transition:border-color .2s,box-shadow .2s;
+  margin-bottom:20px}
+.lc-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(91,106,247,.15)}
+.lc-btn{width:100%;padding:15px;background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:#fff;border:none;border-radius:var(--r);font-size:15px;font-weight:700;
+  font-family:var(--head);letter-spacing:.4px;cursor:pointer;
+  transition:opacity .2s,transform .15s,box-shadow .2s;
+  box-shadow:0 8px 24px rgba(91,106,247,.3)}
+.lc-btn:hover{opacity:.92;box-shadow:0 12px 32px rgba(91,106,247,.4)}
+.lc-btn:active{transform:scale(.99)}
+.lc-err{background:rgba(244,63,94,.08);border:1px solid rgba(244,63,94,.25);
+  color:var(--rose);padding:12px 16px;border-radius:var(--r2);font-size:13px;
+  margin-top:14px;display:none}
 
-/* ── MAIN ── */
-#main{display:none;min-height:100vh}
-header{background:var(--surface);border-bottom:1px solid var(--border);
-  padding:0 32px;height:60px;display:flex;align-items:center;justify-content:space-between;
-  position:sticky;top:0;z-index:100}
-.header-left{display:flex;align-items:center;gap:16px}
-.header-logo{width:32px;height:32px;background:linear-gradient(135deg,var(--accent),var(--accent2));
-  border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px}
-.header-title{font-size:15px;font-weight:600}
-.header-badge{background:rgba(108,99,255,.15);color:var(--accent);border:1px solid rgba(108,99,255,.3);
-  padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
-.header-right{display:flex;align-items:center;gap:12px}
-.header-time{font-size:12px;color:var(--muted);font-family:var(--mono)}
-.logout-btn{background:var(--surface2);border:1px solid var(--border);color:var(--text);
-  padding:7px 16px;border-radius:8px;font-size:13px;cursor:pointer;font-family:var(--font);
-  transition:all .2s}
-.logout-btn:hover{border-color:var(--red);color:var(--red)}
+/* ═══════════════ LAYOUT ═══════════════ */
+#main{display:none;min-height:100vh;flex-direction:row}
 
-.container{max-width:1280px;margin:0 auto;padding:28px 32px}
+/* SIDEBAR */
+.sidebar{width:240px;background:var(--surface);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:50;
+  transition:transform .3s}
+.sb-brand{padding:22px 20px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:12px}
+.sb-mark{width:36px;height:36px;border-radius:10px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  display:grid;place-items:center;font-size:16px;flex-shrink:0}
+.sb-brand h2{font-family:var(--head);font-size:16px;font-weight:800;letter-spacing:-.3px}
+.sb-brand span{font-size:10px;color:var(--muted);font-family:var(--mono)}
+.sb-nav{flex:1;padding:12px 10px;overflow-y:auto}
+.sb-section{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:1.2px;
+  text-transform:uppercase;padding:14px 10px 6px}
+.nav-item{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:var(--r2);
+  cursor:pointer;font-size:13.5px;font-weight:500;color:var(--sub);
+  transition:all .2s;margin-bottom:2px;border:1px solid transparent;white-space:nowrap}
+.nav-item:hover{background:var(--surface2);color:var(--text)}
+.nav-item.active{background:rgba(91,106,247,.12);color:var(--accent);
+  border-color:rgba(91,106,247,.2)}
+.nav-item .ni-icon{font-size:16px;width:22px;text-align:center;flex-shrink:0}
+.nav-badge{margin-left:auto;background:var(--accent);color:#fff;
+  font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;font-family:var(--mono)}
+.sb-bottom{padding:14px 10px;border-top:1px solid var(--border)}
+.sb-user{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--r2);
+  background:var(--surface2)}
+.sb-avatar{width:32px;height:32px;border-radius:8px;
+  background:linear-gradient(135deg,var(--accent3),var(--accent));
+  display:grid;place-items:center;font-size:14px;color:#fff;font-weight:700;flex-shrink:0}
+.sb-user-info{flex:1;min-width:0}
+.sb-user-name{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-user-role{font-size:10px;color:var(--muted);font-family:var(--mono)}
+.sb-logout{background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;
+  padding:4px;border-radius:4px;transition:color .2s;flex-shrink:0}
+.sb-logout:hover{color:var(--red)}
 
-/* STATS */
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
-.stat{background:var(--surface);border:1px solid var(--border);border-radius:14px;
-  padding:20px 24px;transition:border-color .2s}
-.stat:hover{border-color:var(--accent)}
-.stat-num{font-size:32px;font-weight:700;line-height:1;margin-bottom:4px}
-.stat-label{font-size:12px;color:var(--muted);font-weight:500}
-.stat-num.blue{color:var(--accent)}
-.stat-num.yellow{color:var(--yellow)}
-.stat-num.green{color:var(--green)}
-.stat-num.red{color:var(--red)}
+/* CONTENT */
+.content{margin-left:240px;flex:1;display:flex;flex-direction:column;min-height:100vh}
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);
+  padding:0 28px;height:62px;display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:40}
+.topbar-left h1{font-family:var(--head);font-size:18px;font-weight:800;letter-spacing:-.3px}
+.topbar-left p{font-size:12px;color:var(--sub);margin-top:1px}
+.topbar-right{display:flex;align-items:center;gap:14px}
+.tb-clock{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.tb-dot{width:8px;height:8px;border-radius:50%;background:var(--accent3);
+  box-shadow:0 0 8px var(--accent3);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.notif-btn{position:relative;background:var(--surface2);border:1px solid var(--border);
+  color:var(--sub);width:36px;height:36px;border-radius:var(--r2);
+  display:grid;place-items:center;cursor:pointer;font-size:15px;transition:all .2s}
+.notif-btn:hover{border-color:var(--accent);color:var(--accent)}
+.notif-dot{position:absolute;top:6px;right:6px;width:7px;height:7px;
+  border-radius:50%;background:var(--red);border:2px solid var(--surface)}
+
+.page{display:none;flex:1;padding:28px}
+.page.active{display:block}
+
+/* ═══════════════ STATS GRID ═══════════════ */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r3);
+  padding:22px 24px;position:relative;overflow:hidden;transition:border-color .2s,transform .2s}
+.stat-card:hover{border-color:var(--border2);transform:translateY(-1px)}
+.stat-card::before{content:'';position:absolute;inset:0;opacity:.04;border-radius:var(--r3)}
+.stat-card.c-blue::before{background:var(--accent)}
+.stat-card.c-amber::before{background:var(--amber)}
+.stat-card.c-green::before{background:var(--accent3)}
+.stat-card.c-red::before{background:var(--red)}
+.stat-icon{font-size:22px;margin-bottom:12px;display:block}
+.stat-num{font-family:var(--head);font-size:34px;font-weight:800;line-height:1;margin-bottom:4px}
+.stat-num.c-blue{color:var(--accent)}
+.stat-num.c-amber{color:var(--amber)}
+.stat-num.c-green{color:var(--accent3)}
+.stat-num.c-red{color:var(--red)}
+.stat-label{font-size:12px;color:var(--sub);font-weight:500}
+.stat-delta{position:absolute;top:20px;right:20px;font-size:11px;font-family:var(--mono);
+  color:var(--muted)}
+
+/* ═══════════════ CARDS & TABLES ═══════════════ */
+.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.section-title{font-family:var(--head);font-size:16px;font-weight:700}
+.section-sub{font-size:12px;color:var(--muted);margin-top:2px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r3);overflow:hidden}
+.card-head{padding:18px 22px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between}
+.card-head h3{font-family:var(--head);font-size:14px;font-weight:700}
+.card-count{font-size:12px;color:var(--muted);font-family:var(--mono)}
 
 /* TOOLBAR */
-.toolbar{display:flex;gap:12px;align-items:center;margin-bottom:20px;flex-wrap:wrap}
-.search-wrap{flex:1;min-width:220px;position:relative}
-.search-wrap input{width:100%;background:var(--surface);border:1.5px solid var(--border);
-  color:var(--text);padding:10px 14px 10px 38px;border-radius:10px;font-size:14px;
+.toolbar{display:flex;gap:10px;align-items:center;padding:14px 22px;
+  border-bottom:1px solid var(--border);flex-wrap:wrap}
+.search-box{flex:1;min-width:200px;position:relative}
+.search-box input{width:100%;background:var(--bg);border:1.5px solid var(--border2);
+  color:var(--text);padding:9px 14px 9px 36px;border-radius:var(--r2);font-size:13px;
   font-family:var(--font);outline:none;transition:border-color .2s}
-.search-wrap input:focus{border-color:var(--accent)}
-.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px}
-select{background:var(--surface);border:1.5px solid var(--border);color:var(--text);
-  padding:10px 14px;border-radius:10px;font-size:13px;font-family:var(--font);
+.search-box input:focus{border-color:var(--accent)}
+.search-box .si{position:absolute;left:12px;top:50%;transform:translateY(-50%);
+  color:var(--muted);font-size:13px;pointer-events:none}
+.filter-sel{background:var(--bg);border:1.5px solid var(--border2);color:var(--text);
+  padding:9px 12px;border-radius:var(--r2);font-size:13px;font-family:var(--font);
   outline:none;cursor:pointer;transition:border-color .2s}
-select:focus{border-color:var(--accent)}
-.refresh-btn{background:var(--surface2);border:1.5px solid var(--border);color:var(--text);
-  padding:10px 18px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;
-  font-family:var(--font);transition:all .2s;display:flex;align-items:center;gap:6px}
-.refresh-btn:hover{border-color:var(--accent);color:var(--accent)}
+.filter-sel:focus{border-color:var(--accent)}
+.icon-btn{background:var(--surface2);border:1.5px solid var(--border);color:var(--sub);
+  padding:9px 14px;border-radius:var(--r2);font-size:13px;font-weight:600;cursor:pointer;
+  font-family:var(--font);transition:all .2s;display:flex;align-items:center;gap:6px;white-space:nowrap}
+.icon-btn:hover{border-color:var(--accent);color:var(--accent)}
+.icon-btn.primary{background:rgba(91,106,247,.12);border-color:rgba(91,106,247,.3);
+  color:var(--accent)}
+.icon-btn.primary:hover{background:rgba(91,106,247,.2)}
 
 /* TABLE */
-.table-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden}
-.table-header{padding:18px 24px;border-bottom:1px solid var(--border);
-  display:flex;align-items:center;justify-content:space-between}
-.table-header h2{font-size:14px;font-weight:600}
-.table-count{font-size:12px;color:var(--muted)}
 table{width:100%;border-collapse:collapse}
-th{padding:12px 20px;text-align:left;font-size:11px;font-weight:600;color:var(--muted);
-  text-transform:uppercase;letter-spacing:.6px;background:var(--surface2);white-space:nowrap}
-td{padding:14px 20px;font-size:13px;border-top:1px solid var(--border);vertical-align:middle}
-tr:hover td{background:rgba(108,99,255,.04)}
+th{padding:11px 18px;text-align:left;font-size:11px;font-weight:700;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.8px;background:var(--surface2);white-space:nowrap}
+td{padding:14px 18px;font-size:13px;border-top:1px solid var(--border);vertical-align:middle}
+tr:hover td{background:rgba(91,106,247,.03)}
 
-.badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;
-  font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.4px}
-.badge::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor}
-.badge-pending{background:rgba(255,170,0,.1);color:var(--yellow);border:1px solid rgba(255,170,0,.2)}
-.badge-accepted{background:rgba(0,214,143,.1);color:var(--green);border:1px solid rgba(0,214,143,.2)}
-.badge-rejected{background:rgba(255,71,87,.1);color:var(--red);border:1px solid rgba(255,71,87,.2)}
+/* BADGES */
+.badge{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;
+  border-radius:20px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap}
+.badge::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0}
+.b-pending{background:rgba(245,158,11,.1);color:var(--amber);border:1px solid rgba(245,158,11,.25)}
+.b-accepted{background:rgba(61,217,164,.1);color:var(--accent3);border:1px solid rgba(61,217,164,.25)}
+.b-rejected{background:rgba(244,63,94,.1);color:var(--rose);border:1px solid rgba(244,63,94,.25)}
+.b-active{background:rgba(61,217,164,.1);color:var(--accent3);border:1px solid rgba(61,217,164,.25)}
+.b-expired{background:rgba(245,158,11,.1);color:var(--amber);border:1px solid rgba(245,158,11,.25)}
+.b-full{background:rgba(244,63,94,.1);color:var(--rose);border:1px solid rgba(244,63,94,.25)}
 
-.actions{display:flex;gap:6px;flex-wrap:wrap}
-.btn{padding:6px 12px;border-radius:7px;font-size:12px;font-weight:600;border:1px solid transparent;
+/* ACTION BUTTONS */
+.acts{display:flex;gap:5px;flex-wrap:wrap}
+.btn{padding:5px 11px;border-radius:6px;font-size:11.5px;font-weight:600;border:1px solid transparent;
   cursor:pointer;font-family:var(--font);transition:all .15s;white-space:nowrap}
-.btn-view{background:rgba(108,99,255,.1);color:var(--accent);border-color:rgba(108,99,255,.2)}
-.btn-view:hover{background:rgba(108,99,255,.2)}
-.btn-cv{background:rgba(0,214,143,.1);color:var(--green);border-color:rgba(0,214,143,.2)}
-.btn-cv:hover{background:rgba(0,214,143,.2)}
-.btn-accept{background:rgba(0,214,143,.1);color:var(--green);border-color:rgba(0,214,143,.2)}
-.btn-accept:hover{background:rgba(0,214,143,.25)}
-.btn-reject{background:rgba(255,71,87,.1);color:var(--red);border-color:rgba(255,71,87,.2)}
-.btn-reject:hover{background:rgba(255,71,87,.2)}
+.b-view{background:rgba(91,106,247,.1);color:var(--accent);border-color:rgba(91,106,247,.2)}
+.b-view:hover{background:rgba(91,106,247,.2)}
+.b-cv{background:rgba(61,217,164,.1);color:var(--accent3);border-color:rgba(61,217,164,.2)}
+.b-cv:hover{background:rgba(61,217,164,.2)}
+.b-ok{background:rgba(61,217,164,.1);color:var(--accent3);border-color:rgba(61,217,164,.2)}
+.b-ok:hover{background:rgba(61,217,164,.25)}
+.b-no{background:rgba(244,63,94,.08);color:var(--rose);border-color:rgba(244,63,94,.2)}
+.b-no:hover{background:rgba(244,63,94,.18)}
+.b-edit{background:rgba(245,158,11,.1);color:var(--amber);border-color:rgba(245,158,11,.2)}
+.b-edit:hover{background:rgba(245,158,11,.2)}
+.b-del{background:rgba(244,63,94,.08);color:var(--rose);border-color:rgba(244,63,94,.15)}
+.b-del:hover{background:rgba(244,63,94,.2)}
+.b-msg{background:rgba(123,94,167,.1);color:#b992f5;border-color:rgba(123,94,167,.2)}
+.b-msg:hover{background:rgba(123,94,167,.2)}
 
-.name-cell{font-weight:500}
-.username-cell{font-size:11px;color:var(--muted);font-family:var(--mono);margin-top:2px}
-.empty-state{text-align:center;padding:60px;color:var(--muted)}
-.empty-state .icon{font-size:40px;margin-bottom:12px}
-.loading{text-align:center;padding:60px;color:var(--muted)}
+/* EMPTY / LOADING */
+.empty{text-align:center;padding:60px;color:var(--muted)}
+.empty .ei{font-size:36px;margin-bottom:12px}
+.loading-row{text-align:center;padding:60px;color:var(--muted);font-size:13px}
 
-/* MODAL */
-.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;
-  align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+/* NAME CELL */
+.nc-name{font-weight:600;font-size:13.5px}
+.nc-sub{font-size:11px;color:var(--muted);font-family:var(--mono);margin-top:2px}
+
+/* JOB CARD in list */
+.job-icon-cell{width:40px;height:40px;border-radius:10px;
+  display:grid;place-items:center;font-size:18px;flex-shrink:0}
+
+/* ═══════════════ MODAL ═══════════════ */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);
+  z-index:200;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
 .overlay.open{display:flex}
-.modal{background:var(--surface);border:1px solid var(--border);border-radius:20px;
-  width:560px;max-width:90vw;max-height:85vh;overflow-y:auto;
-  box-shadow:0 40px 100px rgba(0,0,0,.8)}
-.modal-head{padding:24px 28px;border-bottom:1px solid var(--border);
-  display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;
-  background:var(--surface)}
-.modal-head h2{font-size:16px;font-weight:700}
-.modal-close{background:var(--surface2);border:1px solid var(--border);color:var(--muted);
+.modal{background:var(--surface);border:1px solid var(--border2);border-radius:22px;
+  width:600px;max-width:92vw;max-height:88vh;overflow-y:auto;
+  box-shadow:0 50px 120px rgba(0,0,0,.9)}
+.modal-lg{width:720px}
+.modal-head{padding:24px 28px 20px;border-bottom:1px solid var(--border);
+  display:flex;align-items:flex-start;justify-content:space-between;
+  position:sticky;top:0;background:var(--surface);z-index:5}
+.modal-head h2{font-family:var(--head);font-size:18px;font-weight:800;letter-spacing:-.3px}
+.modal-head p{font-size:12px;color:var(--muted);margin-top:3px}
+.modal-x{background:var(--surface2);border:1px solid var(--border);color:var(--muted);
   width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:16px;
-  display:flex;align-items:center;justify-content:center;transition:all .2s}
-.modal-close:hover{border-color:var(--red);color:var(--red)}
-.modal-body{padding:28px}
-.modal-row{display:flex;gap:12px;margin-bottom:14px;font-size:13px}
-.modal-key{color:var(--muted);font-weight:500;min-width:120px;font-size:12px;padding-top:1px}
-.modal-val{color:var(--text);flex:1;line-height:1.5}
-.modal-divider{border:none;border-top:1px solid var(--border);margin:20px 0}
-.modal-actions{display:flex;gap:10px;flex-wrap:wrap}
-.modal-btn{padding:10px 20px;border-radius:10px;font-size:13px;font-weight:600;
-  border:none;cursor:pointer;font-family:var(--font);transition:all .2s}
-.modal-btn-cv{background:linear-gradient(135deg,var(--accent),#8b5cf6);color:#fff}
-.modal-btn-accept{background:rgba(0,214,143,.15);color:var(--green);border:1px solid rgba(0,214,143,.3)}
-.modal-btn-accept:hover{background:rgba(0,214,143,.25)}
-.modal-btn-reject{background:rgba(255,71,87,.1);color:var(--red);border:1px solid rgba(255,71,87,.2)}
-.modal-btn-reject:hover{background:rgba(255,71,87,.2)}
+  display:grid;place-items:center;transition:all .2s;flex-shrink:0;margin-left:14px}
+.modal-x:hover{border-color:var(--red);color:var(--red)}
+.modal-body{padding:26px 28px}
+.mrow{display:flex;gap:14px;margin-bottom:13px;font-size:13px;align-items:flex-start}
+.mk{color:var(--sub);font-weight:500;width:130px;flex-shrink:0;font-size:12px;padding-top:1px}
+.mv{color:var(--text);flex:1;line-height:1.6;word-break:break-word}
+.mdiv{border:none;border-top:1px solid var(--border);margin:20px 0}
+.macts{display:flex;gap:10px;flex-wrap:wrap}
+.mbtn{padding:11px 22px;border-radius:10px;font-size:13px;font-weight:700;
+  border:none;cursor:pointer;font-family:var(--head);transition:all .2s;letter-spacing:.2px}
+.mbtn-cv{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;
+  box-shadow:0 4px 16px rgba(91,106,247,.3)}
+.mbtn-ok{background:rgba(61,217,164,.12);color:var(--accent3);border:1.5px solid rgba(61,217,164,.3)}
+.mbtn-ok:hover{background:rgba(61,217,164,.22)}
+.mbtn-no{background:rgba(244,63,94,.08);color:var(--rose);border:1.5px solid rgba(244,63,94,.2)}
+.mbtn-no:hover{background:rgba(244,63,94,.18)}
+.mbtn-msg{background:rgba(123,94,167,.12);color:#b992f5;border:1.5px solid rgba(123,94,167,.25)}
+.mbtn-msg:hover{background:rgba(123,94,167,.22)}
+
+/* JOB FORM */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-group{display:flex;flex-direction:column;gap:7px}
+.form-group.full{grid-column:1/-1}
+.form-label{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.8px;text-transform:uppercase}
+.form-input,.form-select,.form-textarea{background:var(--bg);border:1.5px solid var(--border2);
+  color:var(--text);padding:11px 14px;border-radius:var(--r2);font-size:13.5px;
+  font-family:var(--font);outline:none;transition:border-color .2s,box-shadow .2s;width:100%}
+.form-input:focus,.form-select:focus,.form-textarea:focus{
+  border-color:var(--accent);box-shadow:0 0 0 3px rgba(91,106,247,.12)}
+.form-textarea{resize:vertical;min-height:90px;line-height:1.5}
+.form-select option{background:var(--surface2)}
+.req-list{display:flex;flex-direction:column;gap:8px}
+.req-item{display:flex;gap:8px;align-items:center}
+.req-item input{flex:1}
+.req-rm{background:rgba(244,63,94,.08);border:1px solid rgba(244,63,94,.2);
+  color:var(--rose);width:30px;height:30px;border-radius:6px;cursor:pointer;
+  font-size:14px;display:grid;place-items:center;flex-shrink:0;transition:all .2s}
+.req-rm:hover{background:rgba(244,63,94,.2)}
+.add-req{background:var(--surface2);border:1.5px dashed var(--border2);color:var(--sub);
+  padding:8px;border-radius:var(--r2);font-size:12px;cursor:pointer;
+  font-family:var(--font);transition:all .2s;width:100%;margin-top:4px}
+.add-req:hover{border-color:var(--accent);color:var(--accent)}
+.save-btn{background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:#fff;border:none;padding:13px 28px;border-radius:var(--r);
+  font-size:14px;font-weight:700;font-family:var(--head);cursor:pointer;
+  transition:opacity .2s,transform .15s;box-shadow:0 6px 20px rgba(91,106,247,.3)}
+.save-btn:hover{opacity:.9;box-shadow:0 10px 28px rgba(91,106,247,.4)}
+.save-btn:active{transform:scale(.98)}
+
+/* ICON PICKER */
+.icon-grid{display:flex;flex-wrap:wrap;gap:8px;max-height:120px;overflow-y:auto;
+  padding:12px;background:var(--bg);border:1.5px solid var(--border2);border-radius:var(--r2)}
+.ig-opt{width:36px;height:36px;border-radius:8px;border:1.5px solid transparent;
+  cursor:pointer;display:grid;place-items:center;font-size:18px;transition:all .2s;background:var(--surface2)}
+.ig-opt:hover{border-color:var(--border2)}
+.ig-opt.sel{border-color:var(--accent);background:rgba(91,106,247,.12)}
+
+/* INTERVIEW MODAL */
+.intv-slots{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
+.intv-slot{background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--r);
+  padding:14px 18px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:space-between}
+.intv-slot:hover,.intv-slot.sel{border-color:var(--accent);background:rgba(91,106,247,.08)}
+.intv-slot.sel .intv-check{opacity:1}
+.intv-check{opacity:0;color:var(--accent);font-size:18px;transition:opacity .2s}
 
 /* TOAST */
-.toast{position:fixed;bottom:28px;right:28px;background:var(--surface2);border:1px solid var(--border);
-  color:var(--text);padding:12px 20px;border-radius:12px;font-size:13px;font-weight:500;
-  z-index:999;opacity:0;transform:translateY(8px);transition:all .3s;pointer-events:none;
-  box-shadow:0 8px 30px rgba(0,0,0,.4)}
+.toast{position:fixed;bottom:26px;right:26px;background:var(--surface2);
+  border:1px solid var(--border);color:var(--text);padding:13px 22px;
+  border-radius:var(--r);font-size:13px;font-weight:500;z-index:999;
+  opacity:0;transform:translateY(10px);transition:all .3s;pointer-events:none;
+  box-shadow:0 12px 36px rgba(0,0,0,.5);max-width:320px}
 .toast.show{opacity:1;transform:translateY(0)}
-.toast.success{border-color:rgba(0,214,143,.4);color:var(--green)}
-.toast.error{border-color:rgba(255,71,87,.4);color:var(--red)}
+.toast.success{border-color:rgba(61,217,164,.4);color:var(--accent3)}
+.toast.error{border-color:rgba(244,63,94,.35);color:var(--rose)}
+.toast.info{border-color:rgba(91,106,247,.35);color:var(--accent)}
 
-@media(max-width:768px){
-  .stats{grid-template-columns:repeat(2,1fr)}
-  .container{padding:16px}
-  header{padding:0 16px}
-  th:nth-child(3),th:nth-child(4),td:nth-child(3),td:nth-child(4){display:none}
+/* INTERVIEW BADGE */
+.intv-badge{font-size:11px;font-family:var(--mono);color:#b992f5;
+  background:rgba(123,94,167,.1);border:1px solid rgba(123,94,167,.2);
+  padding:3px 8px;border-radius:20px;display:inline-block}
+
+/* RECENT ACTIVITY */
+.activity-list{padding:6px 0}
+.act-item{display:flex;align-items:center;gap:14px;padding:13px 22px;
+  border-bottom:1px solid var(--border);transition:background .2s}
+.act-item:last-child{border-bottom:none}
+.act-item:hover{background:rgba(91,106,247,.03)}
+.act-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.act-dot.blue{background:var(--accent)}
+.act-dot.green{background:var(--accent3)}
+.act-dot.red{background:var(--red)}
+.act-dot.amber{background:var(--amber)}
+.act-body{flex:1;min-width:0}
+.act-title{font-size:13px;font-weight:500}
+.act-meta{font-size:11px;color:var(--muted);font-family:var(--mono);margin-top:2px}
+.act-time{font-size:11px;color:var(--muted);font-family:var(--mono);flex-shrink:0}
+
+/* JOBS GRID (overview cards) */
+.jobs-mini{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px;padding:22px}
+.jcard{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);
+  padding:18px;transition:all .2s;cursor:default}
+.jcard:hover{border-color:var(--border2);transform:translateY(-1px)}
+.jcard-top{display:flex;align-items:flex-start;gap:12px;margin-bottom:12px}
+.jcard-icon{width:42px;height:42px;border-radius:10px;
+  display:grid;place-items:center;font-size:20px;flex-shrink:0}
+.jcard-title{font-weight:700;font-size:13.5px;line-height:1.3}
+.jcard-cat{font-size:11px;color:var(--muted);margin-top:2px}
+.jcard-meta{display:flex;flex-wrap:wrap;gap:6px}
+.jcard-tag{font-size:10.5px;background:var(--surface);border:1px solid var(--border);
+  color:var(--sub);padding:3px 9px;border-radius:20px}
+.jcard-acts{display:flex;gap:6px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
+.jcard-acts .btn{flex:1;text-align:center}
+
+/* ═══ DASHBOARD OVERVIEW ═══ */
+.dash-grid{display:grid;grid-template-columns:1fr 340px;gap:20px;margin-top:0}
+.dash-main{}
+.dash-side{}
+
+/* PIPELINE */
+.pipeline{display:flex;gap:0}
+.pl-col{flex:1;min-width:0}
+.pl-head{padding:12px 16px;background:var(--surface2);border-bottom:1px solid var(--border);
+  font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;
+  display:flex;align-items:center;justify-content:space-between}
+.pl-head .count{background:var(--border);color:var(--sub);padding:1px 7px;
+  border-radius:10px;font-size:11px}
+.pl-col:not(:last-child) .pl-head,.pl-col:not(:last-child) .pl-body{border-right:1px solid var(--border)}
+.pl-body{padding:10px 10px;min-height:120px;max-height:300px;overflow-y:auto}
+.pl-item{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r2);
+  padding:10px 12px;margin-bottom:8px;transition:border-color .2s;cursor:pointer}
+.pl-item:hover{border-color:var(--border2)}
+.pl-item-name{font-size:12.5px;font-weight:600;margin-bottom:3px}
+.pl-item-pos{font-size:11px;color:var(--muted)}
+.pl-item-date{font-size:10px;color:var(--muted);font-family:var(--mono);margin-top:4px}
+
+/* QUICK ACTIONS */
+.qa-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:18px}
+.qa-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);
+  padding:16px;cursor:pointer;transition:all .2s;text-align:center}
+.qa-card:hover{border-color:var(--accent);background:rgba(91,106,247,.06);transform:translateY(-1px)}
+.qa-icon{font-size:24px;margin-bottom:8px}
+.qa-label{font-size:12px;font-weight:600;color:var(--text)}
+.qa-sub{font-size:11px;color:var(--muted);margin-top:2px}
+
+@media(max-width:900px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .content{margin-left:0}
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .dash-grid{grid-template-columns:1fr}
+  .form-grid{grid-template-columns:1fr}
+  th:nth-child(4),td:nth-child(4),th:nth-child(5),td:nth-child(5){display:none}
 }
 </style>
 </head>
@@ -186,318 +388,1060 @@ tr:hover td{background:rgba(108,99,255,.04)}
 
 <!-- LOGIN -->
 <div id="login">
-  <div class="login-card">
-    <div class="login-logo">
-      <div class="icon">🏢</div>
-      <div>
-        <h1>Nova HR</h1>
-        <p>Admin Dashboard</p>
-      </div>
+  <div class="lc">
+    <div class="lc-brand">
+      <div class="lc-mark">🏢</div>
+      <div><h1>Nova HR</h1><p>ADMIN PANEL</p></div>
     </div>
-    <label class="login-label">Admin Password</label>
-    <input class="login-input" type="password" id="pass" placeholder="Enter your password" autocomplete="current-password"/>
-    <button class="login-btn" onclick="doLogin()">Sign In →</button>
-    <div class="login-err" id="err"></div>
+    <label class="lc-label">Admin Password</label>
+    <input class="lc-input" type="password" id="pass" placeholder="Enter password…" autocomplete="current-password"/>
+    <button class="lc-btn" onclick="doLogin()">Sign In →</button>
+    <div class="lc-err" id="err"></div>
   </div>
 </div>
 
-<!-- MAIN -->
-<div id="main">
-  <header>
-    <div class="header-left">
-      <div class="header-logo">🏢</div>
-      <span class="header-title">Nova HR Admin</span>
-      <span class="header-badge">Dashboard</span>
+<!-- MAIN APP -->
+<div id="main" style="display:none;flex-direction:row">
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sb-brand">
+      <div class="sb-mark">🏢</div>
+      <div><h2>Nova HR</h2><span>Admin Panel</span></div>
     </div>
-    <div class="header-right">
-      <span class="header-time" id="clock"></span>
-      <button class="logout-btn" onclick="logout()">Sign Out</button>
-    </div>
-  </header>
-  <div class="container">
-    <div class="stats">
-      <div class="stat"><div class="stat-num blue" id="s-total">—</div><div class="stat-label">Total Applications</div></div>
-      <div class="stat"><div class="stat-num yellow" id="s-pending">—</div><div class="stat-label">Pending Review</div></div>
-      <div class="stat"><div class="stat-num green" id="s-accepted">—</div><div class="stat-label">Accepted</div></div>
-      <div class="stat"><div class="stat-num red" id="s-rejected">—</div><div class="stat-label">Rejected</div></div>
-    </div>
-    <div class="toolbar">
-      <div class="search-wrap">
-        <span class="search-icon">🔍</span>
-        <input type="text" id="search" placeholder="Search name, email, position..." oninput="filter()"/>
+    <div class="sb-nav">
+      <div class="sb-section">Overview</div>
+      <div class="nav-item active" data-page="dashboard" onclick="goto('dashboard',this)">
+        <span class="ni-icon">📊</span> Dashboard
       </div>
-      <select id="fstatus" onchange="filter()">
-        <option value="">All Statuses</option>
-        <option value="pending">Pending</option>
-        <option value="accepted">Accepted</option>
-        <option value="rejected">Rejected</option>
-      </select>
-      <select id="fpos" onchange="filter()"><option value="">All Positions</option></select>
-      <button class="refresh-btn" onclick="loadData()">↻ Refresh</button>
-    </div>
-    <div class="table-card">
-      <div class="table-header">
-        <h2>Applications</h2>
-        <span class="table-count" id="tcount">Loading...</span>
+      <div class="sb-section">Recruitment</div>
+      <div class="nav-item" data-page="applications" onclick="goto('applications',this)">
+        <span class="ni-icon">📋</span> Applications
+        <span class="nav-badge" id="nb-pending">0</span>
       </div>
-      <table>
-        <thead>
-          <tr>
-            <th>Applicant</th>
-            <th>Position</th>
-            <th>Contact</th>
-            <th>Background</th>
-            <th>Status</th>
-            <th>Date</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody id="tbody">
-          <tr><td colspan="7" class="loading">Loading applications...</td></tr>
-        </tbody>
-      </table>
+      <div class="nav-item" data-page="jobs" onclick="goto('jobs',this)">
+        <span class="ni-icon">💼</span> Job Postings
+      </div>
+      <div class="nav-item" data-page="pipeline" onclick="goto('pipeline',this)">
+        <span class="ni-icon">🔄</span> Pipeline
+      </div>
+      <div class="sb-section">Management</div>
+      <div class="nav-item" data-page="interview" onclick="goto('interview',this)">
+        <span class="ni-icon">📅</span> Interviews
+      </div>
+      <div class="nav-item" data-page="messages" onclick="goto('messages',this)">
+        <span class="ni-icon">💬</span> Bot Messages
+      </div>
+      <div class="sb-section">System</div>
+      <div class="nav-item" data-page="security" onclick="goto('security',this)">
+        <span class="ni-icon">🔐</span> Security Log
+      </div>
+    </div>
+    <div class="sb-bottom">
+      <div class="sb-user">
+        <div class="sb-avatar">A</div>
+        <div class="sb-user-info">
+          <div class="sb-user-name">Administrator</div>
+          <div class="sb-user-role">nova-hr-admin</div>
+        </div>
+        <button class="sb-logout" onclick="logout()" title="Sign Out">⏻</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- CONTENT -->
+  <div class="content">
+    <div class="topbar">
+      <div class="topbar-left">
+        <h1 id="page-title">Dashboard</h1>
+        <p id="page-sub">Overview of Nova HR operations</p>
+      </div>
+      <div class="topbar-right">
+        <div class="tb-dot"></div>
+        <span class="tb-clock" id="clock">--:--:--</span>
+        <div class="notif-btn" title="Pending applications">
+          🔔<span class="notif-dot" id="notif-dot" style="display:none"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ DASHBOARD PAGE ═══ -->
+    <div class="page active" id="pg-dashboard">
+      <div id="pg-inner" style="padding:0">
+        <div style="padding:28px 28px 0">
+          <div class="stats-grid">
+            <div class="stat-card c-blue"><span class="stat-icon">📝</span>
+              <div class="stat-num c-blue" id="s-total">—</div>
+              <div class="stat-label">Total Applications</div>
+              <div class="stat-delta" id="s-today-delta"></div>
+            </div>
+            <div class="stat-card c-amber"><span class="stat-icon">⏳</span>
+              <div class="stat-num c-amber" id="s-pending">—</div>
+              <div class="stat-label">Pending Review</div>
+            </div>
+            <div class="stat-card c-green"><span class="stat-icon">✅</span>
+              <div class="stat-num c-green" id="s-accepted">—</div>
+              <div class="stat-label">Accepted</div>
+            </div>
+            <div class="stat-card c-red"><span class="stat-icon">❌</span>
+              <div class="stat-num c-red" id="s-rejected">—</div>
+              <div class="stat-label">Rejected</div>
+            </div>
+          </div>
+        </div>
+        <div class="dash-grid" style="padding:0 28px 28px">
+          <div class="dash-main">
+            <!-- PIPELINE MINI -->
+            <div class="card" style="margin-bottom:20px">
+              <div class="card-head"><h3>🔄 Application Pipeline</h3>
+                <button class="icon-btn" onclick="goto('pipeline',null)">See All →</button>
+              </div>
+              <div class="pipeline" id="dash-pipeline">
+                <div class="pl-col"><div class="pl-head">Pending <span class="count" id="pl-p">0</span></div><div class="pl-body" id="pl-body-p"></div></div>
+                <div class="pl-col"><div class="pl-head">Accepted <span class="count" id="pl-a">0</span></div><div class="pl-body" id="pl-body-a"></div></div>
+                <div class="pl-col"><div class="pl-head">Rejected <span class="count" id="pl-r">0</span></div><div class="pl-body" id="pl-body-r"></div></div>
+              </div>
+            </div>
+            <!-- RECENT APPS -->
+            <div class="card">
+              <div class="card-head"><h3>🕐 Recent Applications</h3>
+                <button class="icon-btn" onclick="goto('applications',null)">View All →</button>
+              </div>
+              <div id="recent-apps-list"></div>
+            </div>
+          </div>
+          <div class="dash-side">
+            <!-- QUICK ACTIONS -->
+            <div class="card" style="margin-bottom:20px">
+              <div class="card-head"><h3>⚡ Quick Actions</h3></div>
+              <div class="qa-grid">
+                <div class="qa-card" onclick="openJobForm()">
+                  <div class="qa-icon">➕</div>
+                  <div class="qa-label">Post Job</div>
+                  <div class="qa-sub">Create listing</div>
+                </div>
+                <div class="qa-card" onclick="goto('applications',null)">
+                  <div class="qa-icon">📋</div>
+                  <div class="qa-label">Applications</div>
+                  <div class="qa-sub">Review & respond</div>
+                </div>
+                <div class="qa-card" onclick="goto('interview',null)">
+                  <div class="qa-icon">📅</div>
+                  <div class="qa-label">Interviews</div>
+                  <div class="qa-sub">Schedule calls</div>
+                </div>
+                <div class="qa-card" onclick="goto('messages',null)">
+                  <div class="qa-icon">💬</div>
+                  <div class="qa-label">Bot Notify</div>
+                  <div class="qa-sub">Send updates</div>
+                </div>
+              </div>
+            </div>
+            <!-- JOBS SUMMARY -->
+            <div class="card">
+              <div class="card-head"><h3>💼 Active Jobs</h3>
+                <button class="icon-btn" onclick="goto('jobs',null)">Manage →</button>
+              </div>
+              <div id="jobs-summary-list" style="padding:10px 16px"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ APPLICATIONS PAGE ═══ -->
+    <div class="page" id="pg-applications">
+      <div class="card">
+        <div class="card-head">
+          <div><h3>📋 Applications</h3></div>
+          <span class="card-count" id="apps-count"></span>
+        </div>
+        <div class="toolbar">
+          <div class="search-box">
+            <span class="si">🔍</span>
+            <input type="text" id="app-search" placeholder="Search name, email, position…" oninput="filterApps()"/>
+          </div>
+          <select class="filter-sel" id="app-status" onchange="filterApps()">
+            <option value="">All Statuses</option>
+            <option value="pending">Pending</option>
+            <option value="accepted">Accepted</option>
+            <option value="rejected">Rejected</option>
+          </select>
+          <select class="filter-sel" id="app-pos" onchange="filterApps()">
+            <option value="">All Positions</option>
+          </select>
+          <select class="filter-sel" id="app-src" onchange="filterApps()">
+            <option value="">All Sources</option>
+            <option value="telegram_bot">Telegram Bot</option>
+            <option value="webapp">Web App</option>
+          </select>
+          <button class="icon-btn" onclick="loadAll()">↻ Refresh</button>
+        </div>
+        <div style="overflow-x:auto">
+          <table>
+            <thead>
+              <tr>
+                <th>Applicant</th>
+                <th>Position</th>
+                <th>Contact</th>
+                <th>Background</th>
+                <th>Source</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="apps-tbody">
+              <tr><td colspan="8" class="loading-row">Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ JOBS PAGE ═══ -->
+    <div class="page" id="pg-jobs">
+      <div class="section-head">
+        <div><div class="section-title">💼 Job Postings</div><div class="section-sub">Manage open positions</div></div>
+        <button class="icon-btn primary" onclick="openJobForm()">＋ Post New Job</button>
+      </div>
+      <div class="toolbar" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r3) var(--r3) 0 0;margin-bottom:0">
+        <div class="search-box">
+          <span class="si">🔍</span>
+          <input type="text" id="job-search" placeholder="Search jobs…" oninput="filterJobs()"/>
+        </div>
+        <select class="filter-sel" id="job-cat" onchange="filterJobs()">
+          <option value="">All Categories</option>
+        </select>
+      </div>
+      <div class="card" style="border-radius:0 0 var(--r3) var(--r3);border-top:none;overflow:hidden">
+        <div style="overflow-x:auto">
+          <table>
+            <thead>
+              <tr>
+                <th></th>
+                <th>Job Title</th>
+                <th>Category</th>
+                <th>Salary</th>
+                <th>Type</th>
+                <th>Deadline</th>
+                <th>Applicants</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="jobs-tbody">
+              <tr><td colspan="8" class="loading-row">Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ PIPELINE PAGE ═══ -->
+    <div class="page" id="pg-pipeline">
+      <div class="section-head">
+        <div><div class="section-title">🔄 Recruitment Pipeline</div>
+          <div class="section-sub">Kanban view of all applicants</div></div>
+      </div>
+      <div class="card">
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);min-height:500px">
+          <div style="border-right:1px solid var(--border)">
+            <div class="pl-head" style="padding:16px 20px">⏳ Pending <span class="count" id="kp">0</span></div>
+            <div id="k-pending" style="padding:14px;min-height:400px;max-height:600px;overflow-y:auto"></div>
+          </div>
+          <div style="border-right:1px solid var(--border)">
+            <div class="pl-head" style="padding:16px 20px">✅ Accepted <span class="count" id="ka">0</span></div>
+            <div id="k-accepted" style="padding:14px;min-height:400px;max-height:600px;overflow-y:auto"></div>
+          </div>
+          <div>
+            <div class="pl-head" style="padding:16px 20px">❌ Rejected <span class="count" id="kr">0</span></div>
+            <div id="k-rejected" style="padding:14px;min-height:400px;max-height:600px;overflow-y:auto"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ INTERVIEWS PAGE ═══ -->
+    <div class="page" id="pg-interview">
+      <div class="section-head">
+        <div><div class="section-title">📅 Interview Schedule</div>
+          <div class="section-sub">Accepted applicants with interview slots</div></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h3>Scheduled Interviews</h3>
+          <span class="card-count" id="intv-count"></span>
+        </div>
+        <div style="overflow-x:auto">
+          <table>
+            <thead>
+              <tr><th>Applicant</th><th>Position</th><th>Contact</th><th>Interview Time</th><th>Source</th><th>Actions</th></tr>
+            </thead>
+            <tbody id="intv-tbody"><tr><td colspan="6" class="loading-row">Loading…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ BOT MESSAGES PAGE ═══ -->
+    <div class="page" id="pg-messages">
+      <div class="section-head">
+        <div><div class="section-title">💬 Bot Messages</div>
+          <div class="section-sub">Send Telegram notifications to applicants</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+        <div class="card">
+          <div class="card-head"><h3>📢 Broadcast to All Pending</h3></div>
+          <div style="padding:22px;display:flex;flex-direction:column;gap:14px">
+            <div class="form-group">
+              <label class="form-label">Message</label>
+              <textarea class="form-textarea" id="bc-msg" rows="5" placeholder="Type your message to all pending applicants…"></textarea>
+            </div>
+            <button class="save-btn" onclick="sendBroadcast()" style="width:fit-content">📤 Send Broadcast</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><h3>🎯 Message Single Applicant</h3></div>
+          <div style="padding:22px;display:flex;flex-direction:column;gap:14px">
+            <div class="form-group">
+              <label class="form-label">Select Applicant</label>
+              <select class="form-select" id="msg-target"></select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Message</label>
+              <textarea class="form-textarea" id="single-msg" rows="4" placeholder="Type your message…"></textarea>
+            </div>
+            <button class="save-btn" onclick="sendSingleMsg()" style="width:fit-content">💬 Send Message</button>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:20px">
+        <div class="card-head"><h3>📋 Telegram Applicants</h3>
+          <span class="card-count" id="tg-count"></span>
+        </div>
+        <div style="overflow-x:auto">
+          <table>
+            <thead>
+              <tr><th>Applicant</th><th>Position</th><th>Telegram</th><th>Status</th><th>Actions</th></tr>
+            </thead>
+            <tbody id="tg-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ SECURITY PAGE ═══ -->
+    <div class="page" id="pg-security">
+      <div class="section-head">
+        <div><div class="section-title">🔐 Security Log</div>
+          <div class="section-sub">Login attempts and access history</div></div>
+      </div>
+      <div class="stats-grid" style="margin-bottom:20px;grid-template-columns:repeat(3,1fr)">
+        <div class="stat-card c-blue"><span class="stat-icon">🔑</span>
+          <div class="stat-num c-blue" id="sec-total">—</div>
+          <div class="stat-label">Total Attempts</div>
+        </div>
+        <div class="stat-card c-green"><span class="stat-icon">✅</span>
+          <div class="stat-num c-green" id="sec-ok">—</div>
+          <div class="stat-label">Successful</div>
+        </div>
+        <div class="stat-card c-red"><span class="stat-icon">🚫</span>
+          <div class="stat-num c-red" id="sec-fail">—</div>
+          <div class="stat-label">Failed</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h3>Login Attempts</h3></div>
+        <div style="overflow-x:auto">
+          <table>
+            <thead>
+              <tr><th>IP Address</th><th>Time</th><th>Result</th></tr>
+            </thead>
+            <tbody id="sec-tbody"><tr><td colspan="3" class="loading-row">Loading…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<!-- ═══ APPLICATION DETAIL MODAL ═══ -->
+<div class="overlay" id="app-modal" onclick="if(event.target===this)closeModal('app-modal')">
+  <div class="modal modal-lg">
+    <div class="modal-head">
+      <div><h2 id="am-title">Application</h2><p id="am-sub"></p></div>
+      <button class="modal-x" onclick="closeModal('app-modal')">✕</button>
+    </div>
+    <div class="modal-body" id="am-body"></div>
+  </div>
+</div>
+
+<!-- ═══ JOB FORM MODAL ═══ -->
+<div class="overlay" id="job-modal" onclick="if(event.target===this)closeModal('job-modal')">
+  <div class="modal modal-lg">
+    <div class="modal-head">
+      <div><h2 id="jm-title">Post New Job</h2><p>Fill in the job details below</p></div>
+      <button class="modal-x" onclick="closeModal('job-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="jf-id"/>
+      <div class="form-grid">
+        <div class="form-group"><label class="form-label">Job Title *</label>
+          <input class="form-input" id="jf-title" placeholder="e.g. HR Manager"/></div>
+        <div class="form-group"><label class="form-label">Category</label>
+          <input class="form-input" id="jf-cat" placeholder="e.g. Human Resources"/></div>
+        <div class="form-group"><label class="form-label">Salary Range</label>
+          <input class="form-input" id="jf-salary" placeholder="e.g. 20,000 – 30,000 ETB"/></div>
+        <div class="form-group"><label class="form-label">Location</label>
+          <input class="form-input" id="jf-loc" placeholder="e.g. Addis Ababa"/></div>
+        <div class="form-group"><label class="form-label">Job Type</label>
+          <select class="form-select" id="jf-type">
+            <option>Full-time</option><option>Part-time</option>
+            <option>Contract</option><option>Freelance</option></select></div>
+        <div class="form-group"><label class="form-label">Deadline</label>
+          <input class="form-input" type="date" id="jf-deadline"/></div>
+        <div class="form-group full"><label class="form-label">Description *</label>
+          <textarea class="form-textarea" id="jf-desc" rows="4" placeholder="Describe the role…"></textarea></div>
+        <div class="form-group full">
+          <label class="form-label">Icon</label>
+          <div class="icon-grid" id="icon-grid"></div>
+          <input type="hidden" id="jf-icon" value="💼"/>
+        </div>
+        <div class="form-group full">
+          <label class="form-label">Requirements</label>
+          <div class="req-list" id="req-list"></div>
+          <button type="button" class="add-req" onclick="addReq()">＋ Add Requirement</button>
+        </div>
+      </div>
+      <div style="margin-top:20px;display:flex;gap:12px;align-items:center">
+        <button class="save-btn" onclick="saveJob()">💾 Save Job</button>
+        <button class="icon-btn" onclick="closeModal('job-modal')">Cancel</button>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- MODAL -->
-<div class="overlay" id="overlay" onclick="if(event.target===this)closeModal()">
+<!-- ═══ INTERVIEW MODAL ═══ -->
+<div class="overlay" id="intv-modal" onclick="if(event.target===this)closeModal('intv-modal')">
   <div class="modal">
     <div class="modal-head">
-      <h2 id="modal-title">Application</h2>
-      <button class="modal-close" onclick="closeModal()">✕</button>
+      <div><h2>📅 Schedule Interview</h2><p id="intv-applicant-name">Applicant</p></div>
+      <button class="modal-x" onclick="closeModal('intv-modal')">✕</button>
     </div>
-    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-body">
+      <input type="hidden" id="intv-sub-id"/>
+      <div class="form-group" style="margin-bottom:16px">
+        <label class="form-label">Date & Time</label>
+        <input class="form-input" type="datetime-local" id="intv-dt"/>
+      </div>
+      <div class="form-group" style="margin-bottom:20px">
+        <label class="form-label">Notes (optional)</label>
+        <input class="form-input" id="intv-notes" placeholder="e.g. Zoom link, office floor…"/>
+      </div>
+      <div style="display:flex;gap:10px">
+        <button class="save-btn" onclick="confirmInterview()">📅 Confirm & Notify</button>
+        <button class="icon-btn" onclick="closeModal('intv-modal')">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MESSAGE MODAL ═══ -->
+<div class="overlay" id="msg-modal" onclick="if(event.target===this)closeModal('msg-modal')">
+  <div class="modal">
+    <div class="modal-head">
+      <div><h2>💬 Send Telegram Message</h2><p id="msg-to-name"></p></div>
+      <button class="modal-x" onclick="closeModal('msg-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="msg-sub-id"/>
+      <div class="form-group" style="margin-bottom:20px">
+        <label class="form-label">Message</label>
+        <textarea class="form-textarea" id="msg-text" rows="5" placeholder="Type your message…"></textarea>
+      </div>
+      <div style="display:flex;gap:10px">
+        <button class="save-btn" onclick="confirmSendMsg()">📤 Send</button>
+        <button class="icon-btn" onclick="closeModal('msg-modal')">Cancel</button>
+      </div>
+    </div>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-let token = localStorage.getItem('nhr_token') || '';
-let subs = [];
+/* ══════════════════════════════════════════════════════
+   STATE
+══════════════════════════════════════════════════════ */
+let TOKEN = localStorage.getItem('nhr_tkn') || '';
+let SUBS = [], JOBS = [];
+const ICONS = ['💼','📊','🔍','👔','💰','🎓','📋','🚗','🔒','🏗️','🎯','📱','🏥','⚙️','🛒','🍽️','✈️','🔧','📦','🤝'];
 
-// ── AUTH ──────────────────────────────────────────────────────────
-async function doLogin() {
-  const pass = document.getElementById('pass').value.trim();
-  if (!pass) return;
-  const err = document.getElementById('err');
-  err.style.display = 'none';
-  try {
-    const r = await fetch('/api/admin/login', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({password: pass})
-    });
-    const d = await r.json();
-    if (d.success && d.token) {
-      token = d.token;
-      localStorage.setItem('nhr_token', token);
-      showMain();
-    } else {
-      err.textContent = d.error || 'Incorrect password';
-      err.style.display = 'block';
-    }
-  } catch(e) {
-    err.textContent = 'Connection error. Try again.';
-    err.style.display = 'block';
+/* ══════════════════════════════════════════════════════
+   AUTH
+══════════════════════════════════════════════════════ */
+async function doLogin(){
+  const pw=document.getElementById('pass').value.trim();
+  const err=document.getElementById('err');
+  err.style.display='none';
+  if(!pw) return;
+  try{
+    const r=await fetch('/api/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:pw})});
+    const d=await r.json();
+    if(d.success&&d.token){TOKEN=d.token;localStorage.setItem('nhr_tkn',TOKEN);showMain();}
+    else{err.textContent=d.error||'Incorrect password';err.style.display='block';}
+  }catch(e){err.textContent='Connection error';err.style.display='block';}
+}
+function logout(){TOKEN='';localStorage.removeItem('nhr_tkn');SUBS=[];JOBS=[];
+  document.getElementById('main').style.display='none';
+  document.getElementById('login').style.display='flex';}
+function ah(){return{'Content-Type':'application/json','Authorization':'Bearer '+TOKEN};}
+
+/* ══════════════════════════════════════════════════════
+   INIT
+══════════════════════════════════════════════════════ */
+function showMain(){
+  document.getElementById('login').style.display='none';
+  document.getElementById('main').style.display='flex';
+  setInterval(tick,1000);tick();
+  buildIconGrid();loadAll();
+}
+function tick(){
+  document.getElementById('clock').textContent=new Date().toLocaleString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false,month:'short',day:'numeric'});
+}
+
+/* ══════════════════════════════════════════════════════
+   NAVIGATION
+══════════════════════════════════════════════════════ */
+const PAGE_TITLES = {
+  dashboard:['Dashboard','Overview of Nova HR operations'],
+  applications:['Applications','All submissions from bot & web'],
+  jobs:['Job Postings','Manage open positions'],
+  pipeline:['Pipeline','Kanban view of applicants'],
+  interview:['Interviews','Schedule & track interviews'],
+  messages:['Bot Messages','Send Telegram notifications'],
+  security:['Security Log','Login attempts & access history']
+};
+function goto(page, el){
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  if(el) el.classList.add('active');
+  else document.querySelector(`[data-page="${page}"]`)?.classList.add('active');
+  document.getElementById('pg-'+page).classList.add('active');
+  const [t,s]=PAGE_TITLES[page]||[page,''];
+  document.getElementById('page-title').textContent=t;
+  document.getElementById('page-sub').textContent=s;
+  if(page==='security') loadSecurity();
+  if(page==='interview') renderInterviews();
+  if(page==='messages') renderMessages();
+}
+
+/* ══════════════════════════════════════════════════════
+   LOAD DATA
+══════════════════════════════════════════════════════ */
+async function loadAll(){
+  try{
+    const[sr,jr]=await Promise.all([
+      fetch('/api/submissions',{headers:ah()}),
+      fetch('/api/jobs',{headers:ah()})
+    ]);
+    if(sr.status===401){logout();return;}
+    const sd=await sr.json();
+    const jd=await jr.json();
+    SUBS=(sd.submissions||sd.data||sd||[]);
+    JOBS=Array.isArray(jd)?jd:(jd.jobs||[]);
+    updateStats();renderAll();
+  }catch(e){toast('Failed to load data: '+e.message,'error');}
+}
+function updateStats(){
+  const p=SUBS.filter(s=>!s.status||s.status==='pending').length;
+  document.getElementById('s-total').textContent=SUBS.length;
+  document.getElementById('s-pending').textContent=p;
+  document.getElementById('s-accepted').textContent=SUBS.filter(s=>s.status==='accepted').length;
+  document.getElementById('s-rejected').textContent=SUBS.filter(s=>s.status==='rejected').length;
+  document.getElementById('nb-pending').textContent=p;
+  const dot=document.getElementById('notif-dot');
+  dot.style.display=p>0?'block':'none';
+  const today=SUBS.filter(s=>{const d=(s.submitted_at||s.timestamp||'').substring(0,10);return d===new Date().toISOString().substring(0,10);}).length;
+  document.getElementById('s-today-delta').textContent=today>0?'+'+today+' today':'';
+}
+function renderAll(){
+  renderApps();renderJobsTable();renderPipeline();renderDashboard();
+  fillPositionFilter();fillJobCatFilter();fillMsgSelect();
+  renderInterviews();renderMessages();
+}
+
+/* ══════════════════════════════════════════════════════
+   APPLICATIONS TABLE
+══════════════════════════════════════════════════════ */
+function filterApps(){
+  const q=(document.getElementById('app-search').value||'').toLowerCase();
+  const st=document.getElementById('app-status').value;
+  const pos=document.getElementById('app-pos').value;
+  const src=document.getElementById('app-src').value;
+  const filtered=SUBS.filter(s=>{
+    const mq=!q||[s.full_name,s.email,s.position,s.phone,s.telegram_username].some(v=>v&&v.toLowerCase().includes(q));
+    const ms=!st||(s.status||'pending')===st;
+    const mp=!pos||s.position===pos;
+    const mr=!src||s.source===src;
+    return mq&&ms&&mp&&mr;
+  });
+  renderApps(filtered);
+}
+function renderApps(list){
+  list=list||SUBS;
+  document.getElementById('apps-count').textContent=list.length+' result'+(list.length!==1?'s':'');
+  if(!list.length){
+    document.getElementById('apps-tbody').innerHTML='<tr><td colspan="8" class="empty"><div class="ei">📭</div>No applications</td></tr>';return;
   }
-}
-
-function logout() {
-  token = '';
-  localStorage.removeItem('nhr_token');
-  subs = [];
-  document.getElementById('main').style.display = 'none';
-  document.getElementById('login').style.display = 'flex';
-}
-
-function authH() {
-  return {'Content-Type':'application/json','Authorization':'Bearer '+token};
-}
-
-// ── INIT ──────────────────────────────────────────────────────────
-function showMain() {
-  document.getElementById('login').style.display = 'none';
-  document.getElementById('main').style.display = 'block';
-  tick(); setInterval(tick, 1000);
-  loadData();
-}
-
-function tick() {
-  document.getElementById('clock').textContent = new Date().toLocaleString('en-US',
-    {hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false,
-     month:'short',day:'numeric'});
-}
-
-// ── LOAD DATA ─────────────────────────────────────────────────────
-async function loadData() {
-  document.getElementById('tbody').innerHTML =
-    '<tr><td colspan="7" class="loading">Loading...</td></tr>';
-  try {
-    const r = await fetch('/api/submissions', {headers: authH()});
-    if (r.status === 401) { logout(); return; }
-    const d = await r.json();
-    subs = d.submissions || d.data || [];
-    updateStats();
-    fillPositions();
-    render(subs);
-  } catch(e) {
-    document.getElementById('tbody').innerHTML =
-      '<tr><td colspan="7" class="empty-state"><div class="icon">⚠️</div>Failed to load: '+e.message+'</td></tr>';
-  }
-}
-
-function updateStats() {
-  document.getElementById('s-total').textContent = subs.length;
-  document.getElementById('s-pending').textContent = subs.filter(s=>s.status==='pending'||!s.status).length;
-  document.getElementById('s-accepted').textContent = subs.filter(s=>s.status==='accepted').length;
-  document.getElementById('s-rejected').textContent = subs.filter(s=>s.status==='rejected').length;
-}
-
-function fillPositions() {
-  const pos = [...new Set(subs.map(s=>s.position).filter(Boolean))];
-  const sel = document.getElementById('fpos');
-  sel.innerHTML = '<option value="">All Positions</option>' +
-    pos.map(p=>`<option value="${esc(p)}">${esc(p)}</option>`).join('');
-}
-
-// ── RENDER ────────────────────────────────────────────────────────
-function render(list) {
-  document.getElementById('tcount').textContent = list.length + ' application' + (list.length!==1?'s':'');
-  if (!list.length) {
-    document.getElementById('tbody').innerHTML =
-      '<tr><td colspan="7" class="empty-state"><div class="icon">📭</div>No applications found</td></tr>';
-    return;
-  }
-  document.getElementById('tbody').innerHTML = list.map(s => {
-    const st = s.status || 'pending';
-    const date = (s.submitted_at||s.timestamp||'').substring(0,10);
-    const cvBtn = s.cv_path
-      ? `<button class="btn btn-cv" onclick="dlCV('${s.id}','${esc(s.cv_path)}')">📄 CV</button>`
-      : '';
-    return `<tr>
-      <td><div class="name-cell">${esc(s.full_name||'—')}</div>
-          <div class="username-cell">@${esc(s.telegram_username||'—')}</div></td>
+  document.getElementById('apps-tbody').innerHTML=list.map(s=>{
+    const st=s.status||'pending';
+    const date=(s.submitted_at||s.timestamp||'').substring(0,10);
+    const src=s.source==='telegram_bot'?'<span style="color:#b992f5;font-size:11px">🤖 Bot</span>':'<span style="color:var(--accent3);font-size:11px">🌐 Web</span>';
+    const cv=s.cv_path?`<button class="btn b-cv" onclick="dlCV('${s.id}','${esc(s.cv_path)}')">📄 CV</button>`:'';
+    const intv=s.interview?`<div class="intv-badge" style="margin-top:3px">📅 ${esc(s.interview)}</div>`:'';
+    return`<tr>
+      <td><div class="nc-name">${esc(s.full_name||'—')}</div>
+          <div class="nc-sub">@${esc(s.telegram_username||'—')}</div>${intv}</td>
       <td>${esc(s.position||'—')}</td>
-      <td><div>${esc(s.email||'—')}</div><div style="color:var(--muted);font-size:11px">${esc(s.phone||'—')}</div></td>
-      <td><div>${esc(s.education||'—')}</div><div style="color:var(--muted);font-size:11px">${esc(s.experience||'—')} · ${esc(s.gender||'—')}</div></td>
-      <td><span class="badge badge-${st}">${st}</span></td>
-      <td style="color:var(--muted);font-family:var(--mono);font-size:12px">${date}</td>
-      <td><div class="actions">
-        <button class="btn btn-view" onclick="viewSub('${s.id}')">👁 View</button>
-        ${cvBtn}
-        <button class="btn btn-accept" onclick="setStatus('${s.id}','accepted')">✓</button>
-        <button class="btn btn-reject" onclick="setStatus('${s.id}','rejected')">✕</button>
+      <td><div>${esc(s.email||'—')}</div><div style="color:var(--muted);font-size:11px;margin-top:2px">${esc(s.phone||'—')}</div></td>
+      <td><div>${esc(s.education||'—')}</div><div style="color:var(--muted);font-size:11px;margin-top:2px">${esc(s.experience||'—')}${s.gender?' · '+esc(s.gender):''}</div></td>
+      <td>${src}</td>
+      <td><span class="badge b-${st}">${st}</span></td>
+      <td style="color:var(--muted);font-family:var(--mono);font-size:11px">${date}</td>
+      <td><div class="acts">
+        <button class="btn b-view" onclick="viewApp('${s.id}')">👁 View</button>
+        ${cv}
+        <button class="btn b-ok" onclick="setStatus('${s.id}','accepted')" title="Accept">✓</button>
+        <button class="btn b-no" onclick="setStatus('${s.id}','rejected')" title="Reject">✕</button>
+        <button class="btn b-msg" onclick="openMsgModal('${s.id}')" title="Message">💬</button>
+        <button class="btn b-edit" onclick="openIntvModal('${s.id}')" title="Schedule Interview">📅</button>
       </div></td>
     </tr>`;
   }).join('');
 }
-
-// ── FILTER ────────────────────────────────────────────────────────
-function filter() {
-  const q = document.getElementById('search').value.toLowerCase();
-  const st = document.getElementById('fstatus').value;
-  const pos = document.getElementById('fpos').value;
-  render(subs.filter(s => {
-    const mq = !q || [s.full_name,s.email,s.position,s.phone,s.telegram_username]
-      .some(v=>v&&v.toLowerCase().includes(q));
-    const ms = !st || (s.status||'pending')===st;
-    const mp = !pos || s.position===pos;
-    return mq && ms && mp;
-  }));
+function fillPositionFilter(){
+  const pos=[...new Set(SUBS.map(s=>s.position).filter(Boolean))];
+  const sel=document.getElementById('app-pos');
+  sel.innerHTML='<option value="">All Positions</option>'+pos.map(p=>`<option>${esc(p)}</option>`).join('');
 }
 
-// ── CV DOWNLOAD ───────────────────────────────────────────────────
-async function dlCV(id, path) {
-  toast('Generating download link...');
-  try {
-    const r = await fetch(`/api/submissions/${id}?action=cv_url`, {headers: authH()});
-    const d = await r.json();
-    if (d.cv_url) { window.open(d.cv_url,'_blank'); toast('✓ CV opened','success'); }
-    else if (path.startsWith('http')) { window.open(path,'_blank'); toast('✓ CV opened','success'); }
-    else toast('CV not available','error');
-  } catch(e) {
-    if (path.startsWith('http')) window.open(path,'_blank');
+/* ══════════════════════════════════════════════════════
+   JOBS TABLE
+══════════════════════════════════════════════════════ */
+function filterJobs(){
+  const q=(document.getElementById('job-search').value||'').toLowerCase();
+  const cat=document.getElementById('job-cat').value;
+  renderJobsTable(JOBS.filter(j=>{
+    const mq=!q||(j.title||'').toLowerCase().includes(q)||(j.category||'').toLowerCase().includes(q);
+    const mc=!cat||j.category===cat;
+    return mq&&mc;
+  }));
+}
+function renderJobsTable(list){
+  list=list||JOBS;
+  if(!list.length){document.getElementById('jobs-tbody').innerHTML='<tr><td colspan="8" class="empty"><div class="ei">💼</div>No jobs posted yet</td></tr>';return;}
+  document.getElementById('jobs-tbody').innerHTML=list.map(j=>{
+    const appCount=SUBS.filter(s=>s.position===j.title).length;
+    const bg=j.color||'#5b6af7';
+    const deadline=j.deadline||'';
+    const isExpired=deadline&&new Date(deadline)<new Date();
+    const dStatus=isExpired?'<span class="badge b-expired">Expired</span>':'<span class="badge b-active">Active</span>';
+    return`<tr>
+      <td><div class="job-icon-cell" style="background:${bg}22;border:1px solid ${bg}44">${j.icon||'💼'}</div></td>
+      <td><div class="nc-name">${esc(j.title||'—')}</div><div class="nc-sub">${esc(j.type||'')} · ${esc(j.location||'')}</div></td>
+      <td><span style="font-size:12px;color:var(--sub)">${esc(j.category||'—')}</span></td>
+      <td style="font-size:12px;font-family:var(--mono);color:var(--sub)">${esc(j.salary||'—')}</td>
+      <td><span class="badge" style="background:${bg}18;color:${bg};border:1px solid ${bg}33">${esc(j.type||'Full-time')}</span></td>
+      <td style="font-size:12px;font-family:var(--mono)">${deadline}${dStatus?'<br>':''}${dStatus}</td>
+      <td><span style="font-family:var(--mono);font-size:12px;color:var(--accent)">${appCount} applicant${appCount!==1?'s':''}</span></td>
+      <td><div class="acts">
+        <button class="btn b-edit" onclick="openJobForm(${j.id})">✏️ Edit</button>
+        <button class="btn b-del" onclick="deleteJob(${j.id},'${esc(j.title)}')">🗑 Delete</button>
+      </div></td>
+    </tr>`;
+  }).join('');
+}
+function fillJobCatFilter(){
+  const cats=[...new Set(JOBS.map(j=>j.category).filter(Boolean))];
+  const sel=document.getElementById('job-cat');
+  sel.innerHTML='<option value="">All Categories</option>'+cats.map(c=>`<option>${esc(c)}</option>`).join('');
+}
+
+/* ══════════════════════════════════════════════════════
+   PIPELINE
+══════════════════════════════════════════════════════ */
+function renderPipeline(){
+  ['pending','accepted','rejected'].forEach(st=>{
+    const list=SUBS.filter(s=>(s.status||'pending')===st);
+    const ids={pending:'k-pending',accepted:'k-accepted',rejected:'k-rejected'};
+    const cnts={pending:'kp',accepted:'ka',rejected:'kr'};
+    document.getElementById(cnts[st]).textContent=list.length;
+    document.getElementById(ids[st]).innerHTML=list.length?list.map(s=>`
+      <div class="pl-item" onclick="viewApp('${s.id}')">
+        <div class="pl-item-name">${esc(s.full_name||'—')}</div>
+        <div class="pl-item-pos">${esc(s.position||'—')}</div>
+        <div class="pl-item-date">${(s.submitted_at||s.timestamp||'').substring(0,10)}</div>
+      </div>`).join(''):'<div class="empty" style="padding:30px;font-size:12px">Empty</div>';
+  });
+  // dash pipeline
+  ['p','a','r'].forEach((k,i)=>{
+    const st=['pending','accepted','rejected'][i];
+    const list=SUBS.filter(s=>(s.status||'pending')===st);
+    document.getElementById('pl-'+k).textContent=list.length;
+    document.getElementById('pl-body-'+k).innerHTML=list.slice(0,5).map(s=>`
+      <div class="pl-item" onclick="viewApp('${s.id}')">
+        <div class="pl-item-name">${esc(s.full_name||'—')}</div>
+        <div class="pl-item-pos">${esc(s.position||'—')}</div>
+      </div>`).join('');
+  });
+}
+
+/* ══════════════════════════════════════════════════════
+   DASHBOARD
+══════════════════════════════════════════════════════ */
+function renderDashboard(){
+  // recent apps
+  const recent=[...SUBS].sort((a,b)=>new Date(b.submitted_at||b.timestamp||0)-new Date(a.submitted_at||a.timestamp||0)).slice(0,6);
+  document.getElementById('recent-apps-list').innerHTML=recent.length?recent.map(s=>{
+    const st=s.status||'pending';
+    const src=s.source==='telegram_bot'?'🤖':'🌐';
+    return`<div class="act-item" onclick="viewApp('${s.id}')" style="cursor:pointer">
+      <div class="act-dot ${st==='pending'?'amber':st==='accepted'?'green':'red'}"></div>
+      <div class="act-body">
+        <div class="act-title">${src} ${esc(s.full_name||'Unknown')} — ${esc(s.position||'—')}</div>
+        <div class="act-meta"><span class="badge b-${st}" style="font-size:10px">${st}</span></div>
+      </div>
+      <div class="act-time">${(s.submitted_at||s.timestamp||'').substring(0,10)}</div>
+    </div>`;
+  }).join(''):'<div class="empty" style="padding:40px">No applications yet</div>';
+  // jobs summary
+  document.getElementById('jobs-summary-list').innerHTML=JOBS.slice(0,5).map(j=>{
+    const cnt=SUBS.filter(s=>s.position===j.title).length;
+    return`<div style="display:flex;align-items:center;gap:12px;padding:10px 6px;border-bottom:1px solid var(--border)">
+      <div style="font-size:18px">${j.icon||'💼'}</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(j.title)}</div>
+        <div style="font-size:11px;color:var(--muted)">${cnt} applicant${cnt!==1?'s':''}</div>
+      </div>
+    </div>`;
+  }).join('')||'<div style="color:var(--muted);font-size:13px;padding:10px 6px">No jobs yet</div>';
+}
+
+/* ══════════════════════════════════════════════════════
+   APPLICATION VIEW MODAL
+══════════════════════════════════════════════════════ */
+function viewApp(id){
+  const s=SUBS.find(x=>x.id===id);if(!s)return;
+  const st=s.status||'pending';
+  const links=Array.isArray(s.portfolio_links)&&s.portfolio_links.length
+    ?s.portfolio_links.map(l=>`<a href="${l}" target="_blank" style="color:var(--accent)">${l}</a>`).join('<br>'):'—';
+  const atts=Array.isArray(s.attachments)&&s.attachments.length
+    ?s.attachments.map(a=>`<span style="font-size:12px;background:var(--surface2);border:1px solid var(--border);padding:3px 10px;border-radius:6px;margin-right:6px">${a.name}</span>`).join(''):'—';
+  document.getElementById('am-title').textContent=s.full_name||'Application';
+  document.getElementById('am-sub').textContent=(s.position||'')+' · '+(s.source==='telegram_bot'?'🤖 Telegram Bot':'🌐 Web App');
+  document.getElementById('am-body').innerHTML=`
+    <span class="badge b-${st}" style="margin-bottom:18px;display:inline-flex">${st}</span>
+    ${s.interview?`<div style="margin-bottom:18px"><div class="intv-badge">📅 Interview: ${esc(s.interview)}</div></div>`:''}
+    ${mrow('💼 Position',s.position)}
+    ${mrow('👤 Full Name',s.full_name)}
+    ${mrow('📱 Phone',s.phone)}
+    ${mrow('📧 Email',s.email)}
+    ${mrow('🎂 Age',s.age)}
+    ${mrow('⚧ Gender',s.gender)}
+    ${mrow('🎓 Education',s.education)}
+    ${mrow('📊 Experience',s.experience)}
+    ${mrow('🔗 Telegram','@'+(s.telegram_username||'—'))}
+    ${mrow('🆔 Telegram ID',s.telegram_id||'—')}
+    ${mrow('🔗 Portfolio',links)}
+    ${mrow('📎 Attachments',atts)}
+    ${mrow('✍️ Cover Letter',`<span style="white-space:pre-wrap;line-height:1.6">${esc(s.cover_letter||'—')}</span>`)}
+    ${mrow('📅 Submitted',(s.submitted_at||s.timestamp||'').replace('T',' ').substring(0,19))}
+    <hr class="mdiv"/>
+    <div class="macts">
+      ${s.cv_path?`<button class="mbtn mbtn-cv" onclick="dlCV('${s.id}','${esc(s.cv_path)}')">📄 Download CV</button>`:''}
+      <button class="mbtn mbtn-ok" onclick="setStatus('${s.id}','accepted');closeModal('app-modal')">✓ Accept</button>
+      <button class="mbtn mbtn-no" onclick="setStatus('${s.id}','rejected');closeModal('app-modal')">✕ Reject</button>
+      ${s.telegram_id?`<button class="mbtn mbtn-msg" onclick="closeModal('app-modal');openMsgModal('${s.id}')">💬 Message</button>`:''}
+      <button class="mbtn" style="background:rgba(245,158,11,.1);color:var(--amber);border:1.5px solid rgba(245,158,11,.3)" onclick="closeModal('app-modal');openIntvModal('${s.id}')">📅 Interview</button>
+    </div>`;
+  openModal('app-modal');
+}
+function mrow(k,v){return`<div class="mrow"><span class="mk">${k}</span><span class="mv">${v||'—'}</span></div>`;}
+
+/* ══════════════════════════════════════════════════════
+   STATUS UPDATE
+══════════════════════════════════════════════════════ */
+async function setStatus(id,status){
+  try{
+    const r=await fetch(`/api/submissions/${id}`,{method:'PATCH',headers:ah(),body:JSON.stringify({status})});
+    const d=await r.json();
+    if(d.success){
+      const s=SUBS.find(x=>x.id===id);if(s)s.status=status;
+      updateStats();renderAll();
+      toast(status==='accepted'?'✓ Application accepted':'✕ Application rejected',status==='accepted'?'success':'error');
+    } else toast('Update failed: '+(d.error||''),'error');
+  }catch(e){toast('Error: '+e.message,'error');}
+}
+
+/* ══════════════════════════════════════════════════════
+   CV DOWNLOAD
+══════════════════════════════════════════════════════ */
+async function dlCV(id,path){
+  toast('Getting CV link…','info');
+  try{
+    const r=await fetch(`/api/submissions/${id}?action=cv_url`,{headers:ah()});
+    const d=await r.json();
+    if(d.cv_url){window.open(d.cv_url,'_blank');toast('✓ CV opened','success');}
+    else if(path.startsWith('http')){window.open(path,'_blank');toast('✓ CV opened','success');}
+    else toast('CV not available yet','error');
+  }catch(e){
+    if(path.startsWith('http'))window.open(path,'_blank');
     else toast('Could not open CV','error');
   }
 }
 
-// ── VIEW MODAL ────────────────────────────────────────────────────
-function viewSub(id) {
-  const s = subs.find(x=>x.id===id);
-  if (!s) return;
-  const st = s.status||'pending';
-  const links = Array.isArray(s.portfolio_links)&&s.portfolio_links.length
-    ? s.portfolio_links.map(l=>`<a href="${l}" target="_blank" style="color:var(--accent)">${l}</a>`).join('<br>')
-    : '—';
-  document.getElementById('modal-title').textContent = s.full_name||'Application';
-  document.getElementById('modal-body').innerHTML = `
-    <span class="badge badge-${st}" style="margin-bottom:20px;display:inline-flex">${st}</span>
-    ${row('💼 Position', s.position)}
-    ${row('👤 Full Name', s.full_name)}
-    ${row('📱 Phone', s.phone)}
-    ${row('📧 Email', s.email)}
-    ${row('🎂 Age', s.age)}
-    ${row('⚧ Gender', s.gender)}
-    ${row('🎓 Education', s.education)}
-    ${row('📊 Experience', s.experience)}
-    ${row('🔗 Telegram', '@'+(s.telegram_username||'—'))}
-    ${row('🔗 Portfolio', links)}
-    ${row('✍️ Cover Letter', `<span style="white-space:pre-wrap;line-height:1.6">${esc(s.cover_letter||'—')}</span>`)}
-    ${row('📅 Submitted', (s.submitted_at||s.timestamp||'').replace('T',' ').substring(0,19))}
-    <hr class="modal-divider"/>
-    <div class="modal-actions">
-      ${s.cv_path?`<button class="modal-btn modal-btn-cv" onclick="dlCV('${s.id}','${esc(s.cv_path)}')">📄 Download CV</button>`:''}
-      <button class="modal-btn modal-btn-accept" onclick="setStatus('${s.id}','accepted');closeModal()">✓ Accept</button>
-      <button class="modal-btn modal-btn-reject" onclick="setStatus('${s.id}','rejected');closeModal()">✕ Reject</button>
-    </div>`;
-  document.getElementById('overlay').classList.add('open');
+/* ══════════════════════════════════════════════════════
+   JOB FORM
+══════════════════════════════════════════════════════ */
+function buildIconGrid(){
+  document.getElementById('icon-grid').innerHTML=ICONS.map(ic=>
+    `<div class="ig-opt${ic==='💼'?' sel':''}" onclick="pickIcon('${ic}')" data-ic="${ic}">${ic}</div>`
+  ).join('');
+}
+function pickIcon(ic){
+  document.getElementById('jf-icon').value=ic;
+  document.querySelectorAll('.ig-opt').forEach(el=>{
+    el.classList.toggle('sel',el.dataset.ic===ic);
+  });
+}
+function addReq(val=''){
+  const div=document.createElement('div');div.className='req-item';
+  div.innerHTML=`<input class="form-input req-inp" placeholder="Requirement…" value="${esc(val)}"/>
+    <button type="button" class="req-rm" onclick="this.parentElement.remove()">✕</button>`;
+  document.getElementById('req-list').appendChild(div);
+}
+function openJobForm(id){
+  const j=id?JOBS.find(x=>x.id===id):null;
+  document.getElementById('jf-id').value=j?j.id:'';
+  document.getElementById('jf-title').value=j?j.title:'';
+  document.getElementById('jf-cat').value=j?j.category||'':'';
+  document.getElementById('jf-salary').value=j?j.salary||'':'';
+  document.getElementById('jf-loc').value=j?j.location||'Addis Ababa':'Addis Ababa';
+  document.getElementById('jf-type').value=j?j.type||'Full-time':'Full-time';
+  document.getElementById('jf-deadline').value=j?j.deadline||'':'';
+  document.getElementById('jf-desc').value=j?j.description||'':'';
+  document.getElementById('jf-icon').value=j?j.icon||'💼':'💼';
+  document.querySelectorAll('.ig-opt').forEach(el=>el.classList.toggle('sel',el.dataset.ic===(j?j.icon||'💼':'💼')));
+  document.getElementById('req-list').innerHTML='';
+  if(j&&j.requirements) j.requirements.forEach(r=>addReq(r));
+  document.getElementById('jm-title').textContent=j?'Edit Job':'Post New Job';
+  openModal('job-modal');
+}
+async function saveJob(){
+  const id=document.getElementById('jf-id').value;
+  const title=document.getElementById('jf-title').value.trim();
+  const desc=document.getElementById('jf-desc').value.trim();
+  if(!title||!desc){toast('Title and description are required','error');return;}
+  const reqs=[...document.querySelectorAll('.req-inp')].map(i=>i.value.trim()).filter(Boolean);
+  const payload={
+    title,category:document.getElementById('jf-cat').value.trim()||null,
+    salary:document.getElementById('jf-salary').value.trim()||null,
+    location:document.getElementById('jf-loc').value.trim()||'Addis Ababa',
+    type:document.getElementById('jf-type').value,
+    deadline:document.getElementById('jf-deadline').value||null,
+    description:desc,icon:document.getElementById('jf-icon').value,
+    requirements:reqs,company:'Nova HR SM'
+  };
+  try{
+    const url=id?`/api/jobs/${id}`:'/api/jobs';
+    const method=id?'PUT':'POST';
+    const r=await fetch(url,{method,headers:ah(),body:JSON.stringify(payload)});
+    const d=await r.json();
+    if(d.success||d.id||d.job){
+      closeModal('job-modal');
+      await loadAll();
+      toast(id?'✓ Job updated':'✓ Job posted successfully','success');
+    } else toast('Save failed: '+(d.error||JSON.stringify(d)),'error');
+  }catch(e){toast('Error: '+e.message,'error');}
+}
+async function deleteJob(id,title){
+  if(!confirm(`Delete "${title}"? All applicants will still be visible.`)) return;
+  try{
+    const r=await fetch(`/api/jobs/${id}`,{method:'DELETE',headers:ah()});
+    const d=await r.json();
+    if(d.success){await loadAll();toast('Job deleted','success');}
+    else toast('Delete failed: '+(d.error||''),'error');
+  }catch(e){toast('Error: '+e.message,'error');}
 }
 
-function row(k,v){return`<div class="modal-row"><span class="modal-key">${k}</span><span class="modal-val">${v||'—'}</span></div>`}
-function closeModal(){document.getElementById('overlay').classList.remove('open')}
-
-// ── STATUS UPDATE ─────────────────────────────────────────────────
-async function setStatus(id, status) {
-  try {
-    const r = await fetch(`/api/submissions/${id}`, {
-      method:'PATCH', headers: authH(),
-      body: JSON.stringify({status})
-    });
-    const d = await r.json();
-    if (d.success) {
-      const s = subs.find(x=>x.id===id);
-      if (s) s.status = status;
-      updateStats(); filter();
-      toast(status==='accepted'?'✓ Accepted':'✕ Rejected', status==='accepted'?'success':'error');
-    } else toast('Update failed: '+(d.error||''),'error');
-  } catch(e) { toast('Error: '+e.message,'error'); }
+/* ══════════════════════════════════════════════════════
+   INTERVIEWS
+══════════════════════════════════════════════════════ */
+function renderInterviews(){
+  const list=SUBS.filter(s=>s.status==='accepted');
+  document.getElementById('intv-count').textContent=list.length+' accepted';
+  document.getElementById('intv-tbody').innerHTML=list.length?list.map(s=>`
+    <tr>
+      <td><div class="nc-name">${esc(s.full_name||'—')}</div><div class="nc-sub">@${esc(s.telegram_username||'—')}</div></td>
+      <td>${esc(s.position||'—')}</td>
+      <td><div>${esc(s.email||'—')}</div><div style="font-size:11px;color:var(--muted)">${esc(s.phone||'—')}</div></td>
+      <td>${s.interview?`<div class="intv-badge">📅 ${esc(s.interview)}</div>`:'<span style="color:var(--muted);font-size:12px">Not scheduled</span>'}</td>
+      <td>${s.source==='telegram_bot'?'<span style="color:#b992f5;font-size:11px">🤖 Bot</span>':'<span style="color:var(--accent3);font-size:11px">🌐 Web</span>'}</td>
+      <td><div class="acts">
+        <button class="btn b-edit" onclick="openIntvModal('${s.id}')">📅 Schedule</button>
+        ${s.telegram_id?`<button class="btn b-msg" onclick="openMsgModal('${s.id}')">💬 Notify</button>`:''}
+      </div></td>
+    </tr>`).join(''):'<tr><td colspan="6" class="empty"><div class="ei">📅</div>No accepted applicants yet</td></tr>';
+}
+function openIntvModal(id){
+  const s=SUBS.find(x=>x.id===id);if(!s)return;
+  document.getElementById('intv-sub-id').value=id;
+  document.getElementById('intv-applicant-name').textContent=esc(s.full_name||'Unknown')+' — '+esc(s.position||'');
+  document.getElementById('intv-dt').value='';
+  document.getElementById('intv-notes').value='';
+  openModal('intv-modal');
+}
+async function confirmInterview(){
+  const id=document.getElementById('intv-sub-id').value;
+  const dt=document.getElementById('intv-dt').value;
+  const notes=document.getElementById('intv-notes').value.trim();
+  if(!dt){toast('Please pick a date and time','error');return;}
+  const formatted=new Date(dt).toLocaleString('en-ET',{dateStyle:'medium',timeStyle:'short'});
+  const intv=formatted+(notes?' · '+notes:'');
+  try{
+    const r=await fetch(`/api/submissions/${id}`,{method:'PATCH',headers:ah(),body:JSON.stringify({interview:intv,status:'accepted'})});
+    const d=await r.json();
+    if(d.success){
+      const s=SUBS.find(x=>x.id===id);
+      if(s){s.interview=intv;s.status='accepted';}
+      // Try to notify via bot
+      if(s&&s.telegram_id){
+        const msg=`✅ *Interview Scheduled*\n\nHello ${s.full_name}, your interview for *${s.position}* has been scheduled.\n\n📅 *${intv}*\n\nPlease confirm your attendance.`;
+        fetch('/api/telegram/send',{method:'POST',headers:ah(),body:JSON.stringify({telegram_id:s.telegram_id,message:msg})}).catch(()=>{});
+      }
+      closeModal('intv-modal');renderAll();
+      toast('✓ Interview scheduled & notification sent','success');
+    } else toast('Failed: '+(d.error||''),'error');
+  }catch(e){toast('Error: '+e.message,'error');}
 }
 
-// ── UTILS ─────────────────────────────────────────────────────────
-function esc(s){if(!s)return'';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
-
-let toastTimer;
-function toast(msg, type='') {
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.className = 'toast show' + (type?' '+type:'');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(()=>el.classList.remove('show'), 3000);
+/* ══════════════════════════════════════════════════════
+   MESSAGES
+══════════════════════════════════════════════════════ */
+function renderMessages(){
+  const tgSubs=SUBS.filter(s=>s.telegram_id);
+  document.getElementById('tg-count').textContent=tgSubs.length+' Telegram applicant'+(tgSubs.length!==1?'s':'');
+  document.getElementById('tg-tbody').innerHTML=tgSubs.length?tgSubs.map(s=>`
+    <tr>
+      <td><div class="nc-name">${esc(s.full_name||'—')}</div></td>
+      <td>${esc(s.position||'—')}</td>
+      <td><div>@${esc(s.telegram_username||'—')}</div><div style="font-size:11px;font-family:var(--mono);color:var(--muted)">${s.telegram_id}</div></td>
+      <td><span class="badge b-${s.status||'pending'}">${s.status||'pending'}</span></td>
+      <td><button class="btn b-msg" onclick="openMsgModal('${s.id}')">💬 Message</button></td>
+    </tr>`).join(''):'<tr><td colspan="5" class="empty"><div class="ei">🤖</div>No Telegram applicants</td></tr>';
+}
+function fillMsgSelect(){
+  const tgSubs=SUBS.filter(s=>s.telegram_id);
+  document.getElementById('msg-target').innerHTML=tgSubs.map(s=>`<option value="${s.id}">${esc(s.full_name||'Unknown')} — ${esc(s.position||'')} (@${esc(s.telegram_username||s.telegram_id)})</option>`).join('');
+}
+function openMsgModal(id){
+  const s=SUBS.find(x=>x.id===id);if(!s)return;
+  document.getElementById('msg-sub-id').value=id;
+  document.getElementById('msg-to-name').textContent='To: '+esc(s.full_name||'Unknown')+' (@'+esc(s.telegram_username||s.telegram_id)+')';
+  document.getElementById('msg-text').value='';
+  openModal('msg-modal');
+}
+async function confirmSendMsg(){
+  const id=document.getElementById('msg-sub-id').value;
+  const msg=document.getElementById('msg-text').value.trim();
+  if(!msg){toast('Type a message first','error');return;}
+  const s=SUBS.find(x=>x.id===id);if(!s||!s.telegram_id){toast('No Telegram ID','error');return;}
+  try{
+    const r=await fetch('/api/telegram/send',{method:'POST',headers:ah(),body:JSON.stringify({telegram_id:s.telegram_id,message:msg})});
+    const d=await r.json();
+    if(d.success||d.ok){closeModal('msg-modal');toast('✓ Message sent','success');}
+    else toast('Send failed: '+(d.error||d.description||''),'error');
+  }catch(e){toast('Error: '+e.message,'error');}
+}
+async function sendBroadcast(){
+  const msg=document.getElementById('bc-msg').value.trim();
+  if(!msg){toast('Type a message first','error');return;}
+  const targets=SUBS.filter(s=>s.telegram_id&&(!s.status||s.status==='pending'));
+  if(!targets.length){toast('No pending Telegram applicants','info');return;}
+  let ok=0;
+  for(const s of targets){
+    try{
+      const r=await fetch('/api/telegram/send',{method:'POST',headers:ah(),body:JSON.stringify({telegram_id:s.telegram_id,message:msg})});
+      const d=await r.json();if(d.success||d.ok)ok++;
+    }catch(e){}
+  }
+  toast(`✓ Sent to ${ok}/${targets.length} applicants`,'success');
+  document.getElementById('bc-msg').value='';
+}
+async function sendSingleMsg(){
+  const id=document.getElementById('msg-target').value;
+  const msg=document.getElementById('single-msg').value.trim();
+  if(!id||!msg){toast('Select applicant and type message','error');return;}
+  const s=SUBS.find(x=>x.id===id);if(!s||!s.telegram_id){toast('No Telegram ID','error');return;}
+  try{
+    const r=await fetch('/api/telegram/send',{method:'POST',headers:ah(),body:JSON.stringify({telegram_id:s.telegram_id,message:msg})});
+    const d=await r.json();
+    if(d.success||d.ok){toast('✓ Message sent','success');document.getElementById('single-msg').value='';}
+    else toast('Send failed: '+(d.error||d.description||''),'error');
+  }catch(e){toast('Error: '+e.message,'error');}
 }
 
-// ── KEYBOARD ──────────────────────────────────────────────────────
-document.addEventListener('keydown', e => {
-  if (e.key==='Enter' && document.getElementById('login').style.display!=='none') doLogin();
-  if (e.key==='Escape') closeModal();
+/* ══════════════════════════════════════════════════════
+   SECURITY
+══════════════════════════════════════════════════════ */
+async function loadSecurity(){
+  try{
+    const r=await fetch('/api/admin/login-attempts',{headers:ah()});
+    if(r.status===401){logout();return;}
+    const d=await r.json();
+    const rows=d.attempts||d.data||d||[];
+    const ok=rows.filter(r=>r.success).length;
+    const fail=rows.filter(r=>!r.success).length;
+    document.getElementById('sec-total').textContent=rows.length;
+    document.getElementById('sec-ok').textContent=ok;
+    document.getElementById('sec-fail').textContent=fail;
+    document.getElementById('sec-tbody').innerHTML=rows.length?rows.map(row=>`
+      <tr>
+        <td style="font-family:var(--mono);font-size:12px">${esc(row.ip||'—')}</td>
+        <td style="font-family:var(--mono);font-size:12px;color:var(--muted)">${(row.attempted_at||'').replace('T',' ').substring(0,19)}</td>
+        <td><span class="badge ${row.success?'b-accepted':'b-rejected'}">${row.success?'Success':'Failed'}</span></td>
+      </tr>`).join('')
+      :'<tr><td colspan="3" class="empty">No login attempts recorded</td></tr>';
+  }catch(e){document.getElementById('sec-tbody').innerHTML='<tr><td colspan="3" class="empty">Failed to load</td></tr>';}
+}
+
+/* ══════════════════════════════════════════════════════
+   UTILS
+══════════════════════════════════════════════════════ */
+function esc(s){if(!s&&s!==0)return'';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+let toastT;
+function toast(msg,type=''){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.className='toast show'+(type?' '+type:'');
+  clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove('show'),3200);
+}
+document.addEventListener('keydown',e=>{
+  if(e.key==='Enter'&&document.getElementById('login').style.display!=='none') doLogin();
+  if(e.key==='Escape'){
+    ['app-modal','job-modal','intv-modal','msg-modal'].forEach(id=>closeModal(id));
+  }
 });
 
-// ── AUTO LOGIN ────────────────────────────────────────────────────
-if (token) {
-  fetch('/api/submissions?limit=1', {headers: authH()})
-    .then(r => r.status===401 ? logout() : showMain())
-    .catch(() => showMain());
+/* ══════════════════════════════════════════════════════
+   AUTO-LOGIN CHECK
+══════════════════════════════════════════════════════ */
+if(TOKEN){
+  fetch('/api/submissions?limit=1',{headers:ah()})
+    .then(r=>r.status===401?logout():showMain())
+    .catch(()=>showMain());
 }
 </script>
 </body>
