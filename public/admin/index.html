@@ -1,214 +1,258 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Nova HR Admin Panel</title>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; color: #1a1a2e; }
-    
-    /* LOGIN */
-    #login-screen {
-      display: flex; align-items: center; justify-content: center;
-      min-height: 100vh; background: linear-gradient(135deg, #1a1a2e, #16213e);
-    }
-    .login-box {
-      background: white; border-radius: 16px; padding: 40px; width: 360px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-    }
-    .login-box h1 { font-size: 24px; margin-bottom: 6px; color: #1a1a2e; }
-    .login-box p { color: #666; margin-bottom: 28px; font-size: 14px; }
-    .login-box input {
-      width: 100%; padding: 12px 16px; border: 1.5px solid #e0e0e0;
-      border-radius: 8px; font-size: 15px; margin-bottom: 14px; outline: none;
-      transition: border-color 0.2s;
-    }
-    .login-box input:focus { border-color: #4f46e5; }
-    .login-box button {
-      width: 100%; padding: 13px; background: #4f46e5; color: white;
-      border: none; border-radius: 8px; font-size: 16px; font-weight: 600;
-      cursor: pointer; transition: background 0.2s;
-    }
-    .login-box button:hover { background: #4338ca; }
-    #login-error { color: #dc2626; font-size: 13px; margin-top: 10px; display: none; }
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Nova HR — Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0a0f;
+  --surface:#13131a;
+  --surface2:#1c1c26;
+  --border:#2a2a3a;
+  --accent:#6c63ff;
+  --accent2:#ff6584;
+  --green:#00d68f;
+  --yellow:#ffaa00;
+  --red:#ff4757;
+  --text:#e8e8f0;
+  --muted:#666680;
+  --font:'DM Sans',sans-serif;
+  --mono:'DM Mono',monospace;
+}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
 
-    /* MAIN */
-    #main-screen { display: none; }
-    header {
-      background: #1a1a2e; color: white; padding: 16px 32px;
-      display: flex; align-items: center; justify-content: space-between;
-      position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-    }
-    header h1 { font-size: 20px; font-weight: 700; }
-    header span { font-size: 13px; opacity: 0.7; }
-    .logout-btn {
-      background: rgba(255,255,255,0.15); color: white; border: none;
-      padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 13px;
-      transition: background 0.2s;
-    }
-    .logout-btn:hover { background: rgba(255,255,255,0.25); }
+/* ── LOGIN ── */
+#login{display:flex;align-items:center;justify-content:center;min-height:100vh;
+  background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(108,99,255,.15),transparent),
+             radial-gradient(ellipse 60% 40% at 80% 80%,rgba(255,101,132,.08),transparent),
+             var(--bg)}
+.login-card{width:380px;padding:48px 40px;background:var(--surface);border:1px solid var(--border);
+  border-radius:20px;box-shadow:0 32px 80px rgba(0,0,0,.6)}
+.login-logo{display:flex;align-items:center;gap:12px;margin-bottom:32px}
+.login-logo .icon{width:44px;height:44px;background:linear-gradient(135deg,var(--accent),var(--accent2));
+  border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px}
+.login-logo h1{font-size:18px;font-weight:700;letter-spacing:-.3px}
+.login-logo p{font-size:12px;color:var(--muted);margin-top:1px}
+.login-label{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;
+  letter-spacing:.8px;margin-bottom:8px;display:block}
+.login-input{width:100%;background:var(--bg);border:1.5px solid var(--border);color:var(--text);
+  padding:14px 16px;border-radius:10px;font-size:15px;font-family:var(--font);
+  outline:none;transition:border-color .2s;margin-bottom:16px}
+.login-input:focus{border-color:var(--accent)}
+.login-btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--accent),#8b5cf6);
+  color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;
+  font-family:var(--font);transition:opacity .2s,transform .1s;margin-top:4px}
+.login-btn:hover{opacity:.9}
+.login-btn:active{transform:scale(.99)}
+.login-err{background:rgba(255,71,87,.1);border:1px solid rgba(255,71,87,.3);color:var(--red);
+  padding:10px 14px;border-radius:8px;font-size:13px;margin-top:12px;display:none}
 
-    .container { max-width: 1200px; margin: 0 auto; padding: 24px; }
+/* ── MAIN ── */
+#main{display:none;min-height:100vh}
+header{background:var(--surface);border-bottom:1px solid var(--border);
+  padding:0 32px;height:60px;display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:100}
+.header-left{display:flex;align-items:center;gap:16px}
+.header-logo{width:32px;height:32px;background:linear-gradient(135deg,var(--accent),var(--accent2));
+  border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px}
+.header-title{font-size:15px;font-weight:600}
+.header-badge{background:rgba(108,99,255,.15);color:var(--accent);border:1px solid rgba(108,99,255,.3);
+  padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
+.header-right{display:flex;align-items:center;gap:12px}
+.header-time{font-size:12px;color:var(--muted);font-family:var(--mono)}
+.logout-btn{background:var(--surface2);border:1px solid var(--border);color:var(--text);
+  padding:7px 16px;border-radius:8px;font-size:13px;cursor:pointer;font-family:var(--font);
+  transition:all .2s}
+.logout-btn:hover{border-color:var(--red);color:var(--red)}
 
-    /* STATS */
-    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 28px; }
-    .stat-card {
-      background: white; border-radius: 12px; padding: 20px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06); text-align: center;
-    }
-    .stat-card .num { font-size: 32px; font-weight: 700; color: #4f46e5; }
-    .stat-card .label { font-size: 13px; color: #888; margin-top: 4px; }
+.container{max-width:1280px;margin:0 auto;padding:28px 32px}
 
-    /* FILTERS */
-    .filters {
-      background: white; border-radius: 12px; padding: 16px 20px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 20px;
-      display: flex; gap: 12px; flex-wrap: wrap; align-items: center;
-    }
-    .filters input, .filters select {
-      padding: 9px 14px; border: 1.5px solid #e0e0e0; border-radius: 8px;
-      font-size: 14px; outline: none; transition: border-color 0.2s;
-    }
-    .filters input:focus, .filters select:focus { border-color: #4f46e5; }
-    .filters input { flex: 1; min-width: 200px; }
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:14px;
+  padding:20px 24px;transition:border-color .2s}
+.stat:hover{border-color:var(--accent)}
+.stat-num{font-size:32px;font-weight:700;line-height:1;margin-bottom:4px}
+.stat-label{font-size:12px;color:var(--muted);font-weight:500}
+.stat-num.blue{color:var(--accent)}
+.stat-num.yellow{color:var(--yellow)}
+.stat-num.green{color:var(--green)}
+.stat-num.red{color:var(--red)}
 
-    /* TABLE */
-    .table-wrap {
-      background: white; border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06); overflow: hidden;
-    }
-    table { width: 100%; border-collapse: collapse; }
-    thead { background: #f8f9fa; }
-    th { padding: 14px 16px; text-align: left; font-size: 12px; font-weight: 600; color: #666; text-transform: uppercase; letter-spacing: 0.5px; }
-    td { padding: 14px 16px; font-size: 14px; border-top: 1px solid #f0f0f0; vertical-align: middle; }
-    tr:hover td { background: #fafafa; }
+/* TOOLBAR */
+.toolbar{display:flex;gap:12px;align-items:center;margin-bottom:20px;flex-wrap:wrap}
+.search-wrap{flex:1;min-width:220px;position:relative}
+.search-wrap input{width:100%;background:var(--surface);border:1.5px solid var(--border);
+  color:var(--text);padding:10px 14px 10px 38px;border-radius:10px;font-size:14px;
+  font-family:var(--font);outline:none;transition:border-color .2s}
+.search-wrap input:focus{border-color:var(--accent)}
+.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px}
+select{background:var(--surface);border:1.5px solid var(--border);color:var(--text);
+  padding:10px 14px;border-radius:10px;font-size:13px;font-family:var(--font);
+  outline:none;cursor:pointer;transition:border-color .2s}
+select:focus{border-color:var(--accent)}
+.refresh-btn{background:var(--surface2);border:1.5px solid var(--border);color:var(--text);
+  padding:10px 18px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;
+  font-family:var(--font);transition:all .2s;display:flex;align-items:center;gap:6px}
+.refresh-btn:hover{border-color:var(--accent);color:var(--accent)}
 
-    .badge {
-      display: inline-block; padding: 3px 10px; border-radius: 20px;
-      font-size: 12px; font-weight: 600;
-    }
-    .badge-pending { background: #fef3c7; color: #92400e; }
-    .badge-accepted { background: #d1fae5; color: #065f46; }
-    .badge-rejected { background: #fee2e2; color: #991b1b; }
+/* TABLE */
+.table-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+.table-header{padding:18px 24px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between}
+.table-header h2{font-size:14px;font-weight:600}
+.table-count{font-size:12px;color:var(--muted)}
+table{width:100%;border-collapse:collapse}
+th{padding:12px 20px;text-align:left;font-size:11px;font-weight:600;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.6px;background:var(--surface2);white-space:nowrap}
+td{padding:14px 20px;font-size:13px;border-top:1px solid var(--border);vertical-align:middle}
+tr:hover td{background:rgba(108,99,255,.04)}
 
-    .actions { display: flex; gap: 6px; flex-wrap: wrap; }
-    .btn {
-      padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600;
-      border: none; cursor: pointer; transition: all 0.2s; text-decoration: none;
-      display: inline-flex; align-items: center; gap: 4px;
-    }
-    .btn-accept { background: #d1fae5; color: #065f46; }
-    .btn-accept:hover { background: #6ee7b7; }
-    .btn-reject { background: #fee2e2; color: #991b1b; }
-    .btn-reject:hover { background: #fca5a5; }
-    .btn-cv { background: #ede9fe; color: #5b21b6; }
-    .btn-cv:hover { background: #c4b5fd; }
-    .btn-view { background: #e0f2fe; color: #0c4a6e; }
-    .btn-view:hover { background: #7dd3fc; }
+.badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;
+  font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+.badge::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor}
+.badge-pending{background:rgba(255,170,0,.1);color:var(--yellow);border:1px solid rgba(255,170,0,.2)}
+.badge-accepted{background:rgba(0,214,143,.1);color:var(--green);border:1px solid rgba(0,214,143,.2)}
+.badge-rejected{background:rgba(255,71,87,.1);color:var(--red);border:1px solid rgba(255,71,87,.2)}
 
-    /* MODAL */
-    .modal-overlay {
-      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5);
-      z-index: 200; align-items: center; justify-content: center;
-    }
-    .modal-overlay.open { display: flex; }
-    .modal {
-      background: white; border-radius: 16px; padding: 32px; max-width: 600px;
-      width: 90%; max-height: 85vh; overflow-y: auto;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-    }
-    .modal h2 { font-size: 20px; margin-bottom: 20px; color: #1a1a2e; }
-    .modal-row { display: flex; gap: 8px; margin-bottom: 10px; font-size: 14px; }
-    .modal-label { font-weight: 600; min-width: 130px; color: #555; }
-    .modal-value { color: #1a1a2e; flex: 1; }
-    .modal-close {
-      float: right; background: #f0f0f0; border: none; border-radius: 8px;
-      padding: 8px 16px; cursor: pointer; font-size: 13px; margin-bottom: 16px;
-    }
-    .modal-close:hover { background: #e0e0e0; }
-    .cv-download-btn {
-      display: inline-block; margin-top: 16px; padding: 10px 20px;
-      background: #4f46e5; color: white; border-radius: 8px; text-decoration: none;
-      font-weight: 600; font-size: 14px; transition: background 0.2s;
-    }
-    .cv-download-btn:hover { background: #4338ca; }
+.actions{display:flex;gap:6px;flex-wrap:wrap}
+.btn{padding:6px 12px;border-radius:7px;font-size:12px;font-weight:600;border:1px solid transparent;
+  cursor:pointer;font-family:var(--font);transition:all .15s;white-space:nowrap}
+.btn-view{background:rgba(108,99,255,.1);color:var(--accent);border-color:rgba(108,99,255,.2)}
+.btn-view:hover{background:rgba(108,99,255,.2)}
+.btn-cv{background:rgba(0,214,143,.1);color:var(--green);border-color:rgba(0,214,143,.2)}
+.btn-cv:hover{background:rgba(0,214,143,.2)}
+.btn-accept{background:rgba(0,214,143,.1);color:var(--green);border-color:rgba(0,214,143,.2)}
+.btn-accept:hover{background:rgba(0,214,143,.25)}
+.btn-reject{background:rgba(255,71,87,.1);color:var(--red);border-color:rgba(255,71,87,.2)}
+.btn-reject:hover{background:rgba(255,71,87,.2)}
 
-    .loading { text-align: center; padding: 40px; color: #888; }
-    .empty { text-align: center; padding: 40px; color: #888; font-size: 15px; }
-    .toast {
-      position: fixed; bottom: 24px; right: 24px; background: #1a1a2e;
-      color: white; padding: 12px 20px; border-radius: 10px; font-size: 14px;
-      z-index: 999; opacity: 0; transition: opacity 0.3s; pointer-events: none;
-    }
-    .toast.show { opacity: 1; }
-  </style>
+.name-cell{font-weight:500}
+.username-cell{font-size:11px;color:var(--muted);font-family:var(--mono);margin-top:2px}
+.empty-state{text-align:center;padding:60px;color:var(--muted)}
+.empty-state .icon{font-size:40px;margin-bottom:12px}
+.loading{text-align:center;padding:60px;color:var(--muted)}
+
+/* MODAL */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;
+  align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.overlay.open{display:flex}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:20px;
+  width:560px;max-width:90vw;max-height:85vh;overflow-y:auto;
+  box-shadow:0 40px 100px rgba(0,0,0,.8)}
+.modal-head{padding:24px 28px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;
+  background:var(--surface)}
+.modal-head h2{font-size:16px;font-weight:700}
+.modal-close{background:var(--surface2);border:1px solid var(--border);color:var(--muted);
+  width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:16px;
+  display:flex;align-items:center;justify-content:center;transition:all .2s}
+.modal-close:hover{border-color:var(--red);color:var(--red)}
+.modal-body{padding:28px}
+.modal-row{display:flex;gap:12px;margin-bottom:14px;font-size:13px}
+.modal-key{color:var(--muted);font-weight:500;min-width:120px;font-size:12px;padding-top:1px}
+.modal-val{color:var(--text);flex:1;line-height:1.5}
+.modal-divider{border:none;border-top:1px solid var(--border);margin:20px 0}
+.modal-actions{display:flex;gap:10px;flex-wrap:wrap}
+.modal-btn{padding:10px 20px;border-radius:10px;font-size:13px;font-weight:600;
+  border:none;cursor:pointer;font-family:var(--font);transition:all .2s}
+.modal-btn-cv{background:linear-gradient(135deg,var(--accent),#8b5cf6);color:#fff}
+.modal-btn-accept{background:rgba(0,214,143,.15);color:var(--green);border:1px solid rgba(0,214,143,.3)}
+.modal-btn-accept:hover{background:rgba(0,214,143,.25)}
+.modal-btn-reject{background:rgba(255,71,87,.1);color:var(--red);border:1px solid rgba(255,71,87,.2)}
+.modal-btn-reject:hover{background:rgba(255,71,87,.2)}
+
+/* TOAST */
+.toast{position:fixed;bottom:28px;right:28px;background:var(--surface2);border:1px solid var(--border);
+  color:var(--text);padding:12px 20px;border-radius:12px;font-size:13px;font-weight:500;
+  z-index:999;opacity:0;transform:translateY(8px);transition:all .3s;pointer-events:none;
+  box-shadow:0 8px 30px rgba(0,0,0,.4)}
+.toast.show{opacity:1;transform:translateY(0)}
+.toast.success{border-color:rgba(0,214,143,.4);color:var(--green)}
+.toast.error{border-color:rgba(255,71,87,.4);color:var(--red)}
+
+@media(max-width:768px){
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .container{padding:16px}
+  header{padding:0 16px}
+  th:nth-child(3),th:nth-child(4),td:nth-child(3),td:nth-child(4){display:none}
+}
+</style>
 </head>
 <body>
 
 <!-- LOGIN -->
-<div id="login-screen">
-  <div class="login-box">
-    <h1>🏢 Nova HR Admin</h1>
-    <p>Enter your password to access the admin panel</p>
-    <input type="password" id="login-pass" placeholder="Password" />
-    <button onclick="doLogin()">Sign In</button>
-    <div id="login-error">Invalid credentials. Please try again.</div>
+<div id="login">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="icon">🏢</div>
+      <div>
+        <h1>Nova HR</h1>
+        <p>Admin Dashboard</p>
+      </div>
+    </div>
+    <label class="login-label">Admin Password</label>
+    <input class="login-input" type="password" id="pass" placeholder="Enter your password" autocomplete="current-password"/>
+    <button class="login-btn" onclick="doLogin()">Sign In →</button>
+    <div class="login-err" id="err"></div>
   </div>
 </div>
 
 <!-- MAIN -->
-<div id="main-screen">
+<div id="main">
   <header>
-    <div>
-      <h1>🏢 Nova HR Admin Panel</h1>
-      <span id="header-time"></span>
+    <div class="header-left">
+      <div class="header-logo">🏢</div>
+      <span class="header-title">Nova HR Admin</span>
+      <span class="header-badge">Dashboard</span>
     </div>
-    <div style="display:flex;gap:12px;align-items:center;">
-      <span id="admin-label" style="font-size:13px;opacity:0.8;"></span>
-      <button class="logout-btn" onclick="doLogout()">Sign Out</button>
+    <div class="header-right">
+      <span class="header-time" id="clock"></span>
+      <button class="logout-btn" onclick="logout()">Sign Out</button>
     </div>
   </header>
-
   <div class="container">
-    <!-- Stats -->
     <div class="stats">
-      <div class="stat-card"><div class="num" id="stat-total">—</div><div class="label">Total Applications</div></div>
-      <div class="stat-card"><div class="num" id="stat-pending" style="color:#d97706">—</div><div class="label">Pending Review</div></div>
-      <div class="stat-card"><div class="num" id="stat-accepted" style="color:#059669">—</div><div class="label">Accepted</div></div>
-      <div class="stat-card"><div class="num" id="stat-rejected" style="color:#dc2626">—</div><div class="label">Rejected</div></div>
+      <div class="stat"><div class="stat-num blue" id="s-total">—</div><div class="stat-label">Total Applications</div></div>
+      <div class="stat"><div class="stat-num yellow" id="s-pending">—</div><div class="stat-label">Pending Review</div></div>
+      <div class="stat"><div class="stat-num green" id="s-accepted">—</div><div class="stat-label">Accepted</div></div>
+      <div class="stat"><div class="stat-num red" id="s-rejected">—</div><div class="stat-label">Rejected</div></div>
     </div>
-
-    <!-- Filters -->
-    <div class="filters">
-      <input type="text" id="search" placeholder="🔍 Search name, email, position..." oninput="filterTable()" />
-      <select id="filter-status" onchange="filterTable()">
+    <div class="toolbar">
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="search" placeholder="Search name, email, position..." oninput="filter()"/>
+      </div>
+      <select id="fstatus" onchange="filter()">
         <option value="">All Statuses</option>
         <option value="pending">Pending</option>
         <option value="accepted">Accepted</option>
         <option value="rejected">Rejected</option>
       </select>
-      <select id="filter-position" onchange="filterTable()">
-        <option value="">All Positions</option>
-      </select>
-      <button class="btn btn-view" onclick="loadSubmissions()">↻ Refresh</button>
+      <select id="fpos" onchange="filter()"><option value="">All Positions</option></select>
+      <button class="refresh-btn" onclick="loadData()">↻ Refresh</button>
     </div>
-
-    <!-- Table -->
-    <div class="table-wrap">
+    <div class="table-card">
+      <div class="table-header">
+        <h2>Applications</h2>
+        <span class="table-count" id="tcount">Loading...</span>
+      </div>
       <table>
         <thead>
           <tr>
             <th>Applicant</th>
             <th>Position</th>
             <th>Contact</th>
-            <th>Details</th>
+            <th>Background</th>
             <th>Status</th>
             <th>Date</th>
             <th>Actions</th>
           </tr>
         </thead>
-        <tbody id="submissions-tbody">
+        <tbody id="tbody">
           <tr><td colspan="7" class="loading">Loading applications...</td></tr>
         </tbody>
       </table>
@@ -216,297 +260,245 @@
   </div>
 </div>
 
-<!-- Modal -->
-<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
-  <div class="modal" id="modal-content">
-    <button class="modal-close" onclick="closeModal()">✕ Close</button>
-    <div id="modal-body"></div>
+<!-- MODAL -->
+<div class="overlay" id="overlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="modal-title">Application</h2>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-  let authToken = localStorage.getItem('nova_admin_token') || '';
-  let allSubmissions = [];
+let token = localStorage.getItem('nhr_token') || '';
+let subs = [];
 
-  // ── AUTH ──────────────────────────────────────────────────────────────
-  async function doLogin() {
-    const pass = document.getElementById('login-pass').value.trim();
-
-
-    if (!pass) return;
-      const res = await fetch('/api/admin/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password: pass }),
-      });
-        body: JSON.stringify({ password: pass }),
-      if (data.success && data.token) {
-        authToken = data.token;
-        localStorage.setItem('nova_admin_token', authToken);
-        showMain();
-      } else {
-        document.getElementById('login-error').style.display = 'block';
-        document.getElementById('login-error').textContent = data.error || 'Invalid credentials';
-      }
-    } catch (e) {
-      document.getElementById('login-error').style.display = 'block';
-      document.getElementById('login-error').textContent = 'Connection error. Try again.';
-    }
-  }
-
-  function doLogout() {
-    authToken = '';
-    localStorage.removeItem('nova_admin_token');
-    document.getElementById('main-screen').style.display = 'none';
-    document.getElementById('login-screen').style.display = 'flex';
-    allSubmissions = [];
-  }
-
-  // ── Always include auth header ──────────────────────────────────────
-  function authHeaders() {
-    return {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${authToken}`,
-    };
-  }
-
-  // ── INIT ──────────────────────────────────────────────────────────────
-  function showMain() {
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('main-screen').style.display = 'block';
-    document.getElementById('admin-label').textContent = 'Admin';
-    updateClock();
-    setInterval(updateClock, 1000);
-    loadSubmissions();
-  }
-
-  function updateClock() {
-    document.getElementById('header-time').textContent = new Date().toLocaleString();
-  }
-
-  // ── LOAD SUBMISSIONS ──────────────────────────────────────────────────
-  async function loadSubmissions() {
-    document.getElementById('submissions-tbody').innerHTML =
-      '<tr><td colspan="7" class="loading">Loading...</td></tr>';
-    try {
-      const res = await fetch('/api/submissions', {
-        headers: authHeaders(),
-      });
-
-      if (res.status === 401) {
-        doLogout();
-        return;
-      }
-
-      const data = await res.json();
-      if (!data.success) throw new Error(data.error);
-
-      allSubmissions = data.submissions || data.data || [];
-      updateStats();
-      populatePositionFilter();
-      renderTable(allSubmissions);
-    } catch (e) {
-      document.getElementById('submissions-tbody').innerHTML =
-        `<tr><td colspan="7" class="empty">Error loading applications: ${e.message}</td></tr>`;
-    }
-  }
-
-  function updateStats() {
-    document.getElementById('stat-total').textContent = allSubmissions.length;
-    document.getElementById('stat-pending').textContent = allSubmissions.filter(s => s.status === 'pending').length;
-    document.getElementById('stat-accepted').textContent = allSubmissions.filter(s => s.status === 'accepted').length;
-    document.getElementById('stat-rejected').textContent = allSubmissions.filter(s => s.status === 'rejected').length;
-  }
-
-  function populatePositionFilter() {
-    const positions = [...new Set(allSubmissions.map(s => s.position).filter(Boolean))];
-    const sel = document.getElementById('filter-position');
-    sel.innerHTML = '<option value="">All Positions</option>' +
-      positions.map(p => `<option value="${p}">${p}</option>`).join('');
-  }
-
-  // ── RENDER ────────────────────────────────────────────────────────────
-  function renderTable(subs) {
-    if (!subs.length) {
-      document.getElementById('submissions-tbody').innerHTML =
-        '<tr><td colspan="7" class="empty">No applications found.</td></tr>';
-      return;
-    }
-    document.getElementById('submissions-tbody').innerHTML = subs.map(s => {
-      const date = (s.submitted_at || s.timestamp || '').substring(0, 10);
-      const badge = `<span class="badge badge-${s.status || 'pending'}">${(s.status || 'pending').toUpperCase()}</span>`;
-      const cvBtn = s.cv_path
-        ? `<button class="btn btn-cv" onclick="downloadCV('${s.id}', '${escapeHtml(s.cv_path)}')">📄 CV</button>`
-        : '<span style="color:#bbb;font-size:12px;">No CV</span>';
-      return `
-        <tr>
-          <td>
-            <div style="font-weight:600">${escapeHtml(s.full_name || '—')}</div>
-            <div style="font-size:12px;color:#888">@${escapeHtml(s.telegram_username || '—')}</div>
-          </td>
-          <td>${escapeHtml(s.position || '—')}</td>
-          <td>
-            <div style="font-size:13px">${escapeHtml(s.email || '—')}</div>
-            <div style="font-size:12px;color:#888">${escapeHtml(s.phone || '—')}</div>
-          </td>
-          <td>
-            <div style="font-size:12px">${escapeHtml(s.education || '—')}</div>
-            <div style="font-size:12px;color:#888">${escapeHtml(s.experience || '—')} · ${escapeHtml(s.gender || '—')}</div>
-          </td>
-          <td>${badge}</td>
-          <td style="font-size:13px;color:#888">${date}</td>
-          <td>
-            <div class="actions">
-              <button class="btn btn-view" onclick="viewApplication('${s.id}')">👁 View</button>
-              ${cvBtn}
-              <button class="btn btn-accept" onclick="updateStatus('${s.id}', 'accepted')">✅</button>
-              <button class="btn btn-reject" onclick="updateStatus('${s.id}', 'rejected')">❌</button>
-            </div>
-          </td>
-        </tr>`;
-    }).join('');
-  }
-
-  // ── FILTER ────────────────────────────────────────────────────────────
-  function filterTable() {
-    const q = document.getElementById('search').value.toLowerCase();
-    const status = document.getElementById('filter-status').value;
-    const position = document.getElementById('filter-position').value;
-    const filtered = allSubmissions.filter(s => {
-      const matchQ = !q || [s.full_name, s.email, s.position, s.phone, s.telegram_username]
-        .some(v => v && v.toLowerCase().includes(q));
-      const matchStatus = !status || s.status === status;
-      const matchPos = !position || s.position === position;
-      return matchQ && matchStatus && matchPos;
+// ── AUTH ──────────────────────────────────────────────────────────
+async function doLogin() {
+  const pass = document.getElementById('pass').value.trim();
+  if (!pass) return;
+  const err = document.getElementById('err');
+  err.style.display = 'none';
+  try {
+    const r = await fetch('/api/admin/login', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({password: pass})
     });
-    renderTable(filtered);
-  }
-
-  // ── CV DOWNLOAD ───────────────────────────────────────────────────────
-  async function downloadCV(subId, cvPath) {
-    showToast('Generating download link...');
-    try {
-      // First try: get a signed URL from our API
-      const res = await fetch(`/api/submissions/${subId}?action=cv_url`, {
-        headers: authHeaders(),
-      });
-      const data = await res.json();
-
-      if (data.success && data.cv_url) {
-        window.open(data.cv_url, '_blank');
-        showToast('CV opened!');
-      } else if (cvPath && cvPath.startsWith('http')) {
-        // Fallback: open the path directly (works if bucket is public)
-        window.open(cvPath, '_blank');
-        showToast('CV opened!');
-      } else {
-        showToast('CV not available for download');
-      }
-    } catch (e) {
-      // Last resort fallback
-      if (cvPath && cvPath.startsWith('http')) {
-        window.open(cvPath, '_blank');
-      } else {
-        showToast('Could not download CV: ' + e.message);
-      }
+    const d = await r.json();
+    if (d.success && d.token) {
+      token = d.token;
+      localStorage.setItem('nhr_token', token);
+      showMain();
+    } else {
+      err.textContent = d.error || 'Incorrect password';
+      err.style.display = 'block';
     }
+  } catch(e) {
+    err.textContent = 'Connection error. Try again.';
+    err.style.display = 'block';
   }
+}
 
-  // ── VIEW APPLICATION ──────────────────────────────────────────────────
-  function viewApplication(id) {
-    const s = allSubmissions.find(x => x.id === id);
-    if (!s) return;
+function logout() {
+  token = '';
+  localStorage.removeItem('nhr_token');
+  subs = [];
+  document.getElementById('main').style.display = 'none';
+  document.getElementById('login').style.display = 'flex';
+}
+
+function authH() {
+  return {'Content-Type':'application/json','Authorization':'Bearer '+token};
+}
+
+// ── INIT ──────────────────────────────────────────────────────────
+function showMain() {
+  document.getElementById('login').style.display = 'none';
+  document.getElementById('main').style.display = 'block';
+  tick(); setInterval(tick, 1000);
+  loadData();
+}
+
+function tick() {
+  document.getElementById('clock').textContent = new Date().toLocaleString('en-US',
+    {hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false,
+     month:'short',day:'numeric'});
+}
+
+// ── LOAD DATA ─────────────────────────────────────────────────────
+async function loadData() {
+  document.getElementById('tbody').innerHTML =
+    '<tr><td colspan="7" class="loading">Loading...</td></tr>';
+  try {
+    const r = await fetch('/api/submissions', {headers: authH()});
+    if (r.status === 401) { logout(); return; }
+    const d = await r.json();
+    subs = d.submissions || d.data || [];
+    updateStats();
+    fillPositions();
+    render(subs);
+  } catch(e) {
+    document.getElementById('tbody').innerHTML =
+      '<tr><td colspan="7" class="empty-state"><div class="icon">⚠️</div>Failed to load: '+e.message+'</td></tr>';
+  }
+}
+
+function updateStats() {
+  document.getElementById('s-total').textContent = subs.length;
+  document.getElementById('s-pending').textContent = subs.filter(s=>s.status==='pending'||!s.status).length;
+  document.getElementById('s-accepted').textContent = subs.filter(s=>s.status==='accepted').length;
+  document.getElementById('s-rejected').textContent = subs.filter(s=>s.status==='rejected').length;
+}
+
+function fillPositions() {
+  const pos = [...new Set(subs.map(s=>s.position).filter(Boolean))];
+  const sel = document.getElementById('fpos');
+  sel.innerHTML = '<option value="">All Positions</option>' +
+    pos.map(p=>`<option value="${esc(p)}">${esc(p)}</option>`).join('');
+}
+
+// ── RENDER ────────────────────────────────────────────────────────
+function render(list) {
+  document.getElementById('tcount').textContent = list.length + ' application' + (list.length!==1?'s':'');
+  if (!list.length) {
+    document.getElementById('tbody').innerHTML =
+      '<tr><td colspan="7" class="empty-state"><div class="icon">📭</div>No applications found</td></tr>';
+    return;
+  }
+  document.getElementById('tbody').innerHTML = list.map(s => {
+    const st = s.status || 'pending';
+    const date = (s.submitted_at||s.timestamp||'').substring(0,10);
     const cvBtn = s.cv_path
-      ? `<button class="cv-download-btn" onclick="downloadCV('${s.id}', '${escapeHtml(s.cv_path)}')">📄 Download CV</button>`
-      : '<p style="color:#888;margin-top:16px;">No CV uploaded</p>';
-    const links = Array.isArray(s.portfolio_links) && s.portfolio_links.length
-      ? s.portfolio_links.map(l => `<a href="${l}" target="_blank" style="color:#4f46e5">${l}</a>`).join('<br>')
-      : '—';
-    document.getElementById('modal-body').innerHTML = `
-      <h2>👤 ${escapeHtml(s.full_name || '—')}</h2>
-      <div class="modal-row"><span class="modal-label">Position</span><span class="modal-value">${escapeHtml(s.position || '—')}</span></div>
-      <div class="modal-row"><span class="modal-label">Status</span><span class="modal-value"><span class="badge badge-${s.status || 'pending'}">${(s.status||'pending').toUpperCase()}</span></span></div>
-      <div class="modal-row"><span class="modal-label">Email</span><span class="modal-value">${escapeHtml(s.email || '—')}</span></div>
-      <div class="modal-row"><span class="modal-label">Phone</span><span class="modal-value">${escapeHtml(s.phone || '—')}</span></div>
-      <div class="modal-row"><span class="modal-label">Age</span><span class="modal-value">${escapeHtml(s.age || '—')}</span></div>
-      <div class="modal-row"><span class="modal-label">Gender</span><span class="modal-value">${escapeHtml(s.gender || '—')}</span></div>
-      <div class="modal-row"><span class="modal-label">Education</span><span class="modal-value">${escapeHtml(s.education || '—')}</span></div>
-      <div class="modal-row"><span class="modal-label">Experience</span><span class="modal-value">${escapeHtml(s.experience || '—')}</span></div>
-      <div class="modal-row"><span class="modal-label">Telegram</span><span class="modal-value">@${escapeHtml(s.telegram_username || '—')}</span></div>
-      <div class="modal-row"><span class="modal-label">Portfolio</span><span class="modal-value">${links}</span></div>
-      <div class="modal-row"><span class="modal-label">Cover Letter</span><span class="modal-value" style="white-space:pre-wrap">${escapeHtml(s.cover_letter || '—')}</span></div>
-      <div class="modal-row"><span class="modal-label">Submitted</span><span class="modal-value">${(s.submitted_at || s.timestamp || '').substring(0, 19).replace('T', ' ')}</span></div>
-      <div class="modal-row"><span class="modal-label">Source</span><span class="modal-value">${escapeHtml(s.source || '—')}</span></div>
-      <hr style="margin:16px 0;border:none;border-top:1px solid #eee" />
-      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      ? `<button class="btn btn-cv" onclick="dlCV('${s.id}','${esc(s.cv_path)}')">📄 CV</button>`
+      : '';
+    return `<tr>
+      <td><div class="name-cell">${esc(s.full_name||'—')}</div>
+          <div class="username-cell">@${esc(s.telegram_username||'—')}</div></td>
+      <td>${esc(s.position||'—')}</td>
+      <td><div>${esc(s.email||'—')}</div><div style="color:var(--muted);font-size:11px">${esc(s.phone||'—')}</div></td>
+      <td><div>${esc(s.education||'—')}</div><div style="color:var(--muted);font-size:11px">${esc(s.experience||'—')} · ${esc(s.gender||'—')}</div></td>
+      <td><span class="badge badge-${st}">${st}</span></td>
+      <td style="color:var(--muted);font-family:var(--mono);font-size:12px">${date}</td>
+      <td><div class="actions">
+        <button class="btn btn-view" onclick="viewSub('${s.id}')">👁 View</button>
         ${cvBtn}
-        <button class="cv-download-btn" style="background:#059669" onclick="updateStatus('${s.id}','accepted');closeModal()">✅ Accept</button>
-        <button class="cv-download-btn" style="background:#dc2626" onclick="updateStatus('${s.id}','rejected');closeModal()">❌ Reject</button>
-      </div>
-    `;
-    document.getElementById('modal-overlay').classList.add('open');
-  }
+        <button class="btn btn-accept" onclick="setStatus('${s.id}','accepted')">✓</button>
+        <button class="btn btn-reject" onclick="setStatus('${s.id}','rejected')">✕</button>
+      </div></td>
+    </tr>`;
+  }).join('');
+}
 
-  function closeModal(e) {
-    if (!e || e.target === document.getElementById('modal-overlay')) {
-      document.getElementById('modal-overlay').classList.remove('open');
-    }
-  }
+// ── FILTER ────────────────────────────────────────────────────────
+function filter() {
+  const q = document.getElementById('search').value.toLowerCase();
+  const st = document.getElementById('fstatus').value;
+  const pos = document.getElementById('fpos').value;
+  render(subs.filter(s => {
+    const mq = !q || [s.full_name,s.email,s.position,s.phone,s.telegram_username]
+      .some(v=>v&&v.toLowerCase().includes(q));
+    const ms = !st || (s.status||'pending')===st;
+    const mp = !pos || s.position===pos;
+    return mq && ms && mp;
+  }));
+}
 
-  // ── UPDATE STATUS ─────────────────────────────────────────────────────
-  async function updateStatus(id, status) {
-    try {
-      const res = await fetch(`/api/submissions/${id}`, {
-        method: 'PATCH',
-        headers: authHeaders(),
-        body: JSON.stringify({ status }),
-      });
-      const data = await res.json();
-      if (data.success) {
-        const sub = allSubmissions.find(s => s.id === id);
-        if (sub) sub.status = status;
-        updateStats();
-        filterTable();
-        showToast(`Application ${status === 'accepted' ? '✅ accepted' : '❌ rejected'}`);
-      } else {
-        showToast('Error: ' + (data.error || 'Update failed'));
-      }
-    } catch (e) {
-      showToast('Error updating status: ' + e.message);
-    }
+// ── CV DOWNLOAD ───────────────────────────────────────────────────
+async function dlCV(id, path) {
+  toast('Generating download link...');
+  try {
+    const r = await fetch(`/api/submissions/${id}?action=cv_url`, {headers: authH()});
+    const d = await r.json();
+    if (d.cv_url) { window.open(d.cv_url,'_blank'); toast('✓ CV opened','success'); }
+    else if (path.startsWith('http')) { window.open(path,'_blank'); toast('✓ CV opened','success'); }
+    else toast('CV not available','error');
+  } catch(e) {
+    if (path.startsWith('http')) window.open(path,'_blank');
+    else toast('Could not open CV','error');
   }
+}
 
-  // ── UTILS ─────────────────────────────────────────────────────────────
-  function escapeHtml(str) {
-    if (!str) return '';
-    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
+// ── VIEW MODAL ────────────────────────────────────────────────────
+function viewSub(id) {
+  const s = subs.find(x=>x.id===id);
+  if (!s) return;
+  const st = s.status||'pending';
+  const links = Array.isArray(s.portfolio_links)&&s.portfolio_links.length
+    ? s.portfolio_links.map(l=>`<a href="${l}" target="_blank" style="color:var(--accent)">${l}</a>`).join('<br>')
+    : '—';
+  document.getElementById('modal-title').textContent = s.full_name||'Application';
+  document.getElementById('modal-body').innerHTML = `
+    <span class="badge badge-${st}" style="margin-bottom:20px;display:inline-flex">${st}</span>
+    ${row('💼 Position', s.position)}
+    ${row('👤 Full Name', s.full_name)}
+    ${row('📱 Phone', s.phone)}
+    ${row('📧 Email', s.email)}
+    ${row('🎂 Age', s.age)}
+    ${row('⚧ Gender', s.gender)}
+    ${row('🎓 Education', s.education)}
+    ${row('📊 Experience', s.experience)}
+    ${row('🔗 Telegram', '@'+(s.telegram_username||'—'))}
+    ${row('🔗 Portfolio', links)}
+    ${row('✍️ Cover Letter', `<span style="white-space:pre-wrap;line-height:1.6">${esc(s.cover_letter||'—')}</span>`)}
+    ${row('📅 Submitted', (s.submitted_at||s.timestamp||'').replace('T',' ').substring(0,19))}
+    <hr class="modal-divider"/>
+    <div class="modal-actions">
+      ${s.cv_path?`<button class="modal-btn modal-btn-cv" onclick="dlCV('${s.id}','${esc(s.cv_path)}')">📄 Download CV</button>`:''}
+      <button class="modal-btn modal-btn-accept" onclick="setStatus('${s.id}','accepted');closeModal()">✓ Accept</button>
+      <button class="modal-btn modal-btn-reject" onclick="setStatus('${s.id}','rejected');closeModal()">✕ Reject</button>
+    </div>`;
+  document.getElementById('overlay').classList.add('open');
+}
 
-  function showToast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 3000);
-  }
+function row(k,v){return`<div class="modal-row"><span class="modal-key">${k}</span><span class="modal-val">${v||'—'}</span></div>`}
+function closeModal(){document.getElementById('overlay').classList.remove('open')}
 
-  // ── KEYBOARD ──────────────────────────────────────────────────────────
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Enter' && document.getElementById('login-screen').style.display !== 'none') doLogin();
-    if (e.key === 'Escape') closeModal();
-  });
+// ── STATUS UPDATE ─────────────────────────────────────────────────
+async function setStatus(id, status) {
+  try {
+    const r = await fetch(`/api/submissions/${id}`, {
+      method:'PATCH', headers: authH(),
+      body: JSON.stringify({status})
+    });
+    const d = await r.json();
+    if (d.success) {
+      const s = subs.find(x=>x.id===id);
+      if (s) s.status = status;
+      updateStats(); filter();
+      toast(status==='accepted'?'✓ Accepted':'✕ Rejected', status==='accepted'?'success':'error');
+    } else toast('Update failed: '+(d.error||''),'error');
+  } catch(e) { toast('Error: '+e.message,'error'); }
+}
 
-  // ── AUTO LOGIN if token exists ────────────────────────────────────────
-  if (authToken) {
-    // Verify token is still valid
-    fetch('/api/submissions?limit=1', { headers: authHeaders() })
-      .then(r => {
-        if (r.status === 401) { doLogout(); }
-        else { showMain(); }
-      })
-      .catch(() => showMain());
-  }
+// ── UTILS ─────────────────────────────────────────────────────────
+function esc(s){if(!s)return'';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+
+let toastTimer;
+function toast(msg, type='') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'toast show' + (type?' '+type:'');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>el.classList.remove('show'), 3000);
+}
+
+// ── KEYBOARD ──────────────────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if (e.key==='Enter' && document.getElementById('login').style.display!=='none') doLogin();
+  if (e.key==='Escape') closeModal();
+});
+
+// ── AUTO LOGIN ────────────────────────────────────────────────────
+if (token) {
+  fetch('/api/submissions?limit=1', {headers: authH()})
+    .then(r => r.status===401 ? logout() : showMain())
+    .catch(() => showMain());
+}
 </script>
 </body>
 </html>
