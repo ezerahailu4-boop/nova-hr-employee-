@@ -392,32 +392,76 @@ async function handleMyApplications(chatId: number, userId: number) {
 // ── Main dispatcher ────────────────────────────────────────────────────────
 
 export async function processTelegramUpdate(update: any) {
-  // Callback queries (Accept/Reject buttons in admin chat)
+  // Callback queries
   if (update.callback_query) {
-    const data = update.callback_query.data || ""
-    let action = ""
-    let subId = ""
-    if (data.startsWith("accept_")) { action = "accept"; subId = data.slice(7) }
-    else if (data.startsWith("reject_")) { action = "reject"; subId = data.slice(7) }
+    const cbData = update.callback_query.data || ""
+    const cbMsg = update.callback_query.message
+    const cbUser = update.callback_query.from
 
-    if (subId && action && supabaseAdmin) {
-      await supabaseAdmin
-        .from("submissions")
-        .update({ status: action === "accept" ? "accepted" : "rejected", updated_at: new Date().toISOString() })
-        .eq("id", subId)
-      await answerCallbackQuery(update.callback_query.id, `${subId} → ${action}ed`)
+    // ── Admin: Accept/Reject application ──────────────────────────────────
+    if (cbData.startsWith("accept_") || cbData.startsWith("reject_")) {
+      const action = cbData.startsWith("accept_") ? "accept" : "reject"
+      const subId = cbData.startsWith("accept_") ? cbData.slice(7) : cbData.slice(7)
 
-      try {
-        const msg = update.callback_query.message
-        if (msg?.message_id && msg?.chat?.id) {
-          const statusText = action === "accept" ? "✅ Accepted" : "❌ Rejected"
-          const newText = `${(msg.text || "").trim()}\n\n*Status:* ${statusText}`
-          await editMessageText(msg.chat.id, msg.message_id, newText, { parse_mode: "Markdown", reply_markup: { inline_keyboard: [] } })
-        }
-      } catch (err) {
-        console.error("Failed to edit admin message:", err)
+      if (supabaseAdmin) {
+        await supabaseAdmin
+          .from("submissions")
+          .update({ status: action === "accept" ? "accepted" : "rejected", updated_at: new Date().toISOString() })
+          .eq("id", subId)
       }
+      await answerCallbackQuery(update.callback_query.id, `${subId} → ${action}ed`)
+      try {
+        if (cbMsg?.message_id && cbMsg?.chat?.id) {
+          const statusText = action === "accept" ? "✅ Accepted" : "❌ Rejected"
+          const newText = `${(cbMsg.text || "").trim()}\n\n*Status:* ${statusText}`
+          await editMessageText(cbMsg.chat.id, cbMsg.message_id, newText, { parse_mode: "Markdown", reply_markup: { inline_keyboard: [] } })
+        }
+      } catch (err) { console.error("Failed to edit admin message:", err) }
+      return
     }
+
+    // ── Applicant: Confirm/Decline interview ───────────────────────────────
+    if (cbData.startsWith("confirm_") || cbData.startsWith("decline_")) {
+      const confirmed = cbData.startsWith("confirm_")
+      const subId = confirmed ? cbData.slice(8) : cbData.slice(8)
+      const chatId = cbMsg?.chat?.id
+
+      if (supabaseAdmin) {
+        await supabaseAdmin
+          .from("submissions")
+          .update({
+            interview_confirmed: confirmed ? "confirmed" : "declined",
+            updated_at: new Date().toISOString(),
+          })
+          .eq("id", subId)
+      }
+
+      await answerCallbackQuery(update.callback_query.id, confirmed ? "✅ Confirmed!" : "Got it, we'll follow up.")
+
+      // Update the message to remove buttons and show their choice
+      try {
+        if (cbMsg?.message_id && chatId) {
+          const responseText = confirmed
+            ? `${(cbMsg.text || "").trim()}\n\n✅ *You have confirmed your attendance.*`
+            : `${(cbMsg.text || "").trim()}\n\n❌ *You declined this interview.*`
+          await editMessageText(chatId, cbMsg.message_id, responseText, { parse_mode: "Markdown", reply_markup: { inline_keyboard: [] } })
+        }
+      } catch (err) { console.error("Failed to edit applicant message:", err) }
+
+      // Notify admin
+      const admin = adminId()
+      if (admin && supabaseAdmin) {
+        const { data: sub } = await supabaseAdmin.from("submissions").select("full_name,position,interview").eq("id", subId).single()
+        if (sub) {
+          const adminNote = confirmed
+            ? `✅ *Interview Confirmed*\n\n👤 ${sub.full_name}\n💼 ${sub.position}\n📅 ${sub.interview}\n\nApplicant confirmed their attendance.`
+            : `❌ *Interview Declined*\n\n👤 ${sub.full_name}\n💼 ${sub.position}\n📅 ${sub.interview}\n\nApplicant cannot make it. Please reschedule.`
+          await sendMessage(admin, adminNote, { parse_mode: "Markdown" })
+        }
+      }
+      return
+    }
+
     return
   }
 
