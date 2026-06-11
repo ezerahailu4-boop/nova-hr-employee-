@@ -1315,10 +1315,10 @@ async function confirmInterview(){
     if(d.success){
       const s=SUBS.find(x=>x.id===id);
       if(s){s.interview=intv;s.status='accepted';}
-      // Try to notify via bot
+      // Notify applicant via bot with confirm/decline buttons
       if(s&&s.telegram_id){
         const msg=`✅ *Interview Scheduled*\n\nHello ${s.full_name}, your interview for *${s.position}* has been scheduled.\n\n📅 *${intv}*\n\nPlease confirm your attendance.`;
-        fetch('/api/telegram/send',{method:'POST',headers:ah(),body:JSON.stringify({telegram_id:s.telegram_id,message:msg})}).catch(()=>{});
+        fetch('/api/telegram/send',{method:'POST',headers:ah(),body:JSON.stringify({telegram_id:s.telegram_id,message:msg,sub_id:id,type:'interview'})}).catch(()=>{});
       }
       closeModal('intv-modal');renderAll();
       toast('✓ Interview scheduled & notification sent','success');
