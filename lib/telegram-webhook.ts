@@ -102,7 +102,6 @@ async function handleStart(message: any) {
     try { await setChatMenuButton(chatId, appUrl) } catch { /* non-fatal */ }
   }
 
-  // Save/update user in users table for broadcast
   if (supabaseAdmin) {
     await supabaseAdmin.from("users").upsert({
       telegram_id: message.from.id,
@@ -180,7 +179,6 @@ async function handleCollecting(message: any, state: any) {
 
   if (!text) { await sendMessage(chatId, "Please type a response."); return }
 
-  // Validation
   if (step === "collecting_phone" && !/^[\+\d\s\-\(\)]{7,20}$/.test(text)) {
     await sendMessage(chatId, "Please enter a valid phone number (e.g. +251 911 000000).")
     return
@@ -197,7 +195,6 @@ async function handleCollecting(message: any, state: any) {
     }
   }
 
-  // Save field and advance
   const transitions: Record<string, { field: string; next: string; prompt: string }> = {
     collecting_name:       { field: "full_name",   next: "collecting_phone",      prompt: "*Step 2/6:* What is your *phone number*?" },
     collecting_phone:      { field: "phone",        next: "collecting_email",      prompt: "*Step 3/6:* What is your *email address*?" },
@@ -215,14 +212,13 @@ async function handleCollecting(message: any, state: any) {
   await setState(userId, t.next, newData)
 
   if (t.next === "awaiting_cv") {
-    // Save submission now (status: pending_cv), wait for file
     const user = message.from
     const subId = makeSubId(userId, "bot")
     await saveSubmission({
       id: subId,
       timestamp: new Date().toISOString(),
       telegram_id: userId,
-      telegram_username: user.username || "N/A",
+      telegram_username: user.username || null,
       status: "pending_cv",
       source: "telegram_bot",
       position: newData.job?.title || "Unknown",
@@ -234,13 +230,12 @@ async function handleCollecting(message: any, state: any) {
       experience: newData.experience,
       cover_letter: newData.cover_letter,
     })
-    // Store subId so we can link the CV later
     await setState(userId, "awaiting_cv", { ...newData, sub_id: subId })
 
     const admin = adminId()
     if (admin) {
       await sendMessage(admin,
-        `🔔 *New Application (awaiting CV)*\n\n🆔 \`${subId}\`\n💼 ${newData.job?.title}\n👤 ${newData.full_name}\n📱 ${newData.phone}\n📧 ${newData.email}\n🎓 ${newData.education} · ${newData.experience}\n🤖 @${user.username || userId}`,
+        `🔔 *New Application (awaiting CV)*\n\n🆔 \`${subId}\`\n💼 ${newData.job?.title}\n👤 ${newData.full_name}\n📱 ${newData.phone}\n📧 ${newData.email}\n🎓 ${newData.education} · ${newData.experience}\n🤖 ${user.username ? "@" + user.username : "ID: " + userId}`,
         { parse_mode: "Markdown" }
       )
     }
@@ -270,7 +265,7 @@ async function handleWebAppData(message: any) {
     id: subId,
     timestamp: new Date().toISOString(),
     telegram_id: userId,
-    telegram_username: user.username || "N/A",
+    telegram_username: user.username || null,
     status: "pending_cv",
     source: isCvUpload ? "cv_upload" : "mini_app",
     position,
@@ -290,9 +285,10 @@ async function handleWebAppData(message: any) {
   const admin = adminId()
   if (admin) {
     const links = (submission.portfolio_links as string[]).map((l) => `   • ${l}`).join("\n") || "None"
+    const userHandle = user.username ? "@" + user.username : "ID: " + userId
     const adminText = isCvUpload
-      ? `📎 *New CV Upload*\n\n🆔 \`${subId}\`\n👤 ${submission.full_name}\n📱 ${submission.phone}\n📧 ${submission.email}\n💼 ${position}\n🤖 @${submission.telegram_username}`
-      : `🔔 *New Application (Mini App)*\n\n🆔 \`${subId}\`\n💼 ${position}\n👤 ${submission.full_name}\n📱 ${submission.phone}\n📧 ${submission.email}\n🤖 @${submission.telegram_username}\n\n✍️ _${submission.cover_letter}_\n\n🔗 ${links}`
+      ? `📎 *New CV Upload*\n\n🆔 \`${subId}\`\n👤 ${submission.full_name}\n📱 ${submission.phone}\n📧 ${submission.email}\n💼 ${position}\n🤖 ${userHandle}`
+      : `🔔 *New Application (Mini App)*\n\n🆔 \`${subId}\`\n💼 ${position}\n👤 ${submission.full_name}\n📱 ${submission.phone}\n📧 ${submission.email}\n🤖 ${userHandle}\n\n✍️ _${submission.cover_letter}_\n\n🔗 ${links}`
 
     const replyMarkup = {
       inline_keyboard: [[
@@ -323,7 +319,6 @@ async function handleCvFile(message: any) {
     return
   }
 
-  // Check conversation state first, then fall back to DB lookup
   const convState = await getState(userId)
   let subId: string | null = null
   let subName = ""
@@ -349,7 +344,7 @@ async function handleCvFile(message: any) {
   if (admin) {
     const caption = subId
       ? `📎 CV for \`${subId}\` — ${subName} (${subPos})`
-      : `📎 CV from @${user.username || userId} (no linked application)`
+      : `📎 CV from ${user.username ? "@" + user.username : "ID: " + userId} (no linked application)`
     const replyMarkup = subId
       ? { inline_keyboard: [[{ text: "✅ Accept", callback_data: `accept_${subId}` }, { text: "❌ Reject", callback_data: `reject_${subId}` }]] }
       : undefined
@@ -383,7 +378,7 @@ async function handleMyApplications(chatId: number, userId: number) {
   const rows = subs.map((s: any) => {
     const icon = s.status === "accepted" ? "✅" : s.status === "rejected" ? "❌" : "⏳"
     const interview = s.interview ? `\n   📅 Interview: ${s.interview}` : ""
-    return `${icon} *${s.position || "N/A"}*\n   🕒 ${(s.timestamp || "").slice(0, 10)} · ${String(s.status || "pending").toUpperCase()}${interview}`
+    return `${icon} *${s.position || "Unknown"}*\n   🕒 ${(s.timestamp || "").slice(0, 10)} · ${String(s.status || "pending").toUpperCase()}${interview}`
   })
 
   await sendMessage(chatId, `📌 *Your Applications*\n\n${rows.join("\n\n")}`, { parse_mode: "Markdown", reply_markup: MAIN_MENU })
@@ -392,13 +387,11 @@ async function handleMyApplications(chatId: number, userId: number) {
 // ── Main dispatcher ────────────────────────────────────────────────────────
 
 export async function processTelegramUpdate(update: any) {
-  // Callback queries
   if (update.callback_query) {
     const cbData = update.callback_query.data || ""
     const cbMsg = update.callback_query.message
     const cbUser = update.callback_query.from
 
-    // ── Admin: Accept/Reject application ──────────────────────────────────
     if (cbData.startsWith("accept_") || cbData.startsWith("reject_")) {
       const action = cbData.startsWith("accept_") ? "accept" : "reject"
       const subId = cbData.startsWith("accept_") ? cbData.slice(7) : cbData.slice(7)
@@ -420,7 +413,6 @@ export async function processTelegramUpdate(update: any) {
       return
     }
 
-    // ── Applicant: Confirm/Decline interview ───────────────────────────────
     if (cbData.startsWith("confirm_") || cbData.startsWith("decline_")) {
       const confirmed = cbData.startsWith("confirm_")
       const subId = confirmed ? cbData.slice(8) : cbData.slice(8)
@@ -438,7 +430,6 @@ export async function processTelegramUpdate(update: any) {
 
       await answerCallbackQuery(update.callback_query.id, confirmed ? "✅ Confirmed!" : "Got it, we'll follow up.")
 
-      // Update the message to remove buttons and show their choice
       try {
         if (cbMsg?.message_id && chatId) {
           const responseText = confirmed
@@ -448,7 +439,6 @@ export async function processTelegramUpdate(update: any) {
         }
       } catch (err) { console.error("Failed to edit applicant message:", err) }
 
-      // Notify admin
       const admin = adminId()
       if (admin && supabaseAdmin) {
         const { data: sub } = await supabaseAdmin.from("submissions").select("full_name,position,interview").eq("id", subId).single()
@@ -468,13 +458,11 @@ export async function processTelegramUpdate(update: any) {
   const message = update.message
   if (!message) return
 
-  // Mini-app submission
   if (message.web_app_data) {
     await handleWebAppData(message)
     return
   }
 
-  // CV/document upload
   if (message.document || message.photo) {
     await handleCvFile(message)
     return
@@ -484,13 +472,11 @@ export async function processTelegramUpdate(update: any) {
   const chatId = message.chat.id
   const userId = message.from.id
 
-  // /start
   if (text === "/start" || text.startsWith("/start ")) {
     await handleStart(message)
     return
   }
 
-  // Main menu buttons
   if (text === "📋 Apply for a Job") {
     await handleApplyFlow(message)
     return
@@ -513,7 +499,6 @@ export async function processTelegramUpdate(update: any) {
     return
   }
 
-  // Conversation state machine
   const convState = await getState(userId)
   if (convState) {
     const s = convState.state
@@ -525,7 +510,6 @@ export async function processTelegramUpdate(update: any) {
     }
   }
 
-  // Unknown input — show menu
   if (text.length > 0) {
     await sendMessage(chatId, "Use the menu below to get started 👇", { reply_markup: MAIN_MENU })
   }
