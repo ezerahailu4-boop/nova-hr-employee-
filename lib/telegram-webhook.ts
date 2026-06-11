@@ -102,6 +102,17 @@ async function handleStart(message: any) {
     try { await setChatMenuButton(chatId, appUrl) } catch { /* non-fatal */ }
   }
 
+  // Save/update user in users table for broadcast
+  if (supabaseAdmin) {
+    await supabaseAdmin.from("users").upsert({
+      telegram_id: message.from.id,
+      username: message.from.username || null,
+      first_name: message.from.first_name || null,
+      last_name: message.from.last_name || null,
+      last_seen: new Date().toISOString(),
+    }, { onConflict: "telegram_id" })
+  }
+
   await clearState(message.from.id)
   await sendMessage(
     chatId,
