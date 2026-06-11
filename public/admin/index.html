@@ -690,15 +690,33 @@ tr:hover td{background:rgba(91,106,247,.03)}
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
         <div class="card">
-          <div class="card-head"><h3>📢 Broadcast to All Pending</h3></div>
+          <div class="card-head"><h3>📢 Broadcast to All Bot Users</h3></div>
           <div style="padding:22px;display:flex;flex-direction:column;gap:14px">
             <div class="form-group">
-              <label class="form-label">Message</label>
-              <textarea class="form-textarea" id="bc-msg" rows="5" placeholder="Type your message to all pending applicants…"></textarea>
+              <label class="form-label">Message <span style="color:var(--muted);font-weight:400;font-size:11px">— sent to everyone who started the bot</span></label>
+              <textarea class="form-textarea" id="bc-msg" rows="5" placeholder="Type your message to all bot users…"></textarea>
             </div>
-            <button class="save-btn" onclick="sendBroadcast()" style="width:fit-content">📤 Send Broadcast</button>
+            <div style="display:flex;align-items:center;gap:10px">
+              <button class="save-btn" onclick="sendBroadcast()" style="width:fit-content">📤 Send to All Users</button>
+              <span id="bc-count" style="font-size:12px;color:var(--muted)"></span>
+            </div>
           </div>
         </div>
+        <div class="card">
+          <div class="card-head"><h3>⏳ Broadcast to Pending Applicants</h3></div>
+          <div style="padding:22px;display:flex;flex-direction:column;gap:14px">
+            <div class="form-group">
+              <label class="form-label">Message <span style="color:var(--muted);font-weight:400;font-size:11px">— sent to pending applicants only</span></label>
+              <textarea class="form-textarea" id="pending-msg" rows="5" placeholder="Type your message to pending applicants…"></textarea>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px">
+              <button class="save-btn" onclick="sendPendingBroadcast()" style="width:fit-content">📤 Send to Pending</button>
+              <span id="pending-count" style="font-size:12px;color:var(--muted)"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:20px">
         <div class="card">
           <div class="card-head"><h3>🎯 Message Single Applicant</h3></div>
           <div style="padding:22px;display:flex;flex-direction:column;gap:14px">
@@ -711,6 +729,19 @@ tr:hover td{background:rgba(91,106,247,.03)}
               <textarea class="form-textarea" id="single-msg" rows="4" placeholder="Type your message…"></textarea>
             </div>
             <button class="save-btn" onclick="sendSingleMsg()" style="width:fit-content">💬 Send Message</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><h3>✅ Broadcast to Accepted Applicants</h3></div>
+          <div style="padding:22px;display:flex;flex-direction:column;gap:14px">
+            <div class="form-group">
+              <label class="form-label">Message <span style="color:var(--muted);font-weight:400;font-size:11px">— sent to accepted applicants only</span></label>
+              <textarea class="form-textarea" id="accepted-msg" rows="4" placeholder="Type your message to accepted applicants…"></textarea>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px">
+              <button class="save-btn" onclick="sendAcceptedBroadcast()" style="width:fit-content">📤 Send to Accepted</button>
+              <span id="accepted-count" style="font-size:12px;color:var(--muted)"></span>
+            </div>
           </div>
         </div>
       </div>
@@ -1331,7 +1362,12 @@ async function confirmInterview(){
 ══════════════════════════════════════════════════════ */
 function renderMessages(){
   const tgSubs=SUBS.filter(s=>s.telegram_id);
+  const pendingSubs=SUBS.filter(s=>(!s.status||s.status==='pending')&&s.telegram_id);
+  const acceptedSubs=SUBS.filter(s=>s.status==='accepted'&&s.telegram_id);
   document.getElementById('tg-count').textContent=tgSubs.length+' Telegram applicant'+(tgSubs.length!==1?'s':'');
+  const bcCount=document.getElementById('bc-count');if(bcCount)bcCount.textContent='';
+  const pcEl=document.getElementById('pending-count');if(pcEl)pcEl.textContent=pendingSubs.length+' recipient'+(pendingSubs.length!==1?'s':'');
+  const acEl=document.getElementById('accepted-count');if(acEl)acEl.textContent=acceptedSubs.length+' recipient'+(acceptedSubs.length!==1?'s':'');
   document.getElementById('tg-tbody').innerHTML=tgSubs.length?tgSubs.map(s=>`
     <tr>
       <td><div class="nc-name">${esc(s.full_name||'—')}</div></td>
@@ -1367,12 +1403,47 @@ async function confirmSendMsg(){
 async function sendBroadcast(){
   const msg=document.getElementById('bc-msg').value.trim();
   if(!msg){toast('Type a message first','error');return;}
+  if(!confirm('Send this message to ALL bot users?'))return;
   try{
     const r=await fetch('/api/telegram/broadcast',{method:'POST',headers:ah(),body:JSON.stringify({message:msg})});
     const d=await r.json();
     if(d.success){toast(`✓ Sent to ${d.sent}/${d.total} users`,'success');document.getElementById('bc-msg').value='';}
     else toast('Broadcast failed: '+(d.error||''),'error');
   }catch(e){toast('Error: '+e.message,'error');}
+}
+async function sendPendingBroadcast(){
+  const msg=document.getElementById('pending-msg').value.trim();
+  if(!msg){toast('Type a message first','error');return;}
+  const pending=SUBS.filter(s=>(!s.status||s.status==='pending')&&s.telegram_id);
+  if(!pending.length){toast('No pending applicants with Telegram','error');return;}
+  if(!confirm(`Send this message to ${pending.length} pending applicant(s)?`))return;
+  let sent=0,failed=0;
+  for(const s of pending){
+    try{
+      const r=await fetch('/api/telegram/send',{method:'POST',headers:ah(),body:JSON.stringify({telegram_id:s.telegram_id,message:msg})});
+      const d=await r.json();
+      if(d.success||d.ok)sent++;else failed++;
+    }catch{failed++;}
+  }
+  toast(`✓ Sent to ${sent}/${pending.length} pending applicants${failed?` (${failed} failed)":""}`,'success');
+  document.getElementById('pending-msg').value='';
+}
+async function sendAcceptedBroadcast(){
+  const msg=document.getElementById('accepted-msg').value.trim();
+  if(!msg){toast('Type a message first','error');return;}
+  const accepted=SUBS.filter(s=>s.status==='accepted'&&s.telegram_id);
+  if(!accepted.length){toast('No accepted applicants with Telegram','error');return;}
+  if(!confirm(`Send this message to ${accepted.length} accepted applicant(s)?`))return;
+  let sent=0,failed=0;
+  for(const s of accepted){
+    try{
+      const r=await fetch('/api/telegram/send',{method:'POST',headers:ah(),body:JSON.stringify({telegram_id:s.telegram_id,message:msg})});
+      const d=await r.json();
+      if(d.success||d.ok)sent++;else failed++;
+    }catch{failed++;}
+  }
+  toast(`✓ Sent to ${sent}/${accepted.length} accepted applicants${failed?` (${failed} failed)":""}`,'success');
+  document.getElementById('accepted-msg').value='';
 }
 async function sendSingleMsg(){
   const id=document.getElementById('msg-target').value;
