@@ -1425,7 +1425,7 @@ async function sendPendingBroadcast(){
       if(d.success||d.ok)sent++;else failed++;
     }catch{failed++;}
   }
-  toast(`✓ Sent to ${sent}/${pending.length} pending applicants${failed?` (${failed} failed)":""}`,'success');
+  toast('✓ Sent to '+sent+'/'+pending.length+' pending applicants'+(failed?' ('+failed+' failed)':''),'success');
   document.getElementById('pending-msg').value='';
 }
 async function sendAcceptedBroadcast(){
@@ -1442,7 +1442,7 @@ async function sendAcceptedBroadcast(){
       if(d.success||d.ok)sent++;else failed++;
     }catch{failed++;}
   }
-  toast(`✓ Sent to ${sent}/${accepted.length} accepted applicants${failed?` (${failed} failed)":""}`,'success');
+  toast('✓ Sent to '+sent+'/'+accepted.length+' accepted applicants'+(failed?' ('+failed+' failed)':''),'success');
   document.getElementById('accepted-msg').value='';
 }
 async function sendSingleMsg(){
@@ -1512,3 +1512,4 @@ if(TOKEN){
 </script>
 </body>
 </html>
+
