@@ -1,1 +1,84 @@
-import { NextApiRequest, NextApiResponse } from "next"; import { createClient } from "@supabase/supabase-js"; const supabase = createClient(process.env.SUPABASE_URL || "https://aunkcnmplnunnercrvni.supabase.co", process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_KEY || ""); const BUCKET = process.env.SUPABASE_BUCKET || "cvs"; async function checkAuth(token: string): Promise<boolean> { if (!token) return false; try { const { data } = await supabase.from("admin_sessions").select("token").eq("token", token).gt("expires_at", new Date().toISOString()).single(); return !!data; } catch { return false; } } export default async function handler(req: NextApiRequest, res: NextApiResponse) { const token = req.headers.authorization?.replace("Bearer ", "") || ""; const ok = await checkAuth(token); if (!ok) return res.status(401).json({ success: false, error: "Authentication required" }); const { subId } = req.query; if (!subId || typeof subId !== "string") return res.status(400).json({ success: false, error: "Invalid ID" }); if (req.method === "GET") { const { data, error } = await supabase.from("submissions").select("*").eq("id", subId).single(); if (error || !data) return res.status(404).json({ success: false, error: "Not found" }); if (req.query.action === "cv_url" && data.cv_path) { const path = data.cv_path; const isTelegramId = !path.includes("/") && !path.startsWith("http"); if (isTelegramId) { return res.status(200).json({ success: false, error: "CV was uploaded via Telegram — download from the Telegram channel instead", is_telegram: true }); } try { const filename = path.includes("/" + BUCKET + "/") ? path.split("/" + BUCKET + "/").pop() : path.startsWith("http") ? null : path; if (!filename) return res.status(200).json({ success: true, cv_url: path }); const { data: signed, error: sErr } = await supabase.storage.from(BUCKET).createSignedUrl(filename, 3600); if (sErr) throw sErr; return res.status(200).json({ success: true, cv_url: signed.signedUrl }); } catch (e: any) { return res.status(200).json({ success: false, error: "Could not generate download link: " + e.message }); } } return res.status(200).json({ success: true, submission: data }); } if (req.method === "PATCH") { const { status } = req.body; if (!["pending","accepted","rejected"].includes(status)) return res.status(400).json({ success: false, error: "Invalid status" }); const { error } = await supabase.from("submissions").update({ status, updated_at: new Date().toISOString() }).eq("id", subId); if (error) return res.status(500).json({ success: false, error: error.message }); return res.status(200).json({ success: true, status }); } return res.status(405).json({ success: false, error: "Method not allowed" }); }
+import { NextApiRequest, NextApiResponse } from "next"
+import { createClient } from "@supabase/supabase-js"
+
+const supabase = createClient(
+  process.env.SUPABASE_URL || "https://aunkcnmplnunnercrvni.supabase.co",
+  process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_KEY || ""
+)
+
+const BUCKET = process.env.SUPABASE_BUCKET || "cvs"
+
+async function checkAuth(token: string): Promise<boolean> {
+  if (!token) return false
+  try {
+    const { data } = await supabase
+      .from("admin_sessions")
+      .select("token")
+      .eq("token", token)
+      .gt("expires_at", new Date().toISOString())
+      .single()
+    return !!data
+  } catch {
+    return false
+  }
+}
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const token = req.headers.authorization?.replace("Bearer ", "") || ""
+  const ok = await checkAuth(token)
+  if (!ok) return res.status(401).json({ success: false, error: "Authentication required" })
+
+  const { subId } = req.query
+  if (!subId || typeof subId !== "string")
+    return res.status(400).json({ success: false, error: "Invalid ID" })
+
+  // ── GET ──────────────────────────────────────────────────────────────────
+  if (req.method === "GET") {
+    const { data, error } = await supabase.from("submissions").select("*").eq("id", subId).single()
+    if (error || !data) return res.status(404).json({ success: false, error: "Not found" })
+
+    if (req.query.action === "cv_url" && data.cv_path) {
+      const path = data.cv_path
+      const isTelegramId = !path.includes("/") && !path.startsWith("http")
+      if (isTelegramId) {
+        return res.status(200).json({
+          success: false,
+          error: "CV was uploaded via Telegram — download from the Telegram channel instead",
+          is_telegram: true,
+        })
+      }
+      try {
+        const filename = path.includes("/" + BUCKET + "/")
+          ? path.split("/" + BUCKET + "/").pop()
+          : path.startsWith("http") ? null : path
+        if (!filename) return res.status(200).json({ success: true, cv_url: path })
+        const { data: signed, error: sErr } = await supabase.storage.from(BUCKET).createSignedUrl(filename, 3600)
+        if (sErr) throw sErr
+        return res.status(200).json({ success: true, cv_url: signed.signedUrl })
+      } catch (e: any) {
+        return res.status(200).json({ success: false, error: "Could not generate download link: " + e.message })
+      }
+    }
+
+    return res.status(200).json({ success: true, submission: data })
+  }
+
+  // ── PATCH ─────────────────────────────────────────────────────────────────
+  if (req.method === "PATCH") {
+    const { status, interview } = req.body
+
+    if (status && !["pending", "accepted", "rejected"].includes(status))
+      return res.status(400).json({ success: false, error: "Invalid status" })
+
+    const updates: Record<string, any> = { updated_at: new Date().toISOString() }
+    if (status) updates.status = status
+    if (interview !== undefined) updates.interview = interview
+
+    const { error } = await supabase.from("submissions").update(updates).eq("id", subId)
+    if (error) return res.status(500).json({ success: false, error: error.message })
+
+    return res.status(200).json({ success: true, status, interview })
+  }
+
+  return res.status(405).json({ success: false, error: "Method not allowed" })
+}
