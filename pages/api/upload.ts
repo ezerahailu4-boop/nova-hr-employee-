@@ -35,7 +35,7 @@ export default runApi(async (req: NextApiRequest, res: NextApiResponse) => {
   }
   if (user) {
     clean.telegram_id = user.id
-    clean.telegram_username = user.username || "N/A"
+    clean.telegram_username = user.username || null
   }
 
   const subId = `${Date.now()}${Math.random().toString(36).slice(2, 8)}web`
@@ -61,7 +61,6 @@ export default runApi(async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(500).json({ success: false, error: `Failed to upload ${file.name}: ${uploadError.message}` })
     }
 
-    // Store only path — generate signed URLs on demand so they never expire
     savedFiles.push({ name: file.name, path: storagePath, size: buffer.length, type: ext.slice(1).toUpperCase() })
   }
 
