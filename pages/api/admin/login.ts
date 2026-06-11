@@ -77,12 +77,10 @@ export default runApi(async (req: NextApiRequest, res: NextApiResponse) => {
   const token = crypto.randomBytes(32).toString("hex")
   if (db) {
     try {
-      await db.from("admin_sessions").upsert({
+      await db.from("admin_sessions").insert({
         token, ip,
         expires_at: new Date(Date.now() + 12 * 60 * 60 * 1000).toISOString(),
         created_at: new Date().toISOString(),
-        username: adminUsername,
-        role: adminRole,
       })
     } catch { /* non-fatal */ }
   }
