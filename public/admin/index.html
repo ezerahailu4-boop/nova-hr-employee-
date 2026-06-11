@@ -1367,17 +1367,12 @@ async function confirmSendMsg(){
 async function sendBroadcast(){
   const msg=document.getElementById('bc-msg').value.trim();
   if(!msg){toast('Type a message first','error');return;}
-  const targets=SUBS.filter(s=>s.telegram_id&&(!s.status||s.status==='pending'));
-  if(!targets.length){toast('No pending Telegram applicants','info');return;}
-  let ok=0;
-  for(const s of targets){
-    try{
-      const r=await fetch('/api/telegram/send',{method:'POST',headers:ah(),body:JSON.stringify({telegram_id:s.telegram_id,message:msg})});
-      const d=await r.json();if(d.success||d.ok)ok++;
-    }catch(e){}
-  }
-  toast(`✓ Sent to ${ok}/${targets.length} applicants`,'success');
-  document.getElementById('bc-msg').value='';
+  try{
+    const r=await fetch('/api/telegram/broadcast',{method:'POST',headers:ah(),body:JSON.stringify({message:msg})});
+    const d=await r.json();
+    if(d.success){toast(`✓ Sent to ${d.sent}/${d.total} users`,'success');document.getElementById('bc-msg').value='';}
+    else toast('Broadcast failed: '+(d.error||''),'error');
+  }catch(e){toast('Error: '+e.message,'error');}
 }
 async function sendSingleMsg(){
   const id=document.getElementById('msg-target').value;
