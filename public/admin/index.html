@@ -394,8 +394,7 @@ tr:hover td{background:rgba(91,106,247,.03)}
       <div><h1>Nova HR</h1><p>ADMIN PANEL</p></div>
     </div>
     <label class="lc-label">Admin Password</label>
-    <input class="lc-input" type="text" id="username" placeholder="Username" autocomplete="username" style="margin-bottom:10px"/>
-    <input class="lc-input" type="password" id="pass" placeholder="Password" autocomplete="current-password"/>
+    <input class="lc-input" type="password" id="pass" placeholder="Enter password…" autocomplete="current-password"/>
     <button class="lc-btn" onclick="doLogin()">Sign In →</button>
     <div class="lc-err" id="err"></div>
   </div>
@@ -903,8 +902,7 @@ async function doLogin(){
   err.style.display='none';
   if(!pw) return;
   try{
-    const username=(document.getElementById('username')?.value||'').trim();
-    const r=await fetch('/api/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username,password:pw})});
+    const r=await fetch('/api/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:pw})});
     const d=await r.json();
     if(d.success&&d.token){TOKEN=d.token;localStorage.setItem('nhr_tkn',TOKEN);showMain();}
     else{err.textContent=d.error||'Incorrect password';err.style.display='block';}
