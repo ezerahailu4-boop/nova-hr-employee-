@@ -439,16 +439,9 @@ async function submitForm() {
     submitted_at: new Date().toISOString(),
   };
 
-  // 1) Try Telegram sendData (mini-app context)
-  if (tg && tg.initData) {
-    try {
-      tg.sendData(JSON.stringify(payload));
-      if (tg) tg.disableClosingConfirmation();
-      showSuccess(); return;
-    } catch(e) { console.warn("sendData failed, falling back to API:", e); }
-  }
-
-  // 2) Fall back: POST directly to /api/upload (works in browser and as standalone webapp)
+  // Always POST to /api/upload so submissions are saved to Supabase.
+  // initData is sent as a header so telegram_id is linked to the record,
+  // making submissions visible in "My Apps".
   try {
     const fileData = await Promise.all((state.uploadFiles||[]).map(f => new Promise((res,rej)=>{
       const r = new FileReader();
@@ -635,11 +628,6 @@ async function handleUploadSubmit() {
     r.onload=()=>res({name:f.name,type:f.type,data:r.result.split(",")[1]});
     r.onerror=rej; r.readAsDataURL(f);
   })));
-
-  // Try Telegram sendData first
-  if (tg&&tg.initData) {
-    try { tg.sendData(JSON.stringify(payload)); } catch(e) { console.warn("sendData failed:", e); }
-  }
 
   // Always POST to API so files are stored in Supabase storage
   try {
