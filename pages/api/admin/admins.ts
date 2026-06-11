@@ -15,7 +15,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method === "GET") {
     const { data, error } = await supabaseAdmin
       .from("admins")
-      .select("id, username, role, created_at, last_login")
+      .select("id, username, role, telegram_id, created_at, last_login")
       .order("created_at", { ascending: true })
     if (error) return res.status(500).json({ success: false, error: error.message })
     return res.status(200).json(data)
@@ -28,9 +28,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (!password || password.length < 6) return res.status(400).json({ success: false, error: "Password must be at least 6 characters" })
     if (!["admin", "superadmin"].includes(role)) return res.status(400).json({ success: false, error: "Invalid role" })
 
+    const insertData: any = { username: username.trim(), password_hash: hashPassword(password), role }
+    if (req.body.telegram_id) insertData.telegram_id = Number(req.body.telegram_id)
     const { data, error } = await supabaseAdmin
       .from("admins")
-      .insert({ username: username.trim(), password_hash: hashPassword(password), role })
+      .insert(insertData)
       .select("id, username, role, created_at")
       .single()
     if (error) {
