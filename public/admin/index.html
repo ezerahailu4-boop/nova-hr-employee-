@@ -773,7 +773,7 @@ tr:hover td{background:rgba(91,106,247,.03)}
       </div>
       <div class="card" style="padding:0;overflow:hidden">
         <table class="apps-table">
-          <thead><tr><th>Username</th><th>Role</th><th>Last Login</th><th>Created</th><th>Actions</th></tr></thead>
+          <thead><tr><th>Username</th><th>Role</th><th>Telegram ID</th><th>Last Login</th><th>Created</th><th>Actions</th></tr></thead>
           <tbody id="admins-tbody"><tr><td colspan="5" class="loading-row">Loading…</td></tr></tbody>
         </table>
       </div>
@@ -1473,6 +1473,7 @@ async function loadAdmins(){
       <tr>
         <td><strong>${a.username}</strong></td>
         <td><span class="status-badge ${a.role==='superadmin'?'s-accepted':'s-pending'}">${a.role}</span></td>
+        <td>${a.telegram_id?`<code>${a.telegram_id}</code>`:'<span style="color:var(--muted)">—</span>'}</td>
         <td>${a.last_login?new Date(a.last_login).toLocaleString('en-GB',{dateStyle:'medium',timeStyle:'short'}):'Never'}</td>
         <td>${new Date(a.created_at).toLocaleDateString('en-GB',{dateStyle:'medium'})}</td>
         <td>
@@ -1502,7 +1503,10 @@ async function submitAddAdmin(){
   if(!password||password.length<6){document.getElementById('new-admin-password-err').textContent='Min 6 characters';valid=false;}
   if(!valid) return;
   try{
-    const r=await fetch('/api/admin/admins',{method:'POST',headers:ah(),body:JSON.stringify({username,password,role})});
+    const telegramId=document.getElementById('new-admin-telegram-id').value.trim();
+    const body={username,password,role};
+    if(telegramId) body.telegram_id=parseInt(telegramId);
+    const r=await fetch('/api/admin/admins',{method:'POST',headers:ah(),body:JSON.stringify(body)});
     const d=await r.json();
     if(d.success){toast('✓ Admin created successfully','success');closeModal('add-admin-modal');loadAdmins();}
     else toast('Failed: '+(d.error||''),'error');
@@ -1549,6 +1553,10 @@ async function deleteAdmin(id, username){
           <option value="admin">Admin</option>
           <option value="superadmin">Superadmin</option>
         </select></div>
+      <div><label class="form-label">Telegram ID <span style="font-size:11px;color:var(--muted)">(optional — for bot notifications)</span></label>
+        <input class="form-input" type="number" id="new-admin-telegram-id" placeholder="e.g. 123456789"/>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px">They can get their ID by messaging @userinfobot on Telegram</div>
+      </div>
     </div>
     <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:8px">
       <button class="icon-btn" onclick="closeModal('add-admin-modal')">Cancel</button>
