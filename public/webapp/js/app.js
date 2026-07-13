@@ -113,6 +113,15 @@ function init() {
   renderCategories(); renderDepartments(); renderJobs();
   bindNav(); bindSearch();
 
+  // Deep link: ?job=<id> opens that job's detail page directly
+  const jobIdParam = new URLSearchParams(window.location.search).get("job");
+  if (jobIdParam) openDetail(jobIdParam, false);
+
+  window.addEventListener("popstate", () => {
+    const id = new URLSearchParams(window.location.search).get("job");
+    if (id) openDetail(id, false); else navigate("home");
+  });
+
   $("positionOptions").innerHTML = JOBS.map(j => `<option value="${j.title}">`).join("");
 
   $("btnBack").addEventListener("click", goBack);
@@ -203,9 +212,14 @@ function renderJobs() {
 }
 
 /* ── Detail ───────────────────────────────────────────────────────────────── */
-function openDetail(id) {
+function openDetail(id, pushUrl=true) {
   const j = JOBS.find(x => String(x.id)===String(id)); if (!j) return;
   state.currentJob = j;
+  if (pushUrl) {
+    const url = new URL(window.location.href);
+    url.searchParams.set("job", j.id);
+    window.history.pushState({job:j.id}, "", url);
+  }
   const reqs = Array.isArray(j.requirements)
     ? j.requirements.map(r=>`<li>${r}</li>`).join("")
     : `<li>${j.requirements}</li>`;
