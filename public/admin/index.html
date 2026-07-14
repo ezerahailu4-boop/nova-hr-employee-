@@ -808,6 +808,13 @@ tr:hover td{background:rgba(91,106,247,.03)}
           <input type="hidden" id="jf-icon" value="💼"/>
         </div>
         <div class="form-group full">
+          <label class="form-label">Job Photo (optional — used in Telegram post)</label>
+          <input class="form-input" type="file" id="jf-image" accept="image/*" onchange="handleJobImageSelect(event)"/>
+          <div id="jf-image-preview" style="margin-top:8px"></div>
+          <input type="hidden" id="jf-image-base64"/>
+          <input type="hidden" id="jf-image-name"/>
+        </div>
+        <div class="form-group full">
           <label class="form-label">Requirements</label>
           <div class="req-list" id="req-list"></div>
           <button type="button" class="add-req" onclick="addReq()">＋ Add Requirement</button>
@@ -1221,6 +1228,20 @@ function addReq(val=''){
     <button type="button" class="req-rm" onclick="this.parentElement.remove()">✕</button>`;
   document.getElementById('req-list').appendChild(div);
 }
+function handleJobImageSelect(e){
+  const file=e.target.files[0];
+  const preview=document.getElementById('jf-image-preview');
+  if(!file){preview.innerHTML='';document.getElementById('jf-image-base64').value='';document.getElementById('jf-image-name').value='';return;}
+  if(file.size>8*1024*1024){toast('Image must be under 8MB','error');e.target.value='';return;}
+  const reader=new FileReader();
+  reader.onload=()=>{
+    const base64=reader.result.split(',')[1];
+    document.getElementById('jf-image-base64').value=base64;
+    document.getElementById('jf-image-name').value=file.name;
+    preview.innerHTML=`<img src="${reader.result}" style="max-width:180px;border-radius:8px;display:block"/>`;
+  };
+  reader.readAsDataURL(file);
+}
 function openJobForm(id){
   const j=id?JOBS.find(x=>x.id===id):null;
   document.getElementById('jf-id').value=j?j.id:'';
@@ -1232,6 +1253,10 @@ function openJobForm(id){
   document.getElementById('jf-deadline').value=j?j.deadline||'':'';
   document.getElementById('jf-desc').value=j?j.description||'':'';
   document.getElementById('jf-icon').value=j?j.icon||'💼':'💼';
+  document.getElementById('jf-image').value='';
+  document.getElementById('jf-image-base64').value='';
+  document.getElementById('jf-image-name').value='';
+  document.getElementById('jf-image-preview').innerHTML=j&&j.image_url?`<img src="${j.image_url}" style="max-width:180px;border-radius:8px;display:block"/>`:'';
   document.querySelectorAll('.ig-opt').forEach(el=>el.classList.toggle('sel',el.dataset.ic===(j?j.icon||'💼':'💼')));
   document.getElementById('req-list').innerHTML='';
   if(j&&j.requirements) j.requirements.forEach(r=>addReq(r));
@@ -1244,6 +1269,7 @@ async function saveJob(){
   const desc=document.getElementById('jf-desc').value.trim();
   if(!title||!desc){toast('Title and description are required','error');return;}
   const reqs=[...document.querySelectorAll('.req-inp')].map(i=>i.value.trim()).filter(Boolean);
+  const imgB64=document.getElementById('jf-image-base64').value;
   const payload={
     title,category:document.getElementById('jf-cat').value.trim()||null,
     salary:document.getElementById('jf-salary').value.trim()||null,
@@ -1253,6 +1279,10 @@ async function saveJob(){
     description:desc,icon:document.getElementById('jf-icon').value,
     requirements:reqs,company:'Nova HR SM'
   };
+  if(imgB64){
+    payload.image_base64=imgB64;
+    payload.image_name=document.getElementById('jf-image-name').value;
+  }
   try{
     const url=id?`/api/jobs/${id}`:'/api/jobs';
     const method=id?'PUT':'POST';
