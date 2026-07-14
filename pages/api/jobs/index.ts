@@ -2,6 +2,8 @@ import { NextApiRequest, NextApiResponse } from "next"
 import { supabase, supabaseAdmin } from "../../../lib/supabase"
 import { runApi } from "../../../lib/api-handler"
 import { requireAdmin } from "../../../lib/auth"
+import { sendMessage, webappUrl } from "../../../lib/telegram"
+import { JOBS_CHANNEL_ID } from "../../../lib/env"
 import fs from "fs"
 import path from "path"
 
@@ -67,6 +69,18 @@ export default runApi(async (req: NextApiRequest, res: NextApiResponse) => {
     }).select().single()
 
     if (error) return res.status(500).json({ success: false, error: error.message })
+
+    // Auto-post to the Telegram jobs channel (non-blocking — failure here shouldn't fail the job creation)
+    if (JOBS_CHANNEL_ID) {
+      try {
+        const link = `${webappUrl()}?job=${job.id}`
+        const text = `${job.icon || "💼"} *${job.title}*\n\n📍 ${job.location} · ${job.type}${job.salary ? `\n💰 ${job.salary}` : ""}${job.deadline ? `\n⏳ Deadline: ${job.deadline}` : ""}\n\n${job.description}\n\n👉 [Apply Now](${link})`
+        await sendMessage(JOBS_CHANNEL_ID, text, { parse_mode: "Markdown", disable_web_page_preview: false })
+      } catch (e) {
+        console.error("Telegram channel post failed:", (e as Error).message)
+      }
+    }
+
     return res.status(201).json({ success: true, job })
   }
 
