@@ -113,6 +113,15 @@ function init() {
   renderCategories(); renderDepartments(); renderJobs();
   bindNav(); bindSearch();
 
+  // Deep link: ?job=<id> opens that job's detail page directly
+  const jobIdParam = new URLSearchParams(window.location.search).get("job");
+  if (jobIdParam) openDetail(jobIdParam, false);
+
+  window.addEventListener("popstate", () => {
+    const id = new URLSearchParams(window.location.search).get("job");
+    if (id) openDetail(id, false); else navigate("home");
+  });
+
   $("positionOptions").innerHTML = JOBS.map(j => `<option value="${j.title}">`).join("");
 
   $("btnBack").addEventListener("click", goBack);
@@ -182,6 +191,7 @@ function renderJobs() {
   empty.classList.add("hidden");
   list.innerHTML = jobs.map((j,i) => `
     <div class="job-card" data-id="${j.id}" style="animation-delay:${i*.06}s">
+      ${j.image_url?`<img src="${j.image_url}" alt="" class="job-card-image" style="width:100%;border-radius:10px;margin-bottom:10px;max-height:140px;object-fit:cover"/>`:""}
       <div class="job-card-top">
         <div class="job-icon" style="background:${j.color?j.color+"22":"rgba(108,99,255,.13)"}">${j.icon||"💼"}</div>
         <div class="job-card-info"><h4>${j.title}</h4><p>📍 ${j.location} · ${j.type}</p></div>
@@ -203,14 +213,20 @@ function renderJobs() {
 }
 
 /* ── Detail ───────────────────────────────────────────────────────────────── */
-function openDetail(id) {
+function openDetail(id, pushUrl=true) {
   const j = JOBS.find(x => String(x.id)===String(id)); if (!j) return;
   state.currentJob = j;
+  if (pushUrl) {
+    const url = new URL(window.location.href);
+    url.searchParams.set("job", j.id);
+    window.history.pushState({job:j.id}, "", url);
+  }
   const reqs = Array.isArray(j.requirements)
     ? j.requirements.map(r=>`<li>${r}</li>`).join("")
     : `<li>${j.requirements}</li>`;
   $("jobDetailContent").innerHTML = `
     <div class="detail-hero">
+      ${j.image_url?`<img src="${j.image_url}" alt="" style="width:100%;border-radius:12px;margin-bottom:14px;max-height:220px;object-fit:cover"/>`:""}
       <div class="detail-icon" style="background:${j.color?j.color+"22":"rgba(108,99,255,.13)"}">${j.icon||"💼"}</div>
       <h2>${j.title}</h2><p>${j.location} · ${j.type}</p>
       <div class="detail-tags">
