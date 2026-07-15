@@ -34,6 +34,15 @@ export async function sendMessage(
   return telegramApi("sendMessage", { chat_id: chatId, text, ...extra })
 }
 
+export async function sendPhoto(
+  chatId: number | string,
+  photoUrl: string,
+  caption: string,
+  extra: Record<string, unknown> = {}
+) {
+  return telegramApi("sendPhoto", { chat_id: chatId, photo: photoUrl, caption, ...extra })
+}
+
 export async function forwardFileToAdmin(
   adminChatId: number | string,
   fromChatId: number,
